@@ -1,0 +1,81 @@
+# Cara Berkontribusi — TokoKita
+
+Aturan ini dibuat supaya 5 orang bisa bekerja bersamaan tanpa kode bertabrakan
+(Presentasi slide 15). Singkatnya: **satu kartu Trello = satu branch = satu Pull
+Request.**
+
+## 1. Branch
+
+```
+main      ← versi stabil, diperbarui di akhir tiap tahap
+develop   ← tempat semua fitur digabung
+feat/...  ← satu branch per kartu, dibuat dari develop
+```
+
+Buat branch baru dari `develop` yang terbaru:
+
+```bash
+git switch develop
+git pull
+git switch -c feat/keranjang-drawer
+```
+
+Nama branch: `<jenis>/<ringkasan-pendek>` memakai huruf kecil dan tanda hubung.
+Jenis: `feat` (fitur), `fix` (perbaikan bug), `ui` (tampilan), `test`, `docs`,
+`chore` (perkakas), `refactor`, `perf`.
+
+**Jangan pernah commit langsung ke `develop` atau `main`.**
+
+## 2. Commit
+
+Format: `<jenis>: <apa yang berubah>`, dalam Bahasa Indonesia.
+
+```
+feat: hitung ongkir berdasarkan total berat
+fix: stok tidak kembali saat pesanan dibatalkan admin
+```
+
+- Commit kecil dan sering: satu commit untuk satu perubahan yang jelas.
+- Badan commit (opsional) menjelaskan **kenapa**, bukan daftar berkas.
+- Jangan pernah meng-commit `.env`, dump database, atau kredensial. Cek
+  `git status` sebelum `git add`.
+
+## 3. Pull Request
+
+1. `git push -u origin <nama-branch>`, lalu buka Pull Request ke **`develop`**.
+2. Isi template PR: masalah, perubahan, cara menguji, tangkapan layar, dan hasil
+   verifikasi (`PASS` / `FAIL` / `NOT_RUN`).
+3. Pindahkan kartu Trello ke **Uji Coba**.
+4. PR butuh **2 persetujuan**: ketua tim (A1) + satu anggota lain.
+5. Setelah di-merge: pindahkan kartu ke **Selesai**, hapus branch-nya.
+
+PR yang baik itu kecil. Lebih dari ± 400 baris perubahan? Pecah jadi beberapa PR.
+
+## 4. Sebelum membuka PR
+
+Jalankan pemeriksaan ini (setelah proyek di-scaffold):
+
+```bash
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+```
+
+Perubahan yang terlihat pengguna juga dicek di browser, termasuk di layar HP
+(360 px). Rincian: [`docs/UJI_MANDIRI.md`](docs/UJI_MANDIRI.md).
+
+Tulis hasilnya apa adanya. Perintah yang tidak kamu jalankan ditulis `NOT_RUN`
+beserta alasannya, bukan `PASS`.
+
+## 5. Perubahan database
+
+- Skema hanya berubah lewat `npx prisma migrate dev --name <nama>`.
+- Migration yang sudah masuk `develop` **tidak boleh diedit**; buat migration baru.
+- Dua orang mengubah `schema.prisma` bersamaan? Koordinasikan dengan A1 dulu.
+
+## 6. Macet?
+
+Macet lebih dari 2 hari → pindahkan kartu ke **Terhambat** dan bahas di rapat
+pagi. Menemukan keputusan yang tidak dijawab PRD → catat di
+[`docs/OPEN_DECISIONS.md`](docs/OPEN_DECISIONS.md), jangan menebak sendiri.

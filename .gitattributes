@@ -1,0 +1,12 @@
+# Paksa line ending LF di repo, apa pun pengaturan core.autocrlf tiap anggota.
+# Tanpa ini, laptop Windows dengan autocrlf=true dan yang tidak akan saling
+# menimpa line ending dan PR penuh perubahan palsu.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico  binary
+*.pptx binary
+*.pdf  binary
