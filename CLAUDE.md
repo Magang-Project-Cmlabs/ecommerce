@@ -45,8 +45,8 @@ Sudah di-scaffold (27 Sep 2026; catatan di
 [`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md)). Skrip:
 `dev` `build` `start` `lint` `typecheck` (= `next typegen` + `tsc`) `test`
 `test:sandbox` `db:generate` `db:migrate` `db:seed` `db:reset` `db:studio`
-`e2e` `e2e:report`. Skema Prisma masih kosong (kartu *A1 · Buat database*), jadi
-perintah `db:*` belum bermakna. `db:reset` menghapus data — minta persetujuan
+`e2e` `e2e:report`. Skema 15 tabel + seed data demo sudah ada; klien Prisma
+bersama di `src/lib/db.ts`. `db:reset` menghapus data — minta persetujuan
 user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
 
 ## Aturan keras

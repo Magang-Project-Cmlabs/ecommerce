@@ -15,6 +15,24 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Buat database dan isi data contoh
+- Branch / PR: `feat/skema-database` → PR ke `develop`
+- Perubahan: `prisma/schema.prisma` 15 tabel PRD §9 (snake_case lewat `@map`,
+  uang/berat Int, enum status/metode bayar/kurir, indeks PRD, relasi riwayat
+  `Restrict`, 4 kolom payment D9, `users.phone` boleh kosong); migration
+  `20260927072940_init`; `prisma/seed.ts` data demo PRD §20 (14 pengguna termasuk
+  12 pembeli contoh sumber ulasan terverifikasi, 26 produk, 79 pesanan, 188
+  ulasan); `src/lib/db.ts` klien Prisma bersama (adapter MariaDB);
+  `next.config.ts` mengizinkan gambar `picsum.photos`; runner seed `tsx`.
+  Database lokal `ecommerce` dibuat dengan `utf8mb4_unicode_ci`.
+- Verifikasi: `prisma validate` PASS · migration diterapkan PASS · struktur
+  (15 tabel, collation, tipe int, indeks PRD, FK) PASS · `db:seed` PASS · 23 cek
+  aturan PRD §10 = 0 pelanggaran PASS · seed diulang identik PASS · password
+  bcrypt akun demo PASS · `src/lib/db.ts` terhubung PASS · typecheck/lint/test/
+  build: lihat PR · `db:reset` rangkaian penuh NOT_RUN (butuh persetujuan)
+- Catatan: Trello tidak bisa diubah dari sini (tanpa integrasi; board gagal
+  dimuat di Chrome) — nama pemegang dicatat di `docs/trello-board-plan.md`.
+
 ### 2026-09-27 — Scaffold Next.js (A1 · Siapkan proyek awal)
 - Branch / PR: `chore/scaffold-nextjs` → PR #3 (ditumpuk di atas PR #4)
 - Perubahan: Next.js 16.3.6 (App Router, `src/`, Turbopack), Tailwind 4, ESLint,

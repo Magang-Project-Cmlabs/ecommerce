@@ -62,8 +62,9 @@ Terakhir diperbarui: **27 September 2026**
   API Status, konfirmasi/batal tetap lewat `ubahStatus()`. COD dan konfirmasi
   manual admin tetap ada.
 - **Masih terbuka:**
-  1. Menambah 4 kolom di `orders` (`payment_attempt`, `payment_transaction_id`,
-     `payment_url`, `payment_type`) — di luar skema PRD §9. Rekomendasi: setuju.
+  1. ~~Menambah 4 kolom di `orders`~~ — **diputuskan 27 Sep 2026 oleh pemilik
+     proyek:** `payment_attempt`, `payment_transaction_id`, `payment_url`,
+     `payment_type` masuk migration pertama (`20260927072940_init`).
   2. Route handler ketiga `POST /api/payment/midtrans` (aturan keras CLAUDE.md
      #5 hanya mengizinkan dua). Rekomendasi: setuju; webhook memang tidak bisa
      lewat Server Action.
@@ -82,6 +83,7 @@ Terakhir diperbarui: **27 September 2026**
 |---|---|---|
 | 27 Sep 2026 | **D1 — Next.js 16.3.6** (sesuai `proxy.ts` di PRD), dikunci persis. | Scaffold, `runbooks/local-setup.md` |
 | 27 Sep 2026 | **D2 — Prisma 7.10.0** (`prisma`, `@prisma/client`, `@prisma/adapter-mariadb` sama persis), konfigurasi di `prisma7.config.ts`, client di `src/generated/prisma/`. Tag `latest` CLI menunjuk RC 8.0 sehingga tidak dipakai. | Scaffold, dokumentasi resmi Prisma MySQL |
+| 27 Sep 2026 | **Skema database:** metode bayar & kurir disimpan sebagai **enum** (`PaymentMethod`, `ShippingMethod`, kode dari GLOSSARY); `users.phone` **boleh kosong** (form daftar tidak mewajibkan, dikosongkan saat anonimisasi). | Pemilik proyek, migration `20260927072940_init` |
 | 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan penjaga gratis: hook `pre-push` (aktif), CI Actions dan workflow pendeteksi pelanggaran (disiapkan, belum aktif karena Actions tampaknya dimatikan di organisasi). Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Pengecualian: pemilik proyek (`kvnlhm`) boleh merge tanpa persetujuan anggota lain. Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
 | 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.ts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |

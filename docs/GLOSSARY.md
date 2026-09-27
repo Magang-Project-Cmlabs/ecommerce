@@ -63,8 +63,10 @@ dan di `constants.ts` bersamaan.
 
 ## 5. Kurir dan pembayaran
 
-Kode di bawah adalah **usulan** (PRD hanya menyebut nama). Kunci di
-`src/lib/constants.ts` saat kartu A4 pertama dikerjakan, lalu perbarui tabel ini.
+Kode di bawah **sudah dikunci** sebagai enum database `PaymentMethod` dan
+`ShippingMethod` di `prisma/schema.prisma` (migration `20260927072940_init`).
+Mengganti atau menambah kode = migration baru. Label UI tetap dari
+`src/lib/constants.ts`.
 
 | Kode | Label UI | Aturan |
 |---|---|---|
