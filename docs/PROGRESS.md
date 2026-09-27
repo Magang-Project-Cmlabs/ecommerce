@@ -15,6 +15,15 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Trello memakai akun GitHub
+- Branch / PR: `docs/trello-pakai-akun` → PR ke `develop`
+- Perubahan di Trello (lewat API web Trello dari sesi login pemilik proyek):
+  25 kolom, 43 judul kartu, dan 5 label — A1–A5 diganti akun GitHub
+  (`kvnlhm`, `azridalimunthe7`, `rizkikusnadi03`, `astroceilo`, `fikarnugraha18`).
+  Dokumen `trello-board-plan.md` menyesuaikan.
+- Verifikasi: uji kering 73 perubahan tanpa sisa A1–A5; uji tulis 1 kolom;
+  baca ulang board setelah diterapkan: 73/73 berubah, 0 sisa A1–A5 — PASS
+
 ### 2026-09-27 — Identitas anggota A1–A5
 - Branch / PR: `docs/identitas-anggota` → PR ke `develop`
 - Perubahan: A1 `kvnlhm` (Database & Login, penggabung PR), A2 `azridalimunthe7`
