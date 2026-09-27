@@ -36,10 +36,16 @@ describe('tentukanAksi', () => {
     });
   });
 
-  it.each(['pending', 'authorize', 'deny', 'cancel', 'failure', 'refund', 'partial_refund', 'chargeback', 'status_baru_tak_dikenal'])(
-    '%s tidak mengubah status pesanan',
+  it.each(['pending', 'authorize', 'deny', 'cancel', 'failure', 'refund', 'partial_refund', 'chargeback'])(
+    '%s tidak mengubah status pesanan dan tidak perlu diperiksa',
     (s) => {
-      expect(tentukanAksi(status(s)).jenis).toBe('abaikan');
+      const aksi = tentukanAksi(status(s));
+      expect(aksi.jenis).toBe('abaikan');
+      expect(aksi).not.toHaveProperty('perluDiperiksa', true);
     },
   );
+
+  it('status tidak dikenal diabaikan tapi ditandai perlu diperiksa', () => {
+    expect(tentukanAksi(status('status_baru_tak_dikenal'))).toMatchObject({ jenis: 'abaikan', perluDiperiksa: true });
+  });
 });

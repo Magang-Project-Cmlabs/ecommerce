@@ -60,4 +60,4 @@ export type StatusGateway = {
 export type AksiPesanan =
   | { jenis: 'konfirmasi'; paymentType?: string }
   | { jenis: 'batalkan'; alasan: string }
-  | { jenis: 'abaikan'; alasan: string };
+  | { jenis: 'abaikan'; alasan: string; /** status tak dikenal: catat level error */ perluDiperiksa?: boolean };

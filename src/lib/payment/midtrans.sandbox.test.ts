@@ -108,6 +108,7 @@ describe.skipIf(!AKTIF)('Midtrans sandbox (sungguhan)', () => {
       konfirmasiBayar: async () => {
         jumlahKonfirmasi++;
         pesanan = { ...pesanan, status: 'confirmed', paymentStatus: 'paid' };
+        return true;
       },
       batalkanOtomatis: async () => {
         throw new Error('tidak boleh dibatalkan');

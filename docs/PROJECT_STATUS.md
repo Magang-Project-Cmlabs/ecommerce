@@ -29,7 +29,7 @@ test tetapi belum tersambung ke aplikasi (OPEN_DECISIONS D9).
 |---|---|---|
 | `npm run typecheck` | PASS | 27 Sep 2026, cakupan `src/lib/payment/` saja |
 | `npm run lint` | NOT_RUN | Skrip belum ada (ESLint datang bersama scaffold) |
-| `npm run test` | PASS | 27 Sep 2026, 65/65 unit test modul pembayaran |
+| `npm run test` | PASS | 27 Sep 2026, 69/69 unit test modul pembayaran |
 | `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
 | `npm run build` | NOT_RUN | Proyek belum di-scaffold |
 | `npm run e2e` | NOT_RUN | Aplikasi belum ada |

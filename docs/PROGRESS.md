@@ -16,7 +16,7 @@ Format entri:
 ---
 
 ### 2026-09-27 — Modul payment gateway Midtrans (sandbox)
-- Branch / PR: `feat/payment-midtrans`, di-push ke `kvnlhm/ecommerce` (repo sementara), PR belum dibuka
+- Branch / PR: `feat/payment-midtrans`, digabung langsung ke `main` di `kvnlhm/ecommerce` (repo sementara, tanpa PR atas permintaan pemilik proyek); `develop` belum menyusul
 - Perubahan: `src/lib/payment/` — adapter Midtrans Snap via `fetch` (buat sesi,
   ambil status), verifikasi `signature_key` SHA512 waktu-konstan, pemetaan
   `transaction_status` → aksi pesanan, handler webhook dengan dependensi
@@ -27,7 +27,8 @@ Format entri:
   OPEN_DECISIONS, D3 diputuskan Vitest, hook SessionStart mendeteksi scaffold
   dari dependency `next`.
 - Verifikasi:
-  - `npm run test`: PASS (65/65)
+  - `npm run test`: PASS (69/69, termasuk 4 test dari temuan review keamanan)
+  - Review `security-reviewer`: tanpa temuan kritis; 3 temuan pada kode diperbaiki, syarat integrasi dicatat di runbook §4e
   - `npm run typecheck`: PASS
   - Uji mutasi (cek jumlah, signature, percobaan aktif, total item dihapus satu
     per satu): tiap mutasi membuat test gagal — PASS

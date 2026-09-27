@@ -94,6 +94,21 @@ diterima" dikirim setelah transaksi commit.
 **d. Tombol "Bayar Sekarang"** di `/akun/pesanan/[nomor]` menggantikan tombol
 simulasi PRD §7.7 untuk metode gateway.
 
+**e. Syarat keamanan integrasi** (dari review `security-reviewer`, 27 Sep 2026):
+- Server action mengambil pesanan dengan `where: { orderNumber, userId: sesi.userId }`,
+  bukan hanya nomor pesanan — pembeli lain tidak boleh membuka `payment_url`
+  atau memicu `buatSesi` untuk pesanan orang lain.
+- `konfirmasiBayar` menimpa `payment_transaction_id` dengan id transaksi yang
+  membayar, dan mengembalikan `true` hanya bila `ubahStatus()` benar-benar
+  mengubah status pada panggilan itu. Email "Pembayaran diterima" hanya saat `true`.
+- Route handler menolak body lebih dari ± 16 KB (cek `Content-Length`) sebelum
+  `req.json()`, dan tidak dipasangi pemeriksaan sesi/proxy yang menghalangi Midtrans.
+- `catat` produksi tidak menulis body notifikasi mentah ke log yang bisa
+  diakses luas; hasil `perlu-tindakan-admin` dan status tak dikenal (level
+  `error`) harus terlihat oleh admin.
+- Opsional: job rekonsiliasi yang mencocokkan pesanan `pending` lama dengan
+  `ambilStatus()`, sebagai jaring pengaman bila webhook hilang.
+
 ## 5. Menguji di sandbox
 
 - Unit test: `npm run test` (tanpa jaringan).
@@ -117,7 +132,8 @@ npm run test:sandbox -- -t cek    # status dari Midtrans + handler webhook
 
 | Hal | Status | Bukti / alasan |
 |---|---|---|
-| Unit test modul (65 kasus) | PASS | `npm run test` |
+| Unit test modul (69 kasus) | PASS | `npm run test` |
+| Review keamanan (`security-reviewer`) | PASS | 27 Sep 2026: tanpa temuan kritis; 3 temuan kode (pembayaran ganda tanpa jejak, kontrak konfirmasi tanpa hasil, status tak dikenal) sudah diperbaiki |
 | Membuat sesi Snap dengan kunci sandbox asli (ongkir + diskon negatif) | PASS | 27 Sep 2026, `UJI-1790477305694`, Rp 324.300 |
 | Pembayaran BCA VA di simulator sandbox → status `settlement`, jumlah cocok | PASS | 27 Sep 2026, `ambilStatus` sungguhan |
 | Handler webhook dengan status dari API asli: dikonfirmasi sekali, notifikasi ulang `sudah-diproses`, signature palsu 401 | PASS | 27 Sep 2026, `npm run test:sandbox -- -t cek` |

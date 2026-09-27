@@ -43,6 +43,8 @@ export function tentukanAksi(s: StatusGateway): AksiPesanan {
       return { jenis: 'abaikan', alasan: `${s.transactionStatus} ditangani manual oleh admin` };
 
     default:
-      return { jenis: 'abaikan', alasan: `status tidak dikenal: ${s.transactionStatus}` };
+      // 200 menghentikan pengiriman ulang Midtrans, jadi status baru yang
+      // mungkin berarti "lunas" harus terlihat di log, bukan hilang diam-diam.
+      return { jenis: 'abaikan', alasan: `status tidak dikenal: ${s.transactionStatus}`, perluDiperiksa: true };
   }
 }

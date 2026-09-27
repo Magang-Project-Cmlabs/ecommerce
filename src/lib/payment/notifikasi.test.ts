@@ -47,8 +47,8 @@ function siapkan(opsi: { pesanan?: PesananTersimpan | null; statusApi?: Partial<
         ...opsi.statusApi,
       };
     }),
-    konfirmasiBayar: vi.fn(async () => {}),
-    batalkanOtomatis: vi.fn(async () => {}),
+    konfirmasiBayar: vi.fn(async () => true),
+    batalkanOtomatis: vi.fn(async () => true),
     catat: vi.fn(),
   };
   return deps;
@@ -130,6 +130,49 @@ describe('tanganiNotifikasiMidtrans', () => {
 
     expect(hasil).toEqual({ httpStatus: 200, hasil: 'sudah-diproses' });
     expect(deps.konfirmasiBayar).not.toHaveBeenCalled();
+  });
+
+  it('transfer kedua lewat percobaan lain untuk pesanan yang sudah lunas ditandai untuk admin', async () => {
+    const deps = siapkan({
+      pesanan: {
+        nomorPesanan: 'INV-202609-0001',
+        status: 'confirmed',
+        paymentStatus: 'paid',
+        metodeBayar: 'bank_bca',
+        grandTotal: 324_300,
+        idTransaksiAktif: 'INV-202609-0001', // percobaan yang sudah dibayar
+      },
+    });
+    const hasil = await tanganiNotifikasiMidtrans(notifikasi({ order_id: 'INV-202609-0001~2' }), deps);
+
+    expect(hasil).toEqual({ httpStatus: 200, hasil: 'perlu-tindakan-admin' });
+    expect(deps.konfirmasiBayar).not.toHaveBeenCalled();
+    expect(deps.catat).toHaveBeenCalledWith('error', expect.stringContaining('ganda'), expect.anything());
+  });
+
+  it('notifikasi yang kalah balapan (transisi tidak terjadi) tidak dilaporkan dikonfirmasi', async () => {
+    const deps = siapkan();
+    deps.konfirmasiBayar = vi.fn(async () => false); // request paralel lain sudah mengonfirmasi
+    const hasil = await tanganiNotifikasiMidtrans(notifikasi(), deps);
+
+    expect(hasil).toEqual({ httpStatus: 200, hasil: 'sudah-diproses' });
+    expect(deps.catat).not.toHaveBeenCalledWith('info', 'Pembayaran dikonfirmasi', expect.anything());
+  });
+
+  it('pembatalan yang kalah balapan dilaporkan sudah-diproses', async () => {
+    const deps = siapkan({ statusApi: { transactionStatus: 'expire', statusCode: '407' } });
+    deps.batalkanOtomatis = vi.fn(async () => false);
+    const hasil = await tanganiNotifikasiMidtrans(notifikasi({ transaction_status: 'expire', status_code: '407' }), deps);
+
+    expect(hasil).toEqual({ httpStatus: 200, hasil: 'sudah-diproses' });
+  });
+
+  it('status Midtrans yang tidak dikenal dicatat level error agar terpantau', async () => {
+    const deps = siapkan({ statusApi: { transactionStatus: 'status_baru_midtrans' } });
+    const hasil = await tanganiNotifikasiMidtrans(notifikasi(), deps);
+
+    expect(hasil.hasil).toBe('diabaikan');
+    expect(deps.catat).toHaveBeenCalledWith('error', expect.stringContaining('status_baru_midtrans'), expect.anything());
   });
 
   it('uang masuk untuk pesanan yang sudah dibatalkan ditandai untuk admin', async () => {

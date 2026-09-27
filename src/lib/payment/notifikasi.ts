@@ -27,7 +27,11 @@ export type PesananTersimpan = {
   paymentStatus: 'unpaid' | 'paid' | 'refunded';
   metodeBayar: string;
   grandTotal: number;
-  /** id transaksi Midtrans percobaan terakhir; null bila belum pernah dibuka */
+  /**
+   * id transaksi Midtrans (`payment_transaction_id`): percobaan terakhir selama
+   * belum lunas, dan id transaksi yang MEMBAYAR setelah lunas (konfirmasiBayar
+   * wajib menimpanya). null bila sesi bayar belum pernah dibuka.
+   */
   idTransaksiAktif: string | null;
 };
 
@@ -35,10 +39,15 @@ export type DepsNotifikasi = {
   serverKey: string;
   cariPesanan(nomorPesanan: string): Promise<PesananTersimpan | null>;
   ambilStatus(idTransaksi: string): Promise<StatusGateway>;
-  /** Wajib lewat ubahStatus(): pending -> confirmed bersyarat, paid, paid_at, log status. */
-  konfirmasiBayar(nomorPesanan: string, info: { idTransaksi: string; paymentType?: string }): Promise<void>;
-  /** Wajib lewat ubahStatus(): pending -> cancelled bersyarat, stok & kuota promo kembali. */
-  batalkanOtomatis(nomorPesanan: string, alasan: string): Promise<void>;
+  /**
+   * Wajib lewat ubahStatus(): pending -> confirmed bersyarat, paid, paid_at,
+   * payment_transaction_id = info.idTransaksi, log status.
+   * Kembalikan true hanya bila transisi terjadi pada panggilan INI (false bila
+   * request lain sudah lebih dulu). Efek samping seperti email hanya saat true.
+   */
+  konfirmasiBayar(nomorPesanan: string, info: { idTransaksi: string; paymentType?: string }): Promise<boolean>;
+  /** Wajib lewat ubahStatus(): pending -> cancelled bersyarat, stok & kuota promo kembali. true bila terjadi sekarang. */
+  batalkanOtomatis(nomorPesanan: string, alasan: string): Promise<boolean>;
   catat(level: 'info' | 'warn' | 'error', pesan: string, data: Record<string, unknown>): void;
 };
 
@@ -109,7 +118,18 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         });
         return { httpStatus: 200, hasil: 'ditolak' };
       }
-      if (pesanan.paymentStatus === 'paid') return { httpStatus: 200, hasil: 'sudah-diproses' };
+      if (pesanan.paymentStatus === 'paid') {
+        if (pesanan.idTransaksiAktif === idTransaksi) return { httpStatus: 200, hasil: 'sudah-diproses' };
+        // Transaksi LAIN untuk pesanan yang sama juga lunas: dana ganda yang
+        // harus direkonsiliasi/refund admin, jangan hilang tanpa jejak.
+        deps.catat('error', 'Pembayaran ganda: pesanan sudah lunas lewat transaksi lain, perlu refund/tindakan admin', {
+          nomor,
+          idTransaksi,
+          idTransaksiTerbayar: pesanan.idTransaksiAktif,
+          jumlah: status.jumlah,
+        });
+        return { httpStatus: 200, hasil: 'perlu-tindakan-admin' };
+      }
       if (pesanan.status === 'cancelled') {
         // Dana masuk setelah pesanan batal (mis. dibayar tepat saat cron
         // membatalkan). Stok mungkin sudah dijual lagi: admin memutuskan
@@ -125,7 +145,8 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         deps.catat('warn', 'Pembayaran untuk pesanan yang tidak lagi pending', { nomor, status: pesanan.status });
         return { httpStatus: 200, hasil: 'sudah-diproses' };
       }
-      await deps.konfirmasiBayar(nomor, { idTransaksi, paymentType: aksi.paymentType });
+      const terjadi = await deps.konfirmasiBayar(nomor, { idTransaksi, paymentType: aksi.paymentType });
+      if (!terjadi) return { httpStatus: 200, hasil: 'sudah-diproses' }; // kalah balapan dengan request paralel
       deps.catat('info', 'Pembayaran dikonfirmasi', { nomor, idTransaksi });
       return { httpStatus: 200, hasil: 'dikonfirmasi' };
     }
@@ -137,11 +158,11 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         deps.catat('info', 'Percobaan bayar lama kedaluwarsa, diabaikan', { nomor, idTransaksi });
         return { httpStatus: 200, hasil: 'diabaikan' };
       }
-      await deps.batalkanOtomatis(nomor, aksi.alasan);
-      return { httpStatus: 200, hasil: 'dibatalkan' };
+      const terjadi = await deps.batalkanOtomatis(nomor, aksi.alasan);
+      return { httpStatus: 200, hasil: terjadi ? 'dibatalkan' : 'sudah-diproses' };
     }
 
-    deps.catat('info', `Notifikasi Midtrans diabaikan: ${aksi.alasan}`, { nomor, idTransaksi });
+    deps.catat(aksi.perluDiperiksa ? 'error' : 'info', `Notifikasi Midtrans diabaikan: ${aksi.alasan}`, { nomor, idTransaksi });
     return { httpStatus: 200, hasil: 'diabaikan' };
   } catch (e) {
     deps.catat('error', 'Gagal memproses notifikasi Midtrans', {
