@@ -6,8 +6,8 @@ Satu board, setiap anggota punya 5 kolom sendiri. Urutan kolom dari kiri:
 
 ```
 👥 Semua · Rencana | 👥 Semua · Selesai
-🟥 A1 · Rencana | A1 · Dikerjakan | A1 · Terhambat | A1 · Uji Coba | A1 · Selesai
-🟨 A2 · ...  🟩 A3 · ...  🟦 A4 · ...  🟪 A5 · ...   (pola sama)
+🟥 kvnlhm · Rencana | kvnlhm · Dikerjakan | kvnlhm · Terhambat | kvnlhm · Uji Coba | kvnlhm · Selesai
+🟨 azridalimunthe7 · ...  🟩 rizkikusnadi03 · ...  🟦 astroceilo · ...  🟪 fikarnugraha18 · ...   (pola sama)
 💤 Lanjutan (Backlog)
 ```
 
@@ -47,8 +47,13 @@ dengan repo `article-website/news-times`). Presentasi slide 14 menyebut
 
 ## Kartu
 
-Format judul di Trello: `A1 · Hari 1 · Siapkan proyek awal dan bagikan ke tim`.
-Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist`).
+Di Trello, kolom, judul kartu, dan label memakai **akun GitHub**, bukan kode
+A1–A5 (diganti 27 Sep 2026): `kvnlhm · Hari 1 · Siapkan proyek awal dan bagikan
+ke tim`, label `kvnlhm · Database`. Kartu bersama memakai `Semua · …`, kartu
+Lanjutan tanpa hari (`rizkikusnadi03 · Wishlist`).
+
+Di dokumen repo, kode A1–A5 tetap dipakai sebagai singkatan — lihat tabel
+Label di atas untuk pemetaannya.
 
 ### Semua anggota
 - Hari 0 · Rapat awal tim — baca PRD bersama, sepakati cara pakai GitHub, jadwal sinkronisasi 20 menit, belajar dasar Next.js & Prisma
