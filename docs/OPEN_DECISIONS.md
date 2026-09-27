@@ -11,6 +11,11 @@ Terakhir diperbarui: **27 September 2026**
 
 ## D4. Tempat menyimpan hitungan rate limit login
 
+> **Diterapkan 27 Sep 2026 (opsi A, kartu *Fitur lupa password*)** —
+> `src/lib/auth/batas-percobaan.ts`, berlaku untuk masuk, daftar, dan lupa
+> password. Menunggu konfirmasi ketua tim; mudah diganti ke opsi B karena
+> hanya dipanggil dari `src/actions/auth.ts`.
+
 - **Konteks:** PRD §13 membatasi 5 percobaan/15 menit per IP untuk login dan lupa
   password, tapi skema PRD §9 tidak punya tabel untuk itu.
 - **Opsi A (rekomendasi):** `Map` di memori server. Sederhana; syaratnya PM2
@@ -35,6 +40,10 @@ Terakhir diperbarui: **27 September 2026**
 
 ## D6. Email saat development
 
+> **Diterapkan 27 Sep 2026** — `src/lib/email/` (mode `konsol` bila
+> `SMTP_HOST` kosong di luar production; production tanpa SMTP tidak pernah
+> mencetak isi email).
+
 - **Konteks:** tim tidak punya SMTP bersama saat development.
 - **Rekomendasi:** jika `SMTP_HOST` kosong dan `NODE_ENV !== 'production'`,
   `lib/email` mencetak isi email ke konsol alih-alih mengirim. Opsional: Mailpit
@@ -55,6 +64,34 @@ Terakhir diperbarui: **27 September 2026**
 - **Rekomendasi:** `jose` untuk JWT (jalan di proxy dan server), `bcryptjs` untuk
   hash password (algoritma bcrypt, tanpa kompilasi native yang sering gagal di
   Windows).
+
+## D11. Sesi lama tetap hidup setelah reset password
+
+- **Konteks:** sesi berupa JWT stateless 30 hari. Setelah password direset,
+  sesi di perangkat lain (mis. milik orang yang mencuri akun) tetap sah sampai
+  kedaluwarsa. Reset hanya membuang sesi di browser yang dipakai mereset.
+- **Opsi A (rekomendasi):** kolom `users.password_changed_at` (migration baru,
+  di luar skema PRD §9); `ambilPenggunaSaatIni()` menolak token dengan `iat`
+  lebih lama dari kolom itu. Murah, sekaligus bisa dipakai kartu *Ganti
+  password* (A5).
+- **Opsi B:** tabel sesi — memungkinkan "keluar dari semua perangkat", tetapi
+  lebih besar.
+- **Sementara:** diterima sebagai risiko sadar; dicatat di review keamanan.
+
+## D12. Rate limit hanya per IP
+
+- **Konteks (review keamanan PR #14):** PRD §13 membatasi per IP. Penyerang yang
+  bisa mengganti IP (botnet, atau header palsu bila app terbuka tanpa Nginx)
+  tetap bisa mencoba banyak password / memetakan email lewat `/daftar`.
+- **Sudah ada:** jeda 1 menit per akun untuk email reset; bcrypt memperlambat
+  tebakan; salah konfigurasi header tidak lagi mengunci semua pengunjung
+  (rate limit nonaktif + peringatan di log).
+- **Opsi A (rekomendasi, sebelum rilis):** tambah batas per email untuk
+  `/masuk` (mis. 10 gagal / 15 menit) — hati-hati: bisa dipakai mengunci akun
+  orang lain, jadi batasnya lebih longgar dari batas IP.
+- **Opsi B:** captcha setelah N gagal — butuh layanan pihak ketiga, di luar PRD §5.
+- Token reset di query string: mitigasinya log Nginx tanpa query
+  (`runbooks/deployment.md` §4).
 
 ## D9. Payment gateway Midtrans — *menyimpang dari PRD §21*
 

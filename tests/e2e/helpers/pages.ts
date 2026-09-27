@@ -16,7 +16,9 @@ export const HALAMAN_PUBLIK: Halaman[] = [
   { path: '/produk', judul: 'Daftar Produk', belumAda: true },
   { path: '/masuk', judul: 'Masuk' },
   { path: '/daftar', judul: 'Daftar' },
-  { path: '/lupa-password', judul: 'Lupa Password', belumAda: true },
+  { path: '/lupa-password', judul: 'Lupa Password' },
+  // Tanpa token menampilkan "Link tidak berlaku"; alur lengkap di lupa-password.spec.ts.
+  { path: '/reset-password', judul: 'Reset Password' },
   { path: '/kebijakan-privasi', judul: 'Kebijakan Privasi', belumAda: true },
   { path: '/syarat-ketentuan', judul: 'Syarat & Ketentuan', belumAda: true },
   { path: '/bantuan', judul: 'Bantuan', belumAda: true },

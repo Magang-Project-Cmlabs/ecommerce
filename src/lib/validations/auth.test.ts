@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { amanNext, daftarSchema, masukSchema } from './auth';
+import { amanNext, daftarSchema, lupaPasswordSchema, masukSchema, resetPasswordSchema } from './auth';
 
 const daftarSah = {
   name: 'Budi Santoso',
@@ -79,10 +79,49 @@ describe('amanNext', () => {
     'akun',
     '/masuk',
     '/daftar?next=/akun',
+    '/lupa-password',
+    '/reset-password?token=abc',
     '',
     null,
     undefined,
   ])('menolak %j (open redirect / halaman auth) dan mengembalikan null', (masuk) => {
     expect(amanNext(masuk as string | null | undefined)).toBeNull();
+  });
+});
+
+describe('lupaPasswordSchema', () => {
+  it('merapikan email', () => {
+    expect(lupaPasswordSchema.parse({ email: ' Budi@Contoh.ID ' })).toEqual({ email: 'budi@contoh.id' });
+  });
+
+  it('menolak email kosong atau tidak sah', () => {
+    expect(lupaPasswordSchema.safeParse({ email: '' }).success).toBe(false);
+    expect(lupaPasswordSchema.safeParse({ email: 'bukan-email' }).success).toBe(false);
+  });
+});
+
+describe('resetPasswordSchema', () => {
+  const token = 'a'.repeat(43);
+
+  it('menerima password baru yang sah dan hanya mengembalikan token + password', () => {
+    expect(resetPasswordSchema.parse({ token, password: 'rahasiaBaru1', confirmPassword: 'rahasiaBaru1' })).toEqual({
+      token,
+      password: 'rahasiaBaru1',
+    });
+  });
+
+  it('memakai aturan password yang sama dengan daftar', () => {
+    const r = resetPasswordSchema.safeParse({ token, password: 'abc', confirmPassword: 'abd' });
+    expect(r.success).toBe(false);
+    const galat = r.error!.issues.map((i) => i.message);
+    expect(galat).toContain('Password minimal 8 karakter');
+    expect(galat).toContain('Konfirmasi password tidak sama');
+    expect(resetPasswordSchema.safeParse({ token, password: 'é'.repeat(37), confirmPassword: 'é'.repeat(37) }).success).toBe(false);
+  });
+
+  it('menolak token yang bentuknya bukan buatan server', () => {
+    const r = resetPasswordSchema.safeParse({ token: 'x', password: 'rahasiaBaru1', confirmPassword: 'rahasiaBaru1' });
+    expect(r.success).toBe(false);
+    expect(r.error?.issues[0]?.path).toEqual(['token']);
   });
 });

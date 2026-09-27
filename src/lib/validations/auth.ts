@@ -11,6 +11,27 @@ const email = z
   .toLowerCase()
   .pipe(z.email({ error: 'Format email tidak sah' }).max(191, { error: 'Email terlalu panjang' }));
 
+/** Password baru (daftar & reset): min. 8 karakter (PRD §13), maks. 72 byte bcrypt. */
+const passwordBaru = z
+  .string({ error: 'Password wajib diisi' })
+  .min(8, { error: 'Password minimal 8 karakter' })
+  .refine((s) => new TextEncoder().encode(s).length <= BATAS_BCRYPT_BYTE, {
+    error: 'Password terlalu panjang (maksimal 72 byte)',
+  });
+
+const konfirmasiSama = (d: { password: string; confirmPassword: string }) => d.password === d.confirmPassword;
+
+const opsiKonfirmasi = {
+  error: 'Konfirmasi password tidak sama',
+  path: ['confirmPassword'],
+  // Zod 4 melewati cek objek bila ada kolom lain yang salah. Tetap jalankan
+  // selama kedua password berupa teks, agar semua galat tampil sekaligus.
+  when: ({ value }: { value: unknown }) => {
+    const v = value as { password?: unknown; confirmPassword?: unknown };
+    return typeof v.password === 'string' && typeof v.confirmPassword === 'string';
+  },
+};
+
 export const daftarSchema = z
   .object({
     name: z
@@ -27,25 +48,11 @@ export const daftarSchema = z
         error: 'Nomor telepon tidak sah, contoh 081234567890',
       })
       .transform((s) => s || null),
-    password: z
-      .string({ error: 'Password wajib diisi' })
-      .min(8, { error: 'Password minimal 8 karakter' })
-      .refine((s) => new TextEncoder().encode(s).length <= BATAS_BCRYPT_BYTE, {
-        error: 'Password terlalu panjang (maksimal 72 byte)',
-      }),
+    password: passwordBaru,
     confirmPassword: z.string({ error: 'Ulangi password' }),
     agree: z.literal('on', { error: 'Setujui Syarat & Ketentuan dan Kebijakan Privasi untuk mendaftar' }),
   })
-  .refine((d) => d.password === d.confirmPassword, {
-    error: 'Konfirmasi password tidak sama',
-    path: ['confirmPassword'],
-    // Zod 4 melewati cek objek bila ada kolom lain yang salah. Tetap jalankan
-    // selama kedua password berupa teks, agar semua galat tampil sekaligus.
-    when: ({ value }) => {
-      const v = value as { password?: unknown; confirmPassword?: unknown };
-      return typeof v.password === 'string' && typeof v.confirmPassword === 'string';
-    },
-  })
+  .refine(konfirmasiSama, opsiKonfirmasi)
   .transform(({ name, email, phone, password }) => ({ name, email, phone, password }));
 
 export const masukSchema = z.object({
@@ -56,6 +63,17 @@ export const masukSchema = z.object({
     .min(1, { error: 'Password wajib diisi' })
     .max(1000, { error: 'Password terlalu panjang' }),
 });
+
+export const lupaPasswordSchema = z.object({ email });
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string({ error: 'Link reset tidak sah' }).regex(/^[A-Za-z0-9_-]{43}$/, { error: 'Link reset tidak sah' }),
+    password: passwordBaru,
+    confirmPassword: z.string({ error: 'Ulangi password' }),
+  })
+  .refine(konfirmasiSama, opsiKonfirmasi)
+  .transform(({ token, password }) => ({ token, password }));
 
 export type DaftarInput = z.output<typeof daftarSchema>;
 export type MasukInput = z.output<typeof masukSchema>;
@@ -77,6 +95,6 @@ export function amanNext(nilai: string | null | undefined): string | null {
     return null;
   }
   if (url.origin !== DASAR) return null;
-  if (/^\/(masuk|daftar)(\/|$)/.test(url.pathname)) return null;
+  if (/^\/(masuk|daftar|lupa-password|reset-password)(\/|$)/.test(url.pathname)) return null;
   return url.pathname + url.search + url.hash;
 }

@@ -9,9 +9,9 @@ import path from 'node:path';
 
 export const ENV_FILE = path.join(__dirname, '..', '.env.e2e');
 
-export function loadEnv(): boolean {
-  if (!fs.existsSync(ENV_FILE)) return false;
-  const lines = fs.readFileSync(ENV_FILE, 'utf8').split(/\r?\n/);
+export function loadEnv(file = ENV_FILE): boolean {
+  if (!fs.existsSync(file)) return false;
+  const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed === '' || trimmed.startsWith('#')) continue;
