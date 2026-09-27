@@ -39,6 +39,10 @@ memori (OPEN_DECISIONS D4).
 ## 4. Nginx + HTTPS
 
 - Reverse proxy `server_name <domain>` → `http://127.0.0.1:3000`.
+- **Wajib** `proxy_set_header X-Real-IP $remote_addr;` di blok `location`.
+  Rate limit masuk/daftar/lupa password memakai header ini sebagai IP klien
+  (`src/lib/auth/ip.ts`); tanpa baris ini nilainya bisa dipalsukan klien atau
+  semua pengunjung terhitung satu IP.
 - `certbot --nginx -d <domain>`; cek perpanjangan otomatis dengan
   `certbot renew --dry-run`.
 - `client_max_body_size` cukup untuk upload gambar: 2 MB per berkas; kalau

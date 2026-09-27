@@ -42,10 +42,13 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.
 3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-4. A1: kartu *Fitur lupa password* termasuk rate limit masuk, lupa password,
-   **dan** daftar (D4). Pembatasan halaman sudah ada: halaman baru di rute
-   terlindungi wajib memanggil `requireUser`/`requireAdmin` (test akan merah
-   bila lupa).
+4. Auth A1 lengkap (daftar/masuk/keluar, batasi halaman, lupa password +
+   rate limit). Halaman baru di rute terlindungi wajib memanggil
+   `requireUser`/`requireAdmin` (test akan merah bila lupa). Email dikirim lewat
+   `kirimEmail()` di `src/lib/email/` — tanpa SMTP, isinya tercetak di konsol
+   `npm run dev`. Kartu A1 berikutnya: *Cek dan gabungkan pekerjaan anggota*.
+   Keputusan D4/D6 sudah diterapkan sesuai rekomendasi dan D11 (cabut sesi
+   setelah reset) menunggu konfirmasi ketua tim.
 5. A2–A5 kini bisa membaca data sungguhan lewat `src/lib/data/` +
    `src/lib/db.ts`. Gambar demo memakai `picsum.photos` (sudah diizinkan di
    `next.config.ts`).

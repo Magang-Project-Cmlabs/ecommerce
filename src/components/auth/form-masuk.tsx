@@ -38,6 +38,9 @@ export function FormMasuk({ next }: { next: string | null }) {
         required
         errors={state?.errors?.password}
       />
+      <Link href="/lupa-password" className="text-muted-foreground hover:text-foreground -my-2 inline-flex min-h-11 items-center justify-self-end text-sm underline underline-offset-4">
+        Lupa password?
+      </Link>
 
       <Button type="submit" size="lg" className="h-11 w-full" disabled={pending} aria-disabled={pending}>
         {pending ? 'Memproses…' : 'Masuk'}

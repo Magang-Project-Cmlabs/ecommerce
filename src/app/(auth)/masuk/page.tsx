@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HalamanMasuk({ searchParams }: PageProps<'/masuk'>) {
-  const { next } = await searchParams;
+  const { next, reset } = await searchParams;
   const tujuan = amanNext(typeof next === 'string' ? next : null);
   if (await ambilPenggunaSaatIni()) redirect(tujuan ?? '/');
 
@@ -26,7 +26,12 @@ export default async function HalamanMasuk({ searchParams }: PageProps<'/masuk'>
             {tujuan ? 'Masuk dulu untuk melanjutkan.' : 'Masuk untuk berbelanja dan melihat pesananmu.'}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid gap-4">
+          {reset === 'berhasil' && (
+            <p role="status" className="rounded-md border border-emerald-600/30 bg-emerald-600/10 px-3 py-2 text-sm">
+              Password berhasil diganti. Silakan masuk dengan password baru.
+            </p>
+          )}
           <FormMasuk next={tujuan} />
         </CardContent>
       </Card>

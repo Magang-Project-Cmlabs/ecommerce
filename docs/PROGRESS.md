@@ -15,6 +15,24 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Fitur lupa password
+- Branch / PR: `feat/lupa-password` → PR ke `develop`
+- Perubahan: `/lupa-password` dan `/reset-password?token=` (shadcn, keadaan
+  kirim/sukses/galat/link tidak berlaku, `noindex`, `referrer: no-referrer`),
+  Server Action `lupaPassword`/`resetPassword`, tautan "Lupa password?" dan
+  pesan sukses di `/masuk`. Token 32 byte acak, disimpan SHA-256, berlaku 1 jam,
+  sekali pakai (update bersyarat dalam transaksi), token lama dibuang saat
+  minta baru, jeda 1 menit per akun. Pencarian akun + kirim email lewat
+  `after()` agar respons seragam. Rate limit 5/15 menit per IP untuk masuk,
+  daftar, lupa password (D4 opsi A; masuk berhasil mengosongkan hitungan).
+  `src/lib/email/` (Nodemailer, konsol saat dev — D6), link dari `APP_URL`.
+- Keputusan baru: D11 (sesi lama belum dicabut setelah reset). Runbook deploy:
+  Nginx wajib `X-Real-IP`.
+- Verifikasi: unit 174 PASS · typecheck/lint/build PASS · e2e 42 lulus 0 gagal
+  PASS (10 skenario baru, termasuk dua tab memakai link yang sama) · uji mutasi
+  (syarat sekali pakai dihapus, pengosongan hitungan dihapus) tertangkap PASS ·
+  cek visual desktop di Chrome PASS
+
 ### 2026-09-27 — Kevin Ilham — A1 · Batasi halaman yang butuh login
 - Branch / PR: `feat/batasi-halaman-login` → PR #11 ke `develop`; tindak lanjut review di `fix/perketat-penjaga-halaman` (PR #13)
 - Perubahan: `src/proxy.ts` (cek optimistis cookie untuk `/checkout`, `/akun`,
