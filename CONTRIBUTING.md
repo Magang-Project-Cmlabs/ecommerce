@@ -69,13 +69,20 @@ fix: stok tidak kembali saat pesanan dibatalkan admin
 > | Penjaga | Kerjanya | Status |
 > |---|---|---|
 > | **Hook `pre-push`** (`.githooks/pre-push`) | Menolak `git push` ke `develop`/`main` dari laptop. Terpasang otomatis saat `npm install`. | **Aktif** |
-> | **CI** (`.github/workflows/ci.yml`) | Setiap PR menjalankan typecheck, lint, test, dan build. Hasilnya (✓/✗) terlihat di PR. | Belum aktif* |
-> | **Aturan review** (`.github/workflows/aturan-review.yml`) | PR digabung dengan < 2 persetujuan, push langsung, atau force push ke `develop`/`main` → tanda merah + komentar otomatis di PR. | Belum aktif* |
+> | **CI** (`.github/workflows/ci.yml`) | Setiap PR menjalankan typecheck, lint, test, dan build. Hasilnya (✓/✗) terlihat di PR. | **Aktif** |
+> | **Aturan review** (`.github/workflows/aturan-review.yml`) | PR digabung dengan < 2 persetujuan, push langsung, atau force push ke `develop`/`main` → tanda merah + komentar otomatis di PR. | **Aktif** |
 >
-> \* GitHub Actions tampaknya dimatikan di organisasi (tidak ada workflow yang
-> terdaftar maupun berjalan, dicek 27 Sep 2026). Berkasnya dibiarkan dan akan
-> jalan sendiri begitu Actions diaktifkan admin. Sampai saat itu, jalankan
-> `npm run typecheck` dan `npm run test` sendiri sebelum membuka PR.
+> GitHub Actions berjalan sejak 27 Sep 2026 (run pertama 13.44 WIB). Karena
+> paket Free, hasil CI **tidak bisa** dijadikan syarat merge (D10) — tombol
+> merge tetap bisa diklik walau CI merah. Maka:
+>
+> - Penggabung **wajib** melihat ✓ hijau di PR (atau `gh pr checks <nomor>`)
+>   sebelum merge. CI merah = jangan merge, perbaiki dulu.
+> - Tetap jalankan `npm run typecheck`, `npm run lint`, dan `npm run test`
+>   sendiri sebelum membuka PR; CI hanya jaring kedua. CI tidak menjalankan e2e
+>   (butuh MySQL) — e2e tetap tanggung jawab pembuat PR.
+> - Build di CI memakai `DATABASE_URL` placeholder (tanpa database). Kode yang
+>   membuka koneksi DB saat `next build` akan membuat CI merah.
 >
 > Hook bisa dilewati dalam keadaan darurat dengan izin A1:
 > `IZINKAN_PUSH_LANGSUNG=1 git push …` — dan pelanggarannya tetap tercatat oleh
