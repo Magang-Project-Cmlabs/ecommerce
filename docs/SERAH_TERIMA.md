@@ -16,7 +16,7 @@ Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
 
 | Hal | Kondisi |
 |---|---|
-| Branch aktif | `main` (modul pembayaran sudah digabung; `develop` tertinggal) |
+| Branch aktif | `main`; `develop` sama dengan `main` (modul pembayaran sudah digabung) |
 | Perubahan belum di-commit | Tidak ada; branch di-push ke `kvnlhm/ecommerce` (repo sementara) |
 | Server lokal | Tidak dijalankan |
 | Database | Belum dibuat |

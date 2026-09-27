@@ -16,7 +16,7 @@ Format entri:
 ---
 
 ### 2026-09-27 — Modul payment gateway Midtrans (sandbox)
-- Branch / PR: `feat/payment-midtrans`, digabung langsung ke `main` di `kvnlhm/ecommerce` (repo sementara, tanpa PR atas permintaan pemilik proyek); `develop` belum menyusul
+- Branch / PR: `feat/payment-midtrans`, digabung langsung ke `main` di `kvnlhm/ecommerce` (repo sementara, tanpa PR atas permintaan pemilik proyek); `develop` lalu disamakan dengan `main`
 - Perubahan: `src/lib/payment/` — adapter Midtrans Snap via `fetch` (buat sesi,
   ambil status), verifikasi `signature_key` SHA512 waktu-konstan, pemetaan
   `transaction_status` → aksi pesanan, handler webhook dengan dependensi
