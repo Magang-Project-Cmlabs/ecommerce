@@ -5,9 +5,9 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { MASA_SESI_DETIK, bacaTokenSesi, buatTokenSesi, kunciDariRahasia, type IsiSesi } from './token';
+import { MASA_SESI_DETIK, NAMA_COOKIE_SESI, bacaTokenSesi, buatTokenSesi, kunciDariRahasia, type IsiSesi } from './token';
 
-export const NAMA_COOKIE_SESI = 'tokokita_sesi';
+export { NAMA_COOKIE_SESI };
 
 const kunci = () => kunciDariRahasia(process.env.AUTH_SECRET);
 

@@ -15,6 +15,19 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Batasi halaman yang butuh login
+- Branch / PR: `feat/batasi-halaman-login` → PR ke `develop`
+- Perubahan: `src/proxy.ts` (cek optimistis cookie untuk `/checkout`, `/akun`,
+  `/wishlist`, `/admin` → `/masuk?next=`), `src/lib/auth/rute.ts` (daftar rute,
+  murni), `src/lib/auth/akses.ts` (`requireUser`/`requireAdmin` lewat
+  `ambilPenggunaSaatIni()`; selain admin → 404), halaman sementara `/akun`,
+  `/checkout`, `/wishlist`, `/admin` dengan penjaga terpasang, test statis yang
+  mewajibkan setiap `page.tsx` terlindungi memanggil penjaga + matcher proxy
+  sinkron dengan daftar rute.
+- Verifikasi: unit 137 PASS · uji mutasi jaring pengaman (tanpa penjaga,
+  admin pakai requireUser, penjaga hanya di komentar/string) semua tertangkap
+  PASS · typecheck/lint/build PASS · e2e 26 lulus 0 gagal PASS
+
 ### 2026-09-27 — Kevin Ilham — A1 · Fitur daftar, masuk, dan keluar akun
 - Branch / PR: `feat/auth-daftar-masuk-keluar` → PR ke `develop`
 - Perubahan: `/daftar` dan `/masuk` (shadcn, keadaan loading/galat per kolom/

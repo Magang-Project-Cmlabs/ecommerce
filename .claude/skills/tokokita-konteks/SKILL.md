@@ -44,6 +44,7 @@ sudah jadi dan apa yang sedang dikerjakan orang lain.
 | Skema Zod | `src/lib/validations/<domain>.ts` — dipakai form **dan** action |
 | Hitungan murni (ongkir, promo, transisi status) | `src/lib/<domain>.ts`, tanpa Prisma, mudah di-unit-test |
 | Label, tarif kurir, batas angka | `src/lib/constants.ts` |
+| Halaman di `/checkout`, `/akun`, `/wishlist`, `/admin` | panggil `await requireUser(path)` / `await requireAdmin(path)` di baris awal (`src/lib/auth/akses.ts`) |
 | Format Rp dan tanggal | `src/lib/format.ts` |
 | Komponen shadcn | `src/components/ui/` (hasil `npx shadcn add`) |
 | Komponen fitur | `src/components/{layout,product,cart,checkout,admin}/` |
