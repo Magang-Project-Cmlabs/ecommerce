@@ -15,6 +15,17 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — Dokumen: GitHub Actions ternyata aktif
+- Branch / PR: `docs/actions-aktif` → PR ke `develop`
+- Temuan: Actions sudah berjalan sejak 27 Sep 2026 13.44 WIB (29 run CI, 22 run
+  Aturan review), bukan mati seperti dicatat sebelumnya. CI merah sejak PR #10
+  (`next build` gagal: `DATABASE_URL` kosong di CI) dan tidak terlihat karena
+  status CI tidak dicek sebelum merge PR #10, #11, #13; diperbaiki di PR #14
+  (placeholder `DATABASE_URL` di `ci.yml`).
+- Perubahan: `CONTRIBUTING.md` bagian 3 (CI & aturan review **Aktif**, wajib cek
+  ✓ sebelum merge), `SERAH_TERIMA.md`, D10, `PROJECT_STATUS.md`.
+- Verifikasi: hanya dokumen; CI PR ini dicek sebelum merge.
+
 ### 2026-09-27 — Kevin Ilham — A1 · Fitur lupa password
 - Branch / PR: `feat/lupa-password` → PR ke `develop`
 - Perubahan: `/lupa-password` dan `/reset-password?token=` (shadcn, keadaan

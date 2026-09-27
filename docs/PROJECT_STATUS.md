@@ -34,6 +34,7 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 | `npx prisma validate` | PASS | 27 Sep 2026, 15 tabel; `migrate status` sinkron (2 migration) |
 | `npm run build` | PASS | 27 Sep 2026 |
 | `npm run dev` | PASS | 27 Sep 2026, beranda 200, `lang="id"` |
+| CI GitHub Actions | PASS | 27 Sep 2026, `develop` 79934a1 (typecheck, lint, test, build). Sempat merah sejak PR #10 sampai diperbaiki di PR #14 |
 | `npm run e2e` | PASS | 27 Sep 2026: 42 lulus (alur akun, pembatasan halaman, lupa/reset password, rate limit, navigasi/aksesibilitas/360 px), 22 dilewati karena halamannya belum ada |
 | `npm run db:seed` | PASS | 27 Sep 2026: 23 cek aturan PRD §10 = 0 pelanggaran, hasil identik saat diulang |
 | `npm run db:reset` | PASS | 27 Sep 2026, dengan persetujuan pemilik proyek: migrate reset → generate → seed, data lengkap, cek aturan 0 pelanggaran |
