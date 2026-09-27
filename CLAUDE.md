@@ -16,6 +16,13 @@ localStorage) · React Hook Form + Zod · bcrypt + JWT di cookie httpOnly ·
 Nodemailer · penyimpanan gambar lokal (dev) / S3-compatible (prod) · date-fns `id` ·
 Vitest (unit test) · Midtrans Snap sandbox lewat `fetch` (tanpa SDK, D9).
 
+Versi terkunci: Next.js 16.3.6, React 19.2, Prisma 7.10.0 (CLI, client, dan
+`@prisma/adapter-mariadb` harus sama persis), Tailwind 4, shadcn (base Radix,
+preset Nova). **Next.js 16 dan Prisma 7 punya breaking changes** dibanding
+pengetahuan umum: sebelum menulis kode Next.js baca panduan di
+`node_modules/next/dist/docs/` (blok aturan di `AGENTS.md`), dan untuk Prisma
+pakai skill `prisma-cli`, `prisma-client-api`, `prisma-database-setup`.
+
 Jangan menambah ORM, library UI, state manager, atau library auth lain. Butuh
 sesuatu di luar daftar ini? Tulis dulu di `docs/OPEN_DECISIONS.md`.
 
@@ -34,13 +41,13 @@ tests/e2e/     Playwright (lihat tests/e2e/README.md)
 
 ## Perintah
 
-Next.js belum di-scaffold (kartu A1 · Hari 1). `package.json` sementara hanya
-berisi `test` (Vitest) dan `typecheck` untuk modul `src/lib/payment/`. Cara
-scaffold dan menggabung `package.json`/`tsconfig.json`:
-[`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md). Skrip yang
-disepakati: `dev` `build` `start` `lint` `typecheck` `test` `db:migrate`
-`db:seed` `db:reset` `db:studio` `e2e`. Jangan menulis perintah yang belum ada di
-`package.json` sebagai PASS.
+Sudah di-scaffold (27 Sep 2026; catatan di
+[`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md)). Skrip:
+`dev` `build` `start` `lint` `typecheck` (= `next typegen` + `tsc`) `test`
+`test:sandbox` `db:generate` `db:migrate` `db:seed` `db:reset` `db:studio`
+`e2e` `e2e:report`. Skema Prisma masih kosong (kartu *A1 · Buat database*), jadi
+perintah `db:*` belum bermakna. `db:reset` menghapus data — minta persetujuan
+user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
 
 ## Aturan keras
 

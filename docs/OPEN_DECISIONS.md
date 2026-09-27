@@ -5,26 +5,9 @@ butir punya rekomendasi; yang memutuskan adalah ketua tim (A1) kecuali disebut
 lain. Setelah diputuskan, pindahkan ke bagian **Sudah diputuskan** beserta
 tanggalnya.
 
-Terakhir diperbarui: **25 September 2026**
+Terakhir diperbarui: **27 September 2026**
 
 ---
-
-## D1. Versi Next.js — *perlu sebelum scaffold*
-
-- **Konteks:** PRD §12 menyebut `proxy.ts`. Itu nama berkas di Next.js 16; di
-  Next.js 15 namanya `middleware.ts`.
-- **Rekomendasi:** pakai Next.js versi stabil terbaru (16.x) agar sesuai PRD, lalu
-  kunci versinya di `package.json`. Kalau tim memilih 15, ganti semua sebutan
-  `proxy.ts` menjadi `middleware.ts` di PRD dan `CLAUDE.md`.
-
-## D2. Versi Prisma dan driver MySQL — *perlu sebelum scaffold*
-
-- **Konteks:** Prisma versi baru mengubah cara konfigurasi (berkas
-  `prisma.config.ts`, driver adapter, lokasi pengaturan seed). Panduan lama di
-  internet bisa tidak cocok.
-- **Rekomendasi:** pakai versi stabil terbaru, ikuti dokumentasi resmi Prisma
-  untuk MySQL pada versi itu, kunci versinya, dan catat perintah yang benar di
-  `runbooks/database-operations.md`.
 
 ## D4. Tempat menyimpan hitungan rate limit login
 
@@ -97,6 +80,8 @@ Terakhir diperbarui: **25 September 2026**
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 27 Sep 2026 | **D1 — Next.js 16.3.6** (sesuai `proxy.ts` di PRD), dikunci persis. | Scaffold, `runbooks/local-setup.md` |
+| 27 Sep 2026 | **D2 — Prisma 7.10.0** (`prisma`, `@prisma/client`, `@prisma/adapter-mariadb` sama persis), konfigurasi di `prisma7.config.ts`, client di `src/generated/prisma/`. Tag `latest` CLI menunjuk RC 8.0 sehingga tidak dipakai. | Scaffold, dokumentasi resmi Prisma MySQL |
 | 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan penjaga gratis: hook `pre-push` (aktif), CI Actions dan workflow pendeteksi pelanggaran (disiapkan, belum aktif karena Actions tampaknya dimatikan di organisasi). Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Pengecualian: pemilik proyek (`kvnlhm`) boleh merge tanpa persetujuan anggota lain. Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
 | 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.ts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |

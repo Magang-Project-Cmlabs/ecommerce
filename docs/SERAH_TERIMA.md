@@ -24,6 +24,10 @@ Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
 
 ## Yang sedang dikerjakan
 
+Scaffold Next.js selesai di branch `chore/scaffold-nextjs` (PR ke `develop`,
+digabung setelah PR #4). Setelah menarik `develop`, jalankan `npm install`.
+
+
 Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplikasi
 (menunggu scaffold, tabel `orders`, dan `ubahStatus()`). Langkahnya di
 `runbooks/payment-midtrans.md` bagian 4.
@@ -37,11 +41,13 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
    [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.
-3. Jawab keputusan D1, D2, dan D9 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-4. A1 menjalankan [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian
-   "Scaffold proyek" di branch `chore/scaffold-nextjs`, lalu PR ke `develop`.
+3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
+4. A1: kartu *Buat database dan isi data contoh* — 15 tabel PRD §9 di
+   `prisma/schema.prisma`, migration pertama, seed PRD §20 (pasang `tsx`,
+   atur `migrations.seed` di `prisma7.config.ts`).
 
 ## Peringatan untuk yang melanjutkan
 
-- Jangan menjalankan `create-next-app` langsung di folder ini (akan menolak);
-  ikuti runbook.
+- `npm run db:reset` menghapus seluruh isi database lokal; AI agent wajib
+  meminta persetujuan dulu.
+- `src/generated/` dibuat otomatis (`postinstall`), jangan diedit atau di-commit.

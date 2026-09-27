@@ -33,7 +33,7 @@ Hentikan di kegagalan pertama, perbaiki, ulangi dari awal.
 | 2 | `npm run lint` | semua perubahan |
 | 3 | `npm run test` | perubahan di `src/lib/`, `src/actions/` |
 | 4 | `npx prisma validate` | perubahan `schema.prisma` |
-| 5 | `npm run db:reset` | perubahan skema atau seed (database lokal saja) |
+| 5 | `npm run db:reset` | perubahan skema atau seed (database lokal saja). **Minta persetujuan user dulu** — menghapus data; Prisma 7 memblokirnya bila dijalankan agent tanpa izin |
 | 6 | `npm run build` | sebelum PR |
 | 7 | `npm run e2e` | perubahan yang terlihat pengguna, auth, checkout |
 
