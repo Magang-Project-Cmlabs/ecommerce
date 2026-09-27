@@ -9,15 +9,16 @@ Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
 
 ---
 
-**Tanggal:** 25 September 2026
-**Oleh:** persiapan konfigurasi kerja
+**Tanggal:** 27 September 2026
+**Oleh:** persiapan konfigurasi kerja + modul payment gateway
 
 ## Keadaan saat berhenti
 
 | Hal | Kondisi |
 |---|---|
-| Branch aktif | `main`; `develop` sama dengan `main` (modul pembayaran sudah digabung) |
-| Perubahan belum di-commit | Tidak ada; branch di-push ke `kvnlhm/ecommerce` (repo sementara) |
+| Repositori | `https://github.com/Magang-Project-Cmlabs/ecommerce` (private). Repo sementara `kvnlhm/ecommerce` tidak dipakai lagi. |
+| Branch | `main` dan `develop` berisi commit yang sama (konfigurasi kerja + modul pembayaran) |
+| Perubahan belum di-commit | Tidak ada |
 | Server lokal | Tidak dijalankan |
 | Database | Belum dibuat |
 
@@ -29,8 +30,10 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 
 ## Langkah berikutnya
 
-1. Jawab keputusan D1, D2, dan D9 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-2. A1 menjalankan [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian
+1. Admin organisasi: jadikan `develop` default branch dan proteksi `main` +
+   `develop` (wajib PR, 2 persetujuan) — lihat [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
+2. Jawab keputusan D1, D2, dan D9 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
+3. A1 menjalankan [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian
    "Scaffold proyek" di branch `chore/scaffold-nextjs`, lalu PR ke `develop`.
 
 ## Peringatan untuk yang melanjutkan
