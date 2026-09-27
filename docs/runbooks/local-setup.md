@@ -46,11 +46,11 @@ tersalin karena repo ini sudah punya versi sendiri yang lebih lengkap.
 
 | Berkas | Cara menggabung |
 |---|---|
-| `package.json` | Ambil milik `_scaffold` sebagai dasar, lalu tambahkan `devDependencies` `vitest` dari versi repo dan skrip di A3. |
+| `package.json` | Ambil milik `_scaffold` sebagai dasar, lalu tambahkan `devDependencies` `vitest` dari versi repo, skrip `prepare` (memasang hook `pre-push`), `test:sandbox`, dan skrip di A3. |
 | `tsconfig.json` | Ambil milik `_scaffold` (punya plugin `next`, `jsx`, `include` untuk `.tsx`), lalu tambahkan `"noUncheckedIndexedAccess": true`. |
 | `package-lock.json` | Hapus, biarkan `npm install` membuat ulang. |
 
-`vitest.config.ts` dan `src/lib/payment/` tetap dipakai apa adanya. Lalu:
+`vitest.config.ts`, `src/lib/payment/`, `.github/`, dan `.githooks/` tetap dipakai apa adanya. Lalu:
 
 ```bash
 rm -rf _scaffold

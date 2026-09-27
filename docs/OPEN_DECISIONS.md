@@ -91,29 +91,13 @@ Terakhir diperbarui: **25 September 2026**
 - **Perlu disetujui:** ketua tim (A1) dan pembimbing magang, karena mengubah
   cakupan PRD.
 
-## D10. Aturan review tidak bisa dipaksakan GitHub
-
-- **Konteks:** organisasi `Magang-Project-Cmlabs` memakai paket **Free** dan
-  repo `ecommerce` **private**. GitHub menolak proteksi branch dan ruleset
-  untuk kombinasi ini ("Upgrade to GitHub Pro or make this repository public",
-  dicek 27 Sep 2026). PR #1 buktinya: ter-merge tanpa persetujuan reviewer.
-- **Opsi A (rekomendasi):** tetap private, aturan dijaga disiplin tim — hanya
-  A1 yang menekan *Merge* setelah 2 persetujuan (sudah ditulis di
-  `CONTRIBUTING.md`). Gratis, dokumen tim tetap tertutup.
-- **Opsi B:** upgrade organisasi ke GitHub Team (berbayar per anggota; admin
-  dapat mengecek apakah program GitHub Education bisa menggratiskannya).
-- **Opsi C:** jadikan repo public. Proteksi gratis, tetapi PRD dan rencana tim
-  terbuka untuk umum.
-- **Terlepas dari opsi apa pun**, admin (`azridalimunthe7`) sebaiknya menjadikan
-  `develop` default branch — ini tersedia di paket Free.
-- **Yang memutuskan:** admin organisasi bersama ketua tim.
-
 ---
 
 ## Sudah diputuskan
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan penjaga gratis: hook `pre-push` (aktif), CI Actions dan workflow pendeteksi pelanggaran (disiapkan, belum aktif karena Actions tampaknya dimatikan di organisasi). Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Pengecualian: pemilik proyek (`kvnlhm`) boleh merge tanpa persetujuan anggota lain. Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
 | 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.ts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |
 | — | Alur Git: branch fitur → `develop` → `main`, PR 2 reviewer | Presentasi slide 15 |

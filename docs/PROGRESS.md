@@ -15,14 +15,27 @@ Format entri:
 
 ---
 
-### 2026-09-27 — Aturan review tanpa proteksi branch
-- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR ke `develop`
+### 2026-09-27 — Aturan review di GitHub Free (D10)
+- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR #2 ke `develop`
 - Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset
   ditolak GitHub (HTTP 403); akun `kvnlhm` hanya Write (admin: `azridalimunthe7`);
   PR #1 ter-merge tanpa persetujuan.
-- Perubahan: `CONTRIBUTING.md` (aturan merge manual), OPEN_DECISIONS D10,
-  `SERAH_TERIMA.md`, runbook local-setup.
-- Verifikasi: hanya dokumen; tautan diperiksa.
+- Keputusan: tetap Free + private (D10). Pemilik proyek (`kvnlhm`) boleh merge
+  tanpa persetujuan anggota lain (`PENGGABUNG_BEBAS_REVIEW`). Aturan dijaga disiplin tim dan tiga
+  penjaga gratis: CI (`.github/workflows/ci.yml`), pendeteksi pelanggaran
+  (`aturan-review.yml` + `.github/scripts/cek-aturan-review.mjs`), hook
+  `.githooks/pre-push` (dipasang `npm install` lewat skrip `prepare`).
+- Verifikasi:
+  - Pendeteksi, uji lokal ke API GitHub sungguhan (DRY_RUN): PR #1 → gagal
+    0/2 persetujuan; merge commit PR #1 → lolos; push langsung `e098660` →
+    gagal; force push → gagal; PR ditutup tanpa merge → lolos; token salah →
+    exit 2; 6 kasus hitung persetujuan — PASS
+  - Hook `pre-push`: 13 kasus simulasi + `git push --dry-run` sungguhan ke
+    `develop` ditolak dan ke branch lain lolos — PASS
+  - Workflow di GitHub Actions: NOT_RUN — tidak ada workflow terdaftar/berjalan
+    setelah push ke PR #2 (0 workflow, 0 run); kemungkinan Actions dimatikan di
+    organisasi, hanya admin yang bisa memastikan. Tidak menghalangi: hook dan
+    aturan manual tetap berlaku.
 
 ### 2026-09-27 — Pindah ke repo organisasi
 - Branch / PR: `docs/serah-terima-repo-organisasi` → PR ke `develop`

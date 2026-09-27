@@ -31,11 +31,14 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 ## Langkah berikutnya
 
 1. Admin organisasi (`azridalimunthe7`): jadikan `develop` default branch.
-   Proteksi branch tidak tersedia di paket Free untuk repo private — putuskan
-   D10 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md); sementara itu aturan review
-   dijaga manual sesuai [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
-2. Jawab keputusan D1, D2, dan D9 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-3. A1 menjalankan [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian
+   Proteksi branch tidak dipakai (paket Free, D10); aturan review dijaga
+   disiplin tim + hook `pre-push` (CI dan pendeteksi disiapkan, belum aktif karena
+   GitHub Actions tampaknya mati di organisasi), lihat
+   [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
+2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
+   terpasang.
+3. Jawab keputusan D1, D2, dan D9 di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
+4. A1 menjalankan [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian
    "Scaffold proyek" di branch `chore/scaffold-nextjs`, lalu PR ke `develop`.
 
 ## Peringatan untuk yang melanjutkan
