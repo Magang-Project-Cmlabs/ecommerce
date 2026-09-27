@@ -15,6 +15,16 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Cek dan gabungkan pekerjaan anggota (mulai)
+- Branch / PR: `docs/review-pr-anggota` → PR ke `develop`
+- Keadaan: belum ada PR maupun branch dari anggota; semua kartu A2–A5 masih
+  *Rencana*. Temuan: A3 (`rizkikusnadi03`) dan A5 (`fikarnugraha18`) belum punya
+  akses repo — dicatat sebagai blocker, butuh admin `azridalimunthe7`.
+- Perubahan: skill `tokokita-review-pr` (prosedur cek → gerbang lokal → aturan
+  keras → review GitHub → merge dengan CI hijau + 2 persetujuan), didaftarkan di
+  `CLAUDE.md`; blocker akses di `PROJECT_STATUS.md` dan `SERAH_TERIMA.md`.
+- Verifikasi: hanya dokumen/skill; CI PR dicek sebelum merge.
+
 ### 2026-09-27 — Kevin Ilham — Dokumen: GitHub Actions ternyata aktif
 - Branch / PR: `docs/actions-aktif` → PR ke `develop`
 - Temuan: Actions sudah berjalan sejak 27 Sep 2026 13.44 WIB (29 run CI, 22 run
