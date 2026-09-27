@@ -15,6 +15,10 @@ import { urlMasuk } from './rute';
  * Pengguna yang sedang masuk dan akunnya masih ada di database. Selain itu
  * redirect ke /masuk?next=<pathSaatIni>. Memakai ambilPenggunaSaatIni(), bukan
  * isi token saja, karena JWT tetap sah sampai kedaluwarsa walau akun dihapus.
+ *
+ * Query string tidak ikut di next (halaman hanya tahu path statisnya). Jalur
+ * normal tidak terdampak: tamu sudah dialihkan proxy.ts beserta query-nya;
+ * redirect ini hanya terjadi bila cookie sah tetapi akunnya sudah tidak ada.
  */
 export async function requireUser(pathSaatIni: string) {
   const pengguna = await ambilPenggunaSaatIni();

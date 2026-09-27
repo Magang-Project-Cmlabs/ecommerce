@@ -3,9 +3,20 @@
 
 export const RUTE_WAJIB_MASUK = ['/checkout', '/akun', '/wishlist', '/admin'] as const;
 
-/** True untuk rute terlindungi beserta sub-halamannya; "/akunku" tidak ikut. */
+/**
+ * True untuk rute terlindungi beserta sub-halamannya; "/akunku" tidak ikut.
+ * Path dinormalisasi (percent-decode + huruf kecil) supaya "/ADMIN" atau
+ * "/%61dmin" tidak lolos dari proxy. Percent-encoding rusak dianggap apa adanya.
+ */
 export function butuhMasuk(pathname: string): boolean {
-  return RUTE_WAJIB_MASUK.some((r) => pathname === r || pathname.startsWith(`${r}/`));
+  let p = pathname;
+  try {
+    p = decodeURIComponent(pathname);
+  } catch {
+    // biarkan apa adanya
+  }
+  p = p.toLowerCase();
+  return RUTE_WAJIB_MASUK.some((r) => p === r || p.startsWith(`${r}/`));
 }
 
 /** Alamat halaman masuk yang membawa halaman asal sebagai ?next=. */

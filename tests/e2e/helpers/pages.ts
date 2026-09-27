@@ -41,6 +41,7 @@ export const HALAMAN_ADMIN: Halaman[] = [
 export const HALAMAN_TERLINDUNGI: Halaman[] = [
   { path: '/checkout', judul: 'Checkout' },
   { path: '/akun', judul: 'Akun' },
+  // Halamannya belum ada, tetapi proxy.ts sudah mengalihkan seluruh prefix /akun.
   { path: '/akun/pesanan', judul: 'Pesanan Saya' },
   { path: '/wishlist', judul: 'Wishlist' },
   { path: '/admin', judul: 'Admin' },
