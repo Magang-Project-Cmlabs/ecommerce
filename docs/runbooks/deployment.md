@@ -41,8 +41,22 @@ memori (OPEN_DECISIONS D4).
 - Reverse proxy `server_name <domain>` → `http://127.0.0.1:3000`.
 - **Wajib** `proxy_set_header X-Real-IP $remote_addr;` di blok `location`.
   Rate limit masuk/daftar/lupa password memakai header ini sebagai IP klien
-  (`src/lib/auth/ip.ts`); tanpa baris ini nilainya bisa dipalsukan klien atau
-  semua pengunjung terhitung satu IP.
+  (`src/lib/auth/ip.ts`); tanpa baris ini nilainya bisa dipalsukan klien.
+  Bila header kosong sama sekali, rate limit **nonaktif** dan log PM2 berisi
+  `[rate limit] IP klien tidak diketahui` — anggap itu galat konfigurasi.
+  Port 3000 hanya boleh terbuka untuk `127.0.0.1` (bukan publik), supaya semua
+  request lewat Nginx.
+- Cek setelah deploy: `curl -s -o /dev/null -w "%{http_code}" -H "X-Real-IP: 1.2.3.4" https://<domain>/masuk`
+  lalu pastikan log aplikasi tidak pernah memakai `1.2.3.4` (Nginx harus menimpanya).
+- **Access log tanpa query string.** Link reset berbentuk
+  `/reset-password?token=…` (berlaku 1 jam, sekali pakai); jangan sampai token
+  tercatat di log (sejalan dengan D7). Pakai format log dengan `$uri`, bukan
+  `$request`/`$request_uri`:
+
+  ```nginx
+  log_format tanpa_query '$remote_addr - [$time_local] "$request_method $uri" $status $body_bytes_sent "$http_user_agent"';
+  access_log /var/log/nginx/tokokita.access.log tanpa_query;
+  ```
 - `certbot --nginx -d <domain>`; cek perpanjangan otomatis dengan
   `certbot renew --dry-run`.
 - `client_max_body_size` cukup untuk upload gambar: 2 MB per berkas; kalau

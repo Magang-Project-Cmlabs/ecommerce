@@ -38,9 +38,23 @@ const teks = (formData: FormData, nama: string) => {
   return typeof v === 'string' ? v : undefined;
 };
 
-/** Catat satu percobaan untuk aksi ini dari IP peminta. */
+let sudahPeringatkanIp = false;
+
+/**
+ * Catat satu percobaan untuk aksi ini dari IP peminta. IP tidak diketahui
+ * (header proxy tidak ada) = tidak dibatasi + peringatan di log, supaya salah
+ * konfigurasi Nginx tidak mengunci semua pengunjung sekaligus.
+ */
 async function catatPercobaan(aksi: 'masuk' | 'daftar' | 'lupa-password') {
-  const kunci = `${aksi}:${ipKlien(await headers())}`;
+  const ip = ipKlien(await headers());
+  if (!ip) {
+    if (!sudahPeringatkanIp) {
+      sudahPeringatkanIp = true;
+      console.error('[rate limit] IP klien tidak diketahui (X-Real-IP kosong) — batas percobaan NONAKTIF. Periksa konfigurasi Nginx (docs/runbooks/deployment.md).');
+    }
+    return { kunci: null, boleh: true as const };
+  }
+  const kunci = `${aksi}:${ip}`;
   return { kunci, ...batasAuth.catat(kunci) };
 }
 
@@ -93,7 +107,7 @@ export async function masuk(_: StateFormAkun, formData: FormData): Promise<State
     akun && !akun.deletedAt ? await cocokkanPassword(password, akun.passwordHash) : await cocokkanPasswordPalsu(password);
   if (!akun || akun.deletedAt || !cocok) return { message: GAGAL_MASUK, values };
 
-  batasAuth.hapus(batas.kunci); // pengguna sah tidak ikut terkunci oleh salah ketiknya sendiri
+  if (batas.kunci) batasAuth.hapus(batas.kunci); // pengguna sah tidak ikut terkunci oleh salah ketiknya sendiri
   await simpanSesi({ userId: akun.id, role: akun.role });
   redirect(amanNext(teks(formData, 'next')) ?? '/');
 }

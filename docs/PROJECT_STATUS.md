@@ -29,7 +29,7 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 |---|---|---|
 | `npm run typecheck` | PASS | 27 Sep 2026, setelah `npm ci` bersih |
 | `npm run lint` | PASS | 27 Sep 2026 |
-| `npm run test` | PASS | 27 Sep 2026, 174 unit test (pembayaran, akun, rute & penjaga halaman, rate limit, token reset, email) |
+| `npm run test` | PASS | 27 Sep 2026, 175 unit test (pembayaran, akun, rute & penjaga halaman, rate limit, token reset, email) |
 | `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
 | `npx prisma validate` | PASS | 27 Sep 2026, 15 tabel; `migrate status` sinkron (2 migration) |
 | `npm run build` | PASS | 27 Sep 2026 |

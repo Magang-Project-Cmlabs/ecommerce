@@ -13,6 +13,11 @@ describe('modeKirim (OPEN_DECISIONS D6)', () => {
     expect(modeKirim({ NODE_ENV: 'test' })).toBe('konsol');
   });
 
+  it('lingkungan lain (staging, NODE_ENV kosong) tanpa SMTP tidak mencetak isi email', () => {
+    expect(modeKirim({ NODE_ENV: 'staging' })).toBe('tidak-dikonfigurasi');
+    expect(modeKirim({})).toBe('tidak-dikonfigurasi');
+  });
+
   it('production tanpa SMTP tidak pernah mencetak isi email (berisi link rahasia) ke log', () => {
     expect(modeKirim({ SMTP_HOST: '  ', NODE_ENV: 'production' })).toBe('tidak-dikonfigurasi');
   });

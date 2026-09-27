@@ -78,6 +78,21 @@ Terakhir diperbarui: **27 September 2026**
   lebih besar.
 - **Sementara:** diterima sebagai risiko sadar; dicatat di review keamanan.
 
+## D12. Rate limit hanya per IP
+
+- **Konteks (review keamanan PR #14):** PRD §13 membatasi per IP. Penyerang yang
+  bisa mengganti IP (botnet, atau header palsu bila app terbuka tanpa Nginx)
+  tetap bisa mencoba banyak password / memetakan email lewat `/daftar`.
+- **Sudah ada:** jeda 1 menit per akun untuk email reset; bcrypt memperlambat
+  tebakan; salah konfigurasi header tidak lagi mengunci semua pengunjung
+  (rate limit nonaktif + peringatan di log).
+- **Opsi A (rekomendasi, sebelum rilis):** tambah batas per email untuk
+  `/masuk` (mis. 10 gagal / 15 menit) — hati-hati: bisa dipakai mengunci akun
+  orang lain, jadi batasnya lebih longgar dari batas IP.
+- **Opsi B:** captcha setelah N gagal — butuh layanan pihak ketiga, di luar PRD §5.
+- Token reset di query string: mitigasinya log Nginx tanpa query
+  (`runbooks/deployment.md` §4).
+
 ## D9. Payment gateway Midtrans — *menyimpang dari PRD §21*
 
 - **Konteks:** PRD §21 dan slide 19 menaruh payment gateway di luar cakupan

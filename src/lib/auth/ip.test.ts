@@ -13,11 +13,12 @@ describe('ipKlien', () => {
     expect(ipKlien(h({ 'x-forwarded-for': '::1' }))).toBe('::1');
   });
 
-  it('tanpa header apa pun tetap mengembalikan kunci yang stabil', () => {
-    expect(ipKlien(h({}))).toBe('tak-dikenal');
+  it('tanpa header apa pun mengembalikan null — BUKAN kunci bersama yang bisa mengunci semua pengunjung', () => {
+    expect(ipKlien(h({}))).toBeNull();
+    expect(ipKlien(h({ 'x-real-ip': '  ', 'x-forwarded-for': ' , ' }))).toBeNull();
   });
 
   it('nilai aneh dipotong agar tidak membengkakkan kunci di memori', () => {
-    expect(ipKlien(h({ 'x-real-ip': 'x'.repeat(500) })).length).toBeLessThanOrEqual(64);
+    expect(ipKlien(h({ 'x-real-ip': 'x'.repeat(500) }))!.length).toBeLessThanOrEqual(64);
   });
 });

@@ -26,9 +26,12 @@ Format entri:
   `after()` agar respons seragam. Rate limit 5/15 menit per IP untuk masuk,
   daftar, lupa password (D4 opsi A; masuk berhasil mengosongkan hitungan).
   `src/lib/email/` (Nodemailer, konsol saat dev — D6), link dari `APP_URL`.
-- Keputusan baru: D11 (sesi lama belum dicabut setelah reset). Runbook deploy:
-  Nginx wajib `X-Real-IP`.
-- Verifikasi: unit 174 PASS · typecheck/lint/build PASS · e2e 42 lulus 0 gagal
+- Keputusan baru: D11 (sesi lama belum dicabut setelah reset), D12 (rate limit
+  hanya per IP). Runbook deploy: Nginx wajib `X-Real-IP`, log tanpa query.
+- Review keamanan: layak digabung dengan syarat. Diperbaiki: IP tak dikenal
+  tidak lagi jatuh ke satu hitungan bersama (bisa mengunci semua pengunjung),
+  mode email konsol hanya untuk `development`/`test`. Dicatat: D12, log Nginx.
+- Verifikasi: unit 175 PASS · typecheck/lint/build PASS · e2e 42 lulus 0 gagal
   PASS (10 skenario baru, termasuk dua tab memakai link yang sama) · uji mutasi
   (syarat sekali pakai dihapus, pengosongan hitungan dihapus) tertangkap PASS ·
   cek visual desktop di Chrome PASS

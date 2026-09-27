@@ -17,7 +17,9 @@ export function cariAkunUntukReset(email: string) {
 /**
  * Simpan token baru dan buang token lama milik akun itu (hanya link terbaru
  * yang berlaku). Mengembalikan false tanpa menyimpan bila akun baru saja
- * meminta reset kurang dari semenit lalu.
+ * meminta reset kurang dari semenit lalu. Cek jeda sengaja di luar transaksi:
+ * dua permintaan yang benar-benar bersamaan bisa mengirim dua email (risiko
+ * rendah — hanya token terbaru yang tersimpan dan tetap sekali pakai).
  */
 export async function simpanTokenReset(userId: number, tokenHash: string, expiresAt: Date): Promise<boolean> {
   const terakhir = await prisma.passwordResetToken.findFirst({
