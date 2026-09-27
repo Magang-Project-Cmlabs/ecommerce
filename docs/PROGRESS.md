@@ -15,6 +15,13 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Pindah ke repo organisasi
+- Branch / PR: `docs/serah-terima-repo-organisasi` → PR ke `develop`
+- Perubahan: `main` dan `develop` di-push ke `Magang-Project-Cmlabs/ecommerce`
+  setelah akun mendapat izin Write; remote repo sementara `kvnlhm/ecommerce`
+  dilepas; `SERAH_TERIMA.md` diperbarui.
+- Verifikasi: isi `main`/`develop` di GitHub sama dengan lokal (`e098660`) — PASS
+
 ### 2026-09-27 — Modul payment gateway Midtrans (sandbox)
 - Branch / PR: `feat/payment-midtrans`, digabung langsung ke `main` di `kvnlhm/ecommerce` (repo sementara, tanpa PR atas permintaan pemilik proyek); `develop` lalu disamakan dengan `main`
 - Perubahan: `src/lib/payment/` — adapter Midtrans Snap via `fetch` (buat sesi,
