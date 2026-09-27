@@ -18,6 +18,10 @@ Terakhir diperbarui: **27 September 2026**
   diterima.
 - **Opsi B:** tabel `login_attempts`. Tahan restart dan multi-instance, tapi
   menambah tabel ke-16 di luar PRD.
+- **Cakupan (dari review keamanan PR #10):** batasi juga `/daftar`, bukan hanya
+  masuk dan lupa password. Setiap percobaan daftar menjalankan bcrypt dan
+  pesannya mengonfirmasi email terdaftar, sehingga tanpa batas bisa dipakai
+  memetakan akun secara massal dan membebani CPU.
 
 ## D5. Nomor pesanan bulanan tanpa bentrok
 
@@ -81,6 +85,8 @@ Terakhir diperbarui: **27 September 2026**
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 27 Sep 2026 | **Pesan pendaftaran "Email sudah terdaftar" diterima sebagai risiko sadar.** Mengonfirmasi keberadaan akun (enumerasi), tetapi PRD §13 hanya mensyaratkan anti-enumerasi untuk masuk & lupa password, dan pembeli perlu tahu agar memakai Masuk alih-alih membuat akun ganda. Mitigasi: rate limit `/daftar` (D4). Masuk tetap memakai pesan & waktu yang seragam. | Review keamanan PR #10 |
+| 27 Sep 2026 | **Otorisasi selalu lewat `ambilPenggunaSaatIni()`**, bukan `ambilSesi()` mentah: JWT stateless tetap sah sampai kedaluwarsa (30 hari) walau pengguna keluar atau akun dihapus; hanya `ambilPenggunaSaatIni()` yang memastikan akun masih ada (`deleted_at IS NULL`). Pencabutan sesi instan (keluar dari semua perangkat) butuh tabel sesi — belum direncanakan. | Review keamanan PR #10 |
 | 27 Sep 2026 | **D1 — Next.js 16.3.6** (sesuai `proxy.ts` di PRD), dikunci persis. | Scaffold, `runbooks/local-setup.md` |
 | 27 Sep 2026 | **D2 — Prisma 7.10.0** (`prisma`, `@prisma/client`, `@prisma/adapter-mariadb` sama persis), konfigurasi di `prisma7.config.ts`, client di `src/generated/prisma/`. Tag `latest` CLI menunjuk RC 8.0 sehingga tidak dipakai. | Scaffold, dokumentasi resmi Prisma MySQL |
 | 27 Sep 2026 | **Skema database:** metode bayar & kurir disimpan sebagai **enum** (`PaymentMethod`, `ShippingMethod`, kode dari GLOSSARY); `users.phone` **boleh kosong** (form daftar tidak mewajibkan, dikosongkan saat anonimisasi). | Pemilik proyek, migration `20260927072940_init` |

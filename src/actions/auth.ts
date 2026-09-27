@@ -40,7 +40,9 @@ export async function daftar(_: StateFormAkun, formData: FormData): Promise<Stat
   try {
     akun = await buatAkunPembeli({ name, email, phone, passwordHash: await hashPassword(password) });
   } catch (e) {
-    // Email unik (juga menangkap dua pendaftaran bersamaan dengan email sama)
+    // Email unik (juga menangkap dua pendaftaran bersamaan dengan email sama).
+    // Pesan ini sengaja mengonfirmasi email terdaftar — risiko enumerasi yang
+    // diterima sadar (OPEN_DECISIONS); mitigasinya rate limit /daftar.
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
       return { errors: { email: ['Email sudah terdaftar. Silakan masuk.'] }, values };
     }

@@ -29,6 +29,9 @@ Format entri:
 - Verifikasi: unit 109 PASS (40 baru) · typecheck PASS · lint PASS · build PASS ·
   e2e 12 lulus / 0 gagal (6 skenario alur akun) PASS · cek tampilan desktop &
   360 px PASS · checklist keamanan autentikasi PASS
+- Review `security-reviewer`: tidak ada temuan wajib; tiga catatan dicatat di
+  OPEN_DECISIONS (pesan "email sudah terdaftar" = risiko diterima, rate limit
+  juga untuk /daftar, otorisasi wajib lewat `ambilPenggunaSaatIni()`).
 - Di luar cakupan (kartu lain): proxy.ts & halaman admin, lupa password, batas
   5 percobaan masuk.
 

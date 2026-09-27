@@ -27,9 +27,10 @@ export async function hapusSesi(): Promise<void> {
 }
 
 /**
- * Isi token sesi (id + role) tanpa menyentuh database. Untuk keputusan akses
- * yang penting, pakai ambilPenggunaSaatIni() di src/lib/data/pengguna.ts yang
- * juga memastikan akunnya masih ada dan belum dihapus.
+ * Isi token sesi (id + role) tanpa menyentuh database. JANGAN dipakai untuk
+ * keputusan akses (proxy, admin, checkout): JWT tetap sah sampai kedaluwarsa
+ * walau pengguna keluar atau akunnya dihapus. Pakai ambilPenggunaSaatIni() di
+ * src/lib/data/pengguna.ts yang memastikan akunnya masih ada.
  */
 export const ambilSesi = cache(async (): Promise<IsiSesi | null> =>
   bacaTokenSesi((await cookies()).get(NAMA_COOKIE_SESI)?.value, kunci()),
