@@ -10,7 +10,9 @@ description: Pola akses database TokoKita dengan Prisma ke MySQL - data layer di
 - Query baca hanya di `src/lib/data/*.ts`. Tambahkan `import "server-only"` di
   atas berkasnya supaya tidak bisa terimpor ke komponen client.
 - Klien Prisma tunggal di `src/lib/db.ts` (pola singleton `globalThis` agar hot
-  reload tidak membuka koneksi berulang).
+  reload tidak membuka koneksi berulang). Prisma 7: import dari
+  `@/generated/prisma/client` dan wajib adapter `PrismaMariaDb`
+  (`@prisma/adapter-mariadb`) — lihat skill `prisma-database-setup`.
 - Halaman memanggil fungsi data, bukan `prisma.*` langsung.
 - Fungsi data mengembalikan bentuk yang dibutuhkan UI lewat `select`, bukan
   seluruh baris — terutama jangan pernah mengirim `password_hash` ke client.

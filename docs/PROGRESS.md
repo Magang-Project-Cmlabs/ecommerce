@@ -15,6 +15,75 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Buat database dan isi data contoh
+- Branch / PR: `feat/skema-database` → PR ke `develop`
+- Perubahan: `prisma/schema.prisma` 15 tabel PRD §9 (snake_case lewat `@map`,
+  uang/berat Int, enum status/metode bayar/kurir, indeks PRD, relasi riwayat
+  `Restrict`, 4 kolom payment D9, `users.phone` boleh kosong); migration
+  `20260927072940_init`; `prisma/seed.ts` data demo PRD §20 (14 pengguna termasuk
+  12 pembeli contoh sumber ulasan terverifikasi, 26 produk, 79 pesanan, 188
+  ulasan); `src/lib/db.ts` klien Prisma bersama (adapter MariaDB);
+  `next.config.ts` mengizinkan gambar `picsum.photos`; runner seed `tsx`.
+  Database lokal `ecommerce` dibuat dengan `utf8mb4_unicode_ci`.
+- Verifikasi: `prisma validate` PASS · migration diterapkan PASS · struktur
+  (15 tabel, collation, tipe int, indeks PRD, FK) PASS · `db:seed` PASS · 23 cek
+  aturan PRD §10 = 0 pelanggaran PASS · seed diulang identik PASS · password
+  bcrypt akun demo PASS · `src/lib/db.ts` terhubung PASS · typecheck/lint/test/
+  build PASS · `db:reset` rangkaian penuh PASS (dengan persetujuan pemilik proyek)
+- Temuan: setelah `migrate reset`, collation bawaan database kembali ke
+  `utf8mb4_0900_ai_ci` (tabel tetap `utf8mb4_unicode_ci`). Ditambah migration
+  `20260927075929_kolasi_database` (`ALTER DATABASE ... utf8mb4_unicode_ci`) —
+  diterapkan tanpa reset, data utuh.
+- Catatan: Trello tidak bisa diubah dari sini (tanpa integrasi; board gagal
+  dimuat di Chrome) — nama pemegang dicatat di `docs/trello-board-plan.md`.
+
+### 2026-09-27 — Scaffold Next.js (A1 · Siapkan proyek awal)
+- Branch / PR: `chore/scaffold-nextjs` → PR #3 (ditumpuk di atas PR #4)
+- Perubahan: Next.js 16.3.6 (App Router, `src/`, Turbopack), Tailwind 4, ESLint,
+  shadcn (Radix, preset Nova, paket `cn` resmi shadcn), Prisma 7.10.0 dikunci
+  persis (`prisma7.config.ts`, client di `src/generated/prisma/`, adapter
+  MariaDB), dependency PRD §5. Skrip `typecheck` = `next typegen && tsc`,
+  `postinstall` = `prisma generate`, `db:reset` merangkai reset → generate →
+  seed (Prisma 7 tidak seed otomatis). `lang="id"`, judul TokoKita. Dari 9 skill
+  yang dipasang `prisma init`, 3 yang relevan disimpan sebagai folder biasa.
+  Blok `nextjs-agent-rules` disisipkan `next dev` ke `AGENTS.md`.
+  Runbook bagian A ditulis ulang sesuai langkah nyata (termasuk koreksi
+  `_scaffold` yang ditolak npm). D1 & D2 diputuskan.
+- Verifikasi (setelah `npm ci` bersih): typecheck PASS · lint PASS · test 69/69
+  PASS · build PASS · `prisma validate` PASS · dev server beranda 200 PASS ·
+  hook `pre-push` terpasang otomatis PASS · e2e NOT_RUN (semua halaman
+  `belumAda`) · `db:reset` NOT_RUN (skema kosong)
+
+### 2026-09-27 — Aturan review di GitHub Free (D10)
+- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR #2 (hanya commit pertama
+  yang ikut digabung) dan PR #4 (hook, CI, pendeteksi, pengecualian pemilik)
+- Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset
+  ditolak GitHub (HTTP 403); akun `kvnlhm` hanya Write (admin: `azridalimunthe7`);
+  PR #1 ter-merge tanpa persetujuan.
+- Keputusan: tetap Free + private (D10). Pemilik proyek (`kvnlhm`) boleh merge
+  tanpa persetujuan anggota lain (`PENGGABUNG_BEBAS_REVIEW`). Aturan dijaga disiplin tim dan tiga
+  penjaga gratis: CI (`.github/workflows/ci.yml`), pendeteksi pelanggaran
+  (`aturan-review.yml` + `.github/scripts/cek-aturan-review.mjs`), hook
+  `.githooks/pre-push` (dipasang `npm install` lewat skrip `prepare`).
+- Verifikasi:
+  - Pendeteksi, uji lokal ke API GitHub sungguhan (DRY_RUN): PR #1 → gagal
+    0/2 persetujuan; merge commit PR #1 → lolos; push langsung `e098660` →
+    gagal; force push → gagal; PR ditutup tanpa merge → lolos; token salah →
+    exit 2; 6 kasus hitung persetujuan — PASS
+  - Hook `pre-push`: 13 kasus simulasi + `git push --dry-run` sungguhan ke
+    `develop` ditolak dan ke branch lain lolos — PASS
+  - Workflow di GitHub Actions: NOT_RUN — tidak ada workflow terdaftar/berjalan
+    setelah push ke PR #2 (0 workflow, 0 run); kemungkinan Actions dimatikan di
+    organisasi, hanya admin yang bisa memastikan. Tidak menghalangi: hook dan
+    aturan manual tetap berlaku.
+
+### 2026-09-27 — Pindah ke repo organisasi
+- Branch / PR: `docs/serah-terima-repo-organisasi` → PR ke `develop`
+- Perubahan: `main` dan `develop` di-push ke `Magang-Project-Cmlabs/ecommerce`
+  setelah akun mendapat izin Write; remote repo sementara `kvnlhm/ecommerce`
+  dilepas; `SERAH_TERIMA.md` diperbarui.
+- Verifikasi: isi `main`/`develop` di GitHub sama dengan lokal (`e098660`) — PASS
+
 ### 2026-09-27 — Modul payment gateway Midtrans (sandbox)
 - Branch / PR: `feat/payment-midtrans`, digabung langsung ke `main` di `kvnlhm/ecommerce` (repo sementara, tanpa PR atas permintaan pemilik proyek); `develop` lalu disamakan dengan `main`
 - Perubahan: `src/lib/payment/` — adapter Midtrans Snap via `fetch` (buat sesi,

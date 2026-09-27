@@ -49,6 +49,38 @@ fix: stok tidak kembali saat pesanan dibatalkan admin
 4. PR butuh **2 persetujuan**: ketua tim (A1) + satu anggota lain.
 5. Setelah di-merge: pindahkan kartu ke **Selesai**, hapus branch-nya.
 
+> **GitHub tidak memaksakan aturan ini.** Organisasi memakai paket Free dan
+> repo ini private, sehingga proteksi branch tidak tersedia (keputusan
+> `docs/OPEN_DECISIONS.md` D10). Tombol *Merge* tetap aktif walau belum ada
+> persetujuan. Karena itu:
+> - **Jangan menggabungkan PR sendiri.** Yang menekan *Merge* adalah A1,
+>   setelah 2 persetujuan tercatat di tab *Reviews* dan CI hijau.
+> - **Pengecualian: pemilik proyek (akun `kvnlhm`)** boleh menggabungkan PR
+>   tanpa menunggu persetujuan anggota lain (keputusan pemilik proyek,
+>   27 Sep 2026). Pendeteksi aturan review tidak menandai merge oleh akun ini.
+>   PR tetap wajib dibuat — pengecualian ini hanya untuk syarat persetujuan,
+>   bukan izin push langsung ke `develop`/`main`.
+> - Jangan `git push` langsung ke `develop` atau `main`.
+> - PR yang ter-merge tanpa 2 persetujuan tetap di-review susulan dan dicatat
+>   di rapat pagi.
+>
+> Penjaga gratis yang sudah disiapkan:
+>
+> | Penjaga | Kerjanya | Status |
+> |---|---|---|
+> | **Hook `pre-push`** (`.githooks/pre-push`) | Menolak `git push` ke `develop`/`main` dari laptop. Terpasang otomatis saat `npm install`. | **Aktif** |
+> | **CI** (`.github/workflows/ci.yml`) | Setiap PR menjalankan typecheck, lint, test, dan build. Hasilnya (✓/✗) terlihat di PR. | Belum aktif* |
+> | **Aturan review** (`.github/workflows/aturan-review.yml`) | PR digabung dengan < 2 persetujuan, push langsung, atau force push ke `develop`/`main` → tanda merah + komentar otomatis di PR. | Belum aktif* |
+>
+> \* GitHub Actions tampaknya dimatikan di organisasi (tidak ada workflow yang
+> terdaftar maupun berjalan, dicek 27 Sep 2026). Berkasnya dibiarkan dan akan
+> jalan sendiri begitu Actions diaktifkan admin. Sampai saat itu, jalankan
+> `npm run typecheck` dan `npm run test` sendiri sebelum membuka PR.
+>
+> Hook bisa dilewati dalam keadaan darurat dengan izin A1:
+> `IZINKAN_PUSH_LANGSUNG=1 git push …` — dan pelanggarannya tetap tercatat oleh
+> workflow aturan review.
+
 PR yang baik itu kecil. Lebih dari ± 400 baris perubahan? Pecah jadi beberapa PR.
 
 ## 4. Sebelum membuka PR

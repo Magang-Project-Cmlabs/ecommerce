@@ -18,111 +18,84 @@ jalankan sekali `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
 ---
 
-## A. Scaffold proyek (sekali, A1)
+## A. Scaffold proyek — **selesai 27 September 2026**
 
-Jawab dulu keputusan D1 dan D2 di [`../OPEN_DECISIONS.md`](../OPEN_DECISIONS.md).
+Bagian ini catatan apa yang sudah dijalankan (branch `chore/scaffold-nextjs`),
+untuk rujukan bila perlu diulang. Anggota tim langsung ke bagian B.
 
-### A1. Kenapa tidak langsung `create-next-app .`
-
-`create-next-app` menolak folder yang sudah berisi berkas seperti `README.md`,
-`CLAUDE.md`, atau `tests/`. Jadi scaffold ke folder sementara, lalu salin isinya
-**tanpa menimpa** berkas yang sudah ada.
-
-```bash
-cd /c/laragon/www/e-commerce
-
-npx create-next-app@latest _scaffold --ts --tailwind --eslint --app \
-  --src-dir --import-alias "@/*" --use-npm --skip-install
-
-# Salin tanpa menimpa (README.md, .gitignore milik repo ini tetap dipakai)
-cp -rn _scaffold/. .
-```
-
-Setelahnya periksa: `README.md` dan `.gitignore` bawaan Next.js tidak ikut
-tersalin karena repo ini sudah punya versi sendiri yang lebih lengkap.
-
-**Tiga berkas wajib digabung manual** karena repo sudah punya versi kecilnya
-(dibuat untuk unit test modul pembayaran):
-
-| Berkas | Cara menggabung |
+| Keputusan | Nilai |
 |---|---|
-| `package.json` | Ambil milik `_scaffold` sebagai dasar, lalu tambahkan `devDependencies` `vitest` dari versi repo dan skrip di A3. |
-| `tsconfig.json` | Ambil milik `_scaffold` (punya plugin `next`, `jsx`, `include` untuk `.tsx`), lalu tambahkan `"noUncheckedIndexedAccess": true`. |
-| `package-lock.json` | Hapus, biarkan `npm install` membuat ulang. |
+| Next.js (D1) | **16.3.6**, App Router, `src/`, Turbopack, alias `@/*` |
+| Prisma (D2) | **7.10.0** untuk `prisma`, `@prisma/client`, `@prisma/adapter-mariadb` — dikunci persis. Tag `latest` milik CLI `prisma` menunjuk RC 8.0, jangan dipakai. |
+| shadcn | base **Radix**, preset **Nova**, ikon Lucide |
 
-`vitest.config.ts` dan `src/lib/payment/` tetap dipakai apa adanya. Lalu:
+### A1. Scaffold ke folder sementara
 
-```bash
-rm -rf _scaffold
-npm install
-```
-
-### A2. Pasang dependency sesuai PRD §5
-
-Ikuti dokumentasi resmi tiap library untuk versi yang terpasang, terutama
-Prisma (D2) dan shadcn/ui (`npx shadcn@latest init`). Daftar dari PRD:
-Prisma, Zod, React Hook Form, Zustand, Lucide React, Framer Motion, date-fns,
-Nodemailer, Yet Another React Lightbox, library JWT dan bcrypt (D8).
-
-### A3. Tambahkan skrip ke `package.json`
-
-Nama skrip di bawah dipakai oleh semua dokumen dan skill proyek; jangan
-diganti namanya. Isi perintah Prisma sesuaikan dengan versinya.
-
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed",
-    "db:reset": "prisma migrate reset --force",
-    "db:studio": "prisma studio",
-    "e2e": "playwright test -c tests/e2e/playwright.config.ts",
-    "e2e:report": "playwright show-report tests/e2e/.report"
-  }
-}
-```
-
-Unit test memakai Vitest (sudah diputuskan, lihat OPEN_DECISIONS). Untuk E2E
-pasang `npm i -D @playwright/test @axe-core/playwright`. Pastikan
-`npm run test` masih lulus setelah penggabungan.
-
-### A4. Commit dan Pull Request
-
-Repo Git sudah ada (`main` dan `develop` di
-`github.com/Magang-Project-Cmlabs/ecommerce`). Scaffold dikerjakan di branch
-sendiri seperti kartu lain, **sebelum** langkah A1 dijalankan:
+`create-next-app` menolak folder yang tidak kosong, dan npm menolak nama
+folder berawalan garis bawah — jadi pakai `scaffold-tmp`, lalu salin tanpa menimpa:
 
 ```bash
-git switch develop && git pull
-git switch -c chore/scaffold-nextjs
-# … langkah A1–A3 …
-git add .
-git status            # pastikan .env TIDAK ada di daftar
-git commit -m "chore: scaffold proyek Next.js"
-git push -u origin chore/scaffold-nextjs
+npx create-next-app@16.3.6 scaffold-tmp --ts --tailwind --eslint --app --src-dir   --import-alias "@/*" --use-npm --skip-install --disable-git --yes
+cp -rn scaffold-tmp/. .
+rm -rf scaffold-tmp
 ```
 
-Buka PR ke `develop`. Pengaturan GitHub yang disarankan (oleh admin organisasi):
-`develop` sebagai default branch, proteksi `main` dan `develop` (wajib PR,
-2 persetujuan).
+Berkas yang bentrok dan cara menanganinya:
+
+| Berkas | Tindakan |
+|---|---|
+| `package.json`, `tsconfig.json` | Digabung: dasar dari scaffold + skrip, `vitest`, dan `noUncheckedIndexedAccess` dari repo |
+| `AGENTS.md`, `CLAUDE.md` | Versi repo dipertahankan. `next dev` menyisipkan blok `nextjs-agent-rules` ke `AGENTS.md` sendiri (tidak menimpa isi lain); blok itu di-commit |
+| `README.md`, `.gitignore` | Versi repo dipertahankan |
+
+### A2. Dependency (PRD §5)
+
+```bash
+npm i -E @prisma/client@7.10.0 @prisma/adapter-mariadb@7.10.0
+npm i -D -E prisma@7.10.0
+npm i zod react-hook-form @hookform/resolvers zustand lucide-react framer-motion   date-fns nodemailer yet-another-react-lightbox jose bcryptjs dotenv server-only
+npm i -D @types/nodemailer @playwright/test @axe-core/playwright
+npx prisma init --datasource-provider mysql --output ../src/generated/prisma
+npx shadcn@4.21.0 init -b radix -p nova --no-monorepo --no-rtl -y
+```
+
+Catatan:
+- `prisma init` membuat `prisma7.config.ts` (URL database dibaca dari `.env`
+  lewat `dotenv`) dan `prisma/schema.prisma` tanpa model. Client dihasilkan ke
+  `src/generated/prisma/` (diabaikan Git; dibuat ulang otomatis oleh
+  `postinstall`).
+- `prisma init` juga **memasang 9 skill agent** ke `.claude/`, `.agents/`,
+  `.windsurf/`. Yang disimpan hanya `prisma-cli`, `prisma-client-api`,
+  `prisma-database-setup` di `.claude/skills/` sebagai folder biasa (bukan
+  symlink); sisanya (Postgres, MongoDB, Prisma Compute, upgrade v6) dibuang.
+- `shadcn init` menambah `components.json`, `src/lib/utils.ts` (fungsi `cn`
+  dari paket resmi `cn` milik shadcn), dan token di `globals.css`. Font Inter
+  dan token warna `DESIGN.md` dikerjakan di kartu A2.
+
+### A3. Skrip
+
+Lihat `package.json`. Yang tidak biasa:
+- `typecheck` = `next typegen && tsc --noEmit` — Next 16 membuat tipe rute
+  global (mis. `LayoutProps`) lewat `next typegen`; tanpa itu `tsc` gagal.
+- `prepare` memasang hook `pre-push`; `postinstall` menjalankan `prisma generate`.
+- `db:reset` = `migrate reset` → `generate` → `db seed`, karena Prisma 7 tidak
+  lagi menjalankan seed otomatis setelah reset.
 
 ---
 
 ## B. Menyalakan proyek (setiap anggota)
 
 ```bash
-git clone https://github.com/<akun>/<repo>.git e-commerce
+git clone https://github.com/Magang-Project-Cmlabs/ecommerce.git e-commerce
 cd e-commerce
 git switch develop
 npm install
 cp .env.example .env
 ```
+
+`npm install` sekaligus memasang hook `pre-push` (menolak push langsung ke
+`develop`/`main`) dan membuat Prisma client. Cek: `git config core.hooksPath`
+harus menampilkan `.githooks`.
 
 1. **Buat database.** Laragon → *Start All* → *Database* (HeidiSQL), atau di
    terminal Laragon:
@@ -135,11 +108,14 @@ cp .env.example .env
    ```bash
    npm run db:reset
    ```
+   Perintah ini menghapus isi database lokal. AI agent wajib meminta
+   persetujuanmu dulu; Prisma 7 memblokirnya bila dijalankan agent tanpa izin.
 4. **Nyalakan:**
    ```bash
    npm run dev
    ```
-   Buka http://localhost:3000. Berhasil kalau beranda tampil dengan produk demo.
+   Buka http://localhost:3000. Saat ini yang tampil masih halaman bawaan
+   Next.js; beranda TokoKita dibangun di kartu A2.
 
 ## Masalah yang sering muncul
 

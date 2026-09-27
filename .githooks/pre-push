@@ -1,0 +1,29 @@
+#!/bin/sh
+# Menolak push langsung ke develop/main dari laptop anggota tim.
+# Semua perubahan masuk lewat Pull Request (CONTRIBUTING.md bagian 3).
+#
+# Terpasang otomatis lewat `npm install` (skrip "prepare" mengatur
+# core.hooksPath ke .githooks). GitHub paket Free tidak bisa memblokir ini di
+# server (OPEN_DECISIONS D10), jadi hook ini lapis pencegah di sisi laptop.
+#
+# Darurat, dengan izin ketua tim:
+#   IZINKAN_PUSH_LANGSUNG=1 git push ...
+
+[ "$IZINKAN_PUSH_LANGSUNG" = "1" ] && exit 0
+
+# `|| [ -n ... ]`: tetap memproses baris terakhir yang tidak diakhiri newline.
+while read -r local_ref local_sha remote_ref remote_sha || [ -n "$remote_ref" ]; do
+  case "$remote_ref" in
+    refs/heads/main | refs/heads/develop)
+      cabang=${remote_ref#refs/heads/}
+      echo "" >&2
+      echo "Push langsung ke '$cabang' ditolak." >&2
+      echo "Buat branch sendiri (mis. git switch -c feat/nama-fitur), push branch itu," >&2
+      echo "lalu buka Pull Request ke develop. Lihat CONTRIBUTING.md." >&2
+      echo "" >&2
+      exit 1
+      ;;
+  esac
+done
+
+exit 0
