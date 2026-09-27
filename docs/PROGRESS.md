@@ -29,7 +29,11 @@ Format entri:
   (15 tabel, collation, tipe int, indeks PRD, FK) PASS · `db:seed` PASS · 23 cek
   aturan PRD §10 = 0 pelanggaran PASS · seed diulang identik PASS · password
   bcrypt akun demo PASS · `src/lib/db.ts` terhubung PASS · typecheck/lint/test/
-  build: lihat PR · `db:reset` rangkaian penuh NOT_RUN (butuh persetujuan)
+  build PASS · `db:reset` rangkaian penuh PASS (dengan persetujuan pemilik proyek)
+- Temuan: setelah `migrate reset`, collation bawaan database kembali ke
+  `utf8mb4_0900_ai_ci` (tabel tetap `utf8mb4_unicode_ci`). Ditambah migration
+  `20260927075929_kolasi_database` (`ALTER DATABASE ... utf8mb4_unicode_ci`) —
+  diterapkan tanpa reset, data utuh.
 - Catatan: Trello tidak bisa diubah dari sini (tanpa integrasi; board gagal
   dimuat di Chrome) — nama pemegang dicatat di `docs/trello-board-plan.md`.
 

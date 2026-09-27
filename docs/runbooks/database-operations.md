@@ -13,6 +13,7 @@ Yang berbeda dari panduan Prisma lama di internet:
 | Generate | tidak otomatis setelah migrate; jalankan `npm run db:generate` (juga jalan saat `npm install`) |
 | Seed | diatur di `prisma7.config.ts` → `migrations.seed` (mis. `tsx prisma/seed.ts`; runner `tsx` dipasang saat kartu seed). `migrate reset`/`migrate dev` **tidak lagi menjalankan seed otomatis** — karena itu `npm run db:reset` merangkai reset → generate → seed |
 | `migrate reset` oleh AI agent | diblokir Prisma sampai user memberi persetujuan eksplisit |
+| Collation | `migrate reset` membuat ulang database dengan bawaan server (MySQL 8: `utf8mb4_0900_ai_ci`); migration `kolasi_database` mengembalikannya ke `utf8mb4_unicode_ci` |
 
 Rujukan cepat: skill `prisma-cli`, `prisma-client-api`, `prisma-database-setup`.
 

@@ -31,25 +31,26 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 | `npm run lint` | PASS | 27 Sep 2026 |
 | `npm run test` | PASS | 27 Sep 2026, 69/69 unit test modul pembayaran |
 | `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
-| `npx prisma validate` | PASS | 27 Sep 2026, skema tanpa model |
+| `npx prisma validate` | PASS | 27 Sep 2026, 15 tabel; `migrate status` sinkron (2 migration) |
 | `npm run build` | PASS | 27 Sep 2026 |
 | `npm run dev` | PASS | 27 Sep 2026, beranda 200, `lang="id"` |
 | `npm run e2e` | NOT_RUN | Harness jalan (40 tes), semua dilewati karena halaman TokoKita belum ada |
 | `npm run db:seed` | PASS | 27 Sep 2026: 23 cek aturan PRD §10 = 0 pelanggaran, hasil identik saat diulang |
-| `npm run db:reset` | NOT_RUN | Rangkaian lengkap belum dijalankan (menghapus data; butuh persetujuan) |
+| `npm run db:reset` | PASS | 27 Sep 2026, dengan persetujuan pemilik proyek: migrate reset → generate → seed, data lengkap, cek aturan 0 pelanggaran |
 
 ## 4. Kriteria sukses PRD §22
 
 | Kriteria | Status | Bukti |
 |---|---|---|
 | Semua data dibaca dan disimpan di MySQL | Sebagian | Skema 15 tabel + seed di MySQL; halaman belum ada |
-| `npm run db:reset` menghasilkan data demo lengkap | Belum | `db:seed` terbukti lengkap; rangkaian `db:reset` belum dijalankan |
+| `npm run db:reset` menghasilkan data demo lengkap | **Terpenuhi** | 27 Sep 2026: 14 pengguna, 26 produk, 79 pesanan, 188 ulasan; cek aturan PRD §10 = 0 pelanggaran |
 
 Kriteria lain belum dimulai. Centang hanya setelah dibuktikan di browser atau
 lewat tes.
 
 ## 5. Blocker aktif
 
-- Keputusan D1 (versi Next.js) dan D2 (versi Prisma) di
-  [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) perlu dijawab sebelum scaffold;
-  D9 (payment gateway) perlu persetujuan A1 dan pembimbing.
+- Keputusan D9 (payment gateway: route handler webhook, tombol bayar simulasi,
+  akun production) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) masih perlu
+  persetujuan pembimbing.
+- Admin organisasi belum menjadikan `develop` default branch (opsional).
