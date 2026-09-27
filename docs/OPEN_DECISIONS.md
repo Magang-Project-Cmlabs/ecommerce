@@ -91,6 +91,23 @@ Terakhir diperbarui: **25 September 2026**
 - **Perlu disetujui:** ketua tim (A1) dan pembimbing magang, karena mengubah
   cakupan PRD.
 
+## D10. Aturan review tidak bisa dipaksakan GitHub
+
+- **Konteks:** organisasi `Magang-Project-Cmlabs` memakai paket **Free** dan
+  repo `ecommerce` **private**. GitHub menolak proteksi branch dan ruleset
+  untuk kombinasi ini ("Upgrade to GitHub Pro or make this repository public",
+  dicek 27 Sep 2026). PR #1 buktinya: ter-merge tanpa persetujuan reviewer.
+- **Opsi A (rekomendasi):** tetap private, aturan dijaga disiplin tim — hanya
+  A1 yang menekan *Merge* setelah 2 persetujuan (sudah ditulis di
+  `CONTRIBUTING.md`). Gratis, dokumen tim tetap tertutup.
+- **Opsi B:** upgrade organisasi ke GitHub Team (berbayar per anggota; admin
+  dapat mengecek apakah program GitHub Education bisa menggratiskannya).
+- **Opsi C:** jadikan repo public. Proteksi gratis, tetapi PRD dan rencana tim
+  terbuka untuk umum.
+- **Terlepas dari opsi apa pun**, admin (`azridalimunthe7`) sebaiknya menjadikan
+  `develop` default branch — ini tersedia di paket Free.
+- **Yang memutuskan:** admin organisasi bersama ketua tim.
+
 ---
 
 ## Sudah diputuskan

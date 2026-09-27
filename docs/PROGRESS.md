@@ -15,6 +15,15 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Aturan review tanpa proteksi branch
+- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR ke `develop`
+- Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset
+  ditolak GitHub (HTTP 403); akun `kvnlhm` hanya Write (admin: `azridalimunthe7`);
+  PR #1 ter-merge tanpa persetujuan.
+- Perubahan: `CONTRIBUTING.md` (aturan merge manual), OPEN_DECISIONS D10,
+  `SERAH_TERIMA.md`, runbook local-setup.
+- Verifikasi: hanya dokumen; tautan diperiksa.
+
 ### 2026-09-27 — Pindah ke repo organisasi
 - Branch / PR: `docs/serah-terima-repo-organisasi` → PR ke `develop`
 - Perubahan: `main` dan `develop` di-push ke `Magang-Project-Cmlabs/ecommerce`
