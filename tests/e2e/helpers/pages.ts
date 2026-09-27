@@ -23,13 +23,13 @@ export const HALAMAN_PUBLIK: Halaman[] = [
 ];
 
 export const HALAMAN_PEMBELI: Halaman[] = [
-  { path: '/akun', judul: 'Akun', belumAda: true },
+  { path: '/akun', judul: 'Akun' },
   { path: '/akun/pesanan', judul: 'Pesanan Saya', belumAda: true },
-  { path: '/wishlist', judul: 'Wishlist', belumAda: true },
+  { path: '/wishlist', judul: 'Wishlist' },
 ];
 
 export const HALAMAN_ADMIN: Halaman[] = [
-  { path: '/admin', judul: 'Ringkasan', belumAda: true },
+  { path: '/admin', judul: 'Ringkasan' },
   { path: '/admin/pesanan', judul: 'Pesanan', belumAda: true },
   { path: '/admin/produk', judul: 'Produk', belumAda: true },
   { path: '/admin/kategori', judul: 'Kategori', belumAda: true },
@@ -39,9 +39,9 @@ export const HALAMAN_ADMIN: Halaman[] = [
 
 // Halaman yang wajib mengalihkan tamu ke /masuk?next=... (PRD §12).
 export const HALAMAN_TERLINDUNGI: Halaman[] = [
-  { path: '/checkout', judul: 'Checkout', belumAda: true },
-  { path: '/akun', judul: 'Akun', belumAda: true },
-  { path: '/akun/pesanan', judul: 'Pesanan Saya', belumAda: true },
-  { path: '/wishlist', judul: 'Wishlist', belumAda: true },
-  { path: '/admin', judul: 'Admin', belumAda: true },
+  { path: '/checkout', judul: 'Checkout' },
+  { path: '/akun', judul: 'Akun' },
+  { path: '/akun/pesanan', judul: 'Pesanan Saya' },
+  { path: '/wishlist', judul: 'Wishlist' },
+  { path: '/admin', judul: 'Admin' },
 ];

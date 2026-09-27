@@ -8,6 +8,9 @@ import { SignJWT, jwtVerify } from 'jose';
 export type Role = 'customer' | 'admin';
 export type IsiSesi = { userId: number; role: Role };
 
+/** Nama cookie sesi; dipakai sesi.ts (server) dan proxy.ts. */
+export const NAMA_COOKIE_SESI = 'tokokita_sesi';
+
 /** Cookie sesi berlaku 30 hari (PRD §13). */
 export const MASA_SESI_DETIK = 30 * 24 * 60 * 60;
 
