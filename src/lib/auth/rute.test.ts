@@ -12,6 +12,15 @@ describe('butuhMasuk', () => {
     (p) => expect(butuhMasuk(p)).toBe(false),
   );
 
+  it.each(['/ADMIN', '/Admin/produk', '/%61dmin', '/%41KUN', '/wish%6Cist'])(
+    '%s (huruf besar / percent-encoding) tetap dianggap terlindungi',
+    (p) => expect(butuhMasuk(p)).toBe(true),
+  );
+
+  it('percent-encoding yang rusak tidak membuat error', () => {
+    expect(butuhMasuk('/%E0%A4%A')).toBe(false);
+  });
+
   it('mencakup semua rute PRD §12', () => {
     expect([...RUTE_WAJIB_MASUK].sort()).toEqual(['/admin', '/akun', '/checkout', '/wishlist']);
   });

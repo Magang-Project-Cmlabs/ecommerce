@@ -39,7 +39,13 @@ describe('penjaga halaman terlindungi', () => {
       .replace(/(['"`])(?:\\.|(?!\1)[^\\\n])*\1/g, '""');
     const penjaga =
       rute === '/admin' || rute.startsWith('/admin/') ? /\bawait\s+requireAdmin\(/ : /\bawait\s+require(User|Admin)\(/;
-    expect(isi, `${path.relative(process.cwd(), berkas)} harus memanggil ${rute.startsWith('/admin') ? 'requireAdmin' : 'requireUser'}()`).toMatch(penjaga);
+    // Penjaga harus berada di badan komponen halaman (default export) sebelum
+    // `return` pertamanya — bukan sekadar ada di berkas, karena Server Action
+    // di berkas yang sama bisa memanggil requireUser sementara halamannya lupa.
+    const halaman = /export\s+default\s+(?:async\s+)?function\s*\w*\s*\([^)]*\)[^{]*\{([\s\S]*?)\breturn\b/.exec(isi);
+    const nama = path.relative(process.cwd(), berkas);
+    expect(halaman, `${nama}: komponen halaman harus "export default async function" dengan return`).not.toBeNull();
+    expect(halaman![1], `${nama} harus memanggil ${rute.startsWith('/admin') ? 'requireAdmin' : 'requireUser'}() di awal komponen halaman, sebelum return`).toMatch(penjaga);
   });
 
   it('matcher proxy.ts mencakup semua rute terlindungi', () => {
