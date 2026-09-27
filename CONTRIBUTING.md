@@ -49,6 +49,16 @@ fix: stok tidak kembali saat pesanan dibatalkan admin
 4. PR butuh **2 persetujuan**: ketua tim (A1) + satu anggota lain.
 5. Setelah di-merge: pindahkan kartu ke **Selesai**, hapus branch-nya.
 
+> **GitHub tidak memaksakan aturan ini.** Organisasi memakai paket Free dan
+> repo ini private, sehingga proteksi branch tidak tersedia (lihat
+> `docs/OPEN_DECISIONS.md` D10). Tombol *Merge* tetap aktif walau belum ada
+> persetujuan. Karena itu:
+> - **Jangan menggabungkan PR sendiri.** Yang menekan *Merge* adalah A1,
+>   setelah 2 persetujuan tercatat di tab *Reviews*.
+> - Jangan `git push` langsung ke `develop` atau `main`.
+> - PR yang ter-merge tanpa 2 persetujuan tetap di-review susulan dan dicatat
+>   di rapat pagi.
+
 PR yang baik itu kecil. Lebih dari ± 400 baris perubahan? Pecah jadi beberapa PR.
 
 ## 4. Sebelum membuka PR

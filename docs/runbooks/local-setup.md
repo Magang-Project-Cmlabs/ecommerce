@@ -108,9 +108,10 @@ git commit -m "chore: scaffold proyek Next.js"
 git push -u origin chore/scaffold-nextjs
 ```
 
-Buka PR ke `develop`. Pengaturan GitHub yang disarankan (oleh admin organisasi):
-`develop` sebagai default branch, proteksi `main` dan `develop` (wajib PR,
-2 persetujuan).
+Buka PR ke `develop`. Pengaturan GitHub oleh admin organisasi: `develop`
+sebagai default branch. Proteksi branch belum tersedia untuk repo private di
+paket Free (OPEN_DECISIONS D10); aturan 2 persetujuan dijaga manual sesuai
+`CONTRIBUTING.md`.
 
 ---
 
