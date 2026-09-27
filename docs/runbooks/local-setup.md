@@ -104,8 +104,7 @@ harus menampilkan `.githooks`.
    ```
 2. **Isi `.env`.** Minimal `DATABASE_URL` dan `AUTH_SECRET` (cara membuatnya
    tertulis di `.env.example`).
-3. **Buat tabel dan data demo** — baru bisa setelah kartu *A1 · Buat database
-   dan isi data contoh* selesai (skema masih kosong):
+3. **Buat tabel dan data demo:**
    ```bash
    npm run db:reset
    ```

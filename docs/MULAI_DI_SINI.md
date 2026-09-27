@@ -7,7 +7,7 @@
 
 | Komponen | Fakta |
 |---|---|
-| Kode aplikasi | **Scaffold selesai** (Next.js 16.3.6, Prisma 7.10.0, Tailwind 4, shadcn Radix/Nova). Belum ada halaman TokoKita maupun model database. Modul payment gateway Midtrans sandbox ada di `src/lib/payment/`. |
+| Kode aplikasi | **Scaffold selesai** (Next.js 16.3.6, Prisma 7.10.0, Tailwind 4, shadcn Radix/Nova). Skema 15 tabel dan data demo sudah ada; halaman TokoKita belum. Modul payment gateway Midtrans sandbox ada di `src/lib/payment/`. |
 | Git | `github.com/Magang-Project-Cmlabs/ecommerce` (private), branch `main` dan `develop`. |
 | Isi repo | Dokumen perencanaan (`docs/`), instruksi AI (`CLAUDE.md`, `AGENTS.md`, `.claude/`, `.agents/`), template (`.env.example`, `.gitignore`, template PR), kerangka tes E2E (`tests/e2e/`). |
 | Stack | Next.js App Router + TypeScript, Prisma, MySQL, Tailwind, shadcn/ui (PRD §5). |
@@ -21,8 +21,9 @@ Tiga kartu ini harus selesai duluan karena anggota lain bergantung padanya:
 1. ~~**A1 · Siapkan proyek awal**~~ — selesai 27 Sep 2026 (branch
    `chore/scaffold-nextjs`). Anggota tinggal mengikuti
    [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian B.
-2. **A1 · Buat database dan isi data contoh** — `schema.prisma` untuk 15 tabel
-   PRD §9, migration pertama, `seed.ts` sesuai PRD §20.
+2. ~~**A1 · Buat database dan isi data contoh**~~ — selesai 27 Sep 2026 (Kevin
+   Ilham): 15 tabel, migration `init`, seed PRD §20. Jalankan `npm run db:reset`
+   untuk mengisi database lokal.
 3. **A4 · Aturan cek isian form** — skema Zod bersama di `src/lib/validations/`.
 
 Sambil menunggu, A2 dan A3 bisa mengerjakan tampilan yang belum butuh data.

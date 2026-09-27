@@ -20,13 +20,13 @@ Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
 | Branch | `main` dan `develop` berisi commit yang sama (konfigurasi kerja + modul pembayaran) |
 | Perubahan belum di-commit | Tidak ada |
 | Server lokal | Tidak dijalankan |
-| Database | Belum dibuat |
+| Database | `ecommerce` di MySQL Laragon 8.0.30, terisi data demo |
 
 ## Yang sedang dikerjakan
 
-Scaffold Next.js selesai di branch `chore/scaffold-nextjs` (PR ke `develop`,
-digabung setelah PR #4). Setelah menarik `develop`, jalankan `npm install`.
-
+Kartu database selesai di branch `feat/skema-database` (Kevin Ilham): 15 tabel,
+migration `init`, seed data demo, `src/lib/db.ts`. Setelah menarik `develop`:
+`npm install`, pastikan MySQL Laragon menyala, lalu `npm run db:reset`.
 
 Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplikasi
 (menunggu scaffold, tabel `orders`, dan `ubahStatus()`). Langkahnya di
@@ -42,9 +42,11 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.
 3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-4. A1: kartu *Buat database dan isi data contoh* — 15 tabel PRD §9 di
-   `prisma/schema.prisma`, migration pertama, seed PRD §20 (pasang `tsx`,
-   atur `migrations.seed` di `prisma7.config.ts`).
+4. A1: kartu *Daftar, masuk, dan keluar akun* dan *Batasi halaman yang butuh
+   login* (PRD §7.7, §13; OPEN_DECISIONS D4, D8).
+5. A2–A5 kini bisa membaca data sungguhan lewat `src/lib/data/` +
+   `src/lib/db.ts`. Gambar demo memakai `picsum.photos` (sudah diizinkan di
+   `next.config.ts`).
 
 ## Peringatan untuk yang melanjutkan
 

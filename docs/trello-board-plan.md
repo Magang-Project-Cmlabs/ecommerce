@@ -52,7 +52,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 
 ### A1 — Ketua Tim & Database
 - Hari 1 · Siapkan proyek awal dan bagikan ke tim **(Blocker)**
-- Hari 1 · Buat database dan isi data contoh **(Blocker)**
+- Hari 1 · Buat database dan isi data contoh **(Blocker)** — dikerjakan **Kevin Ilham**
 - Hari 2 · Fitur daftar, masuk, dan keluar akun
 - Hari 2 · Batasi halaman yang butuh login
 - Hari 2 · Fitur lupa password
