@@ -32,7 +32,8 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 
 1. Admin organisasi (`azridalimunthe7`): jadikan `develop` default branch.
    Proteksi branch tidak dipakai (paket Free, D10); aturan review dijaga
-   disiplin tim + CI + pendeteksi + hook `pre-push`, lihat
+   disiplin tim + hook `pre-push` (CI dan pendeteksi disiapkan, belum aktif karena
+   GitHub Actions tampaknya mati di organisasi), lihat
    [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.

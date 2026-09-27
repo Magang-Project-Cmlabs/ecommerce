@@ -97,7 +97,7 @@ Terakhir diperbarui: **25 September 2026**
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
-| 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan tiga penjaga gratis: CI Actions, workflow pendeteksi pelanggaran, hook `pre-push`. Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
+| 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan penjaga gratis: hook `pre-push` (aktif), CI Actions dan workflow pendeteksi pelanggaran (disiapkan, belum aktif karena Actions tampaknya dimatikan di organisasi). Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
 | 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.ts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |
 | — | Alur Git: branch fitur → `develop` → `main`, PR 2 reviewer | Presentasi slide 15 |

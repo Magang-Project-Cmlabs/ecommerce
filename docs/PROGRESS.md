@@ -31,7 +31,10 @@ Format entri:
     exit 2; 6 kasus hitung persetujuan — PASS
   - Hook `pre-push`: 13 kasus simulasi + `git push --dry-run` sungguhan ke
     `develop` ditolak dan ke branch lain lolos — PASS
-  - Workflow di GitHub Actions: lihat hasil CI di PR #2
+  - Workflow di GitHub Actions: NOT_RUN — tidak ada workflow terdaftar/berjalan
+    setelah push ke PR #2 (0 workflow, 0 run); kemungkinan Actions dimatikan di
+    organisasi, hanya admin yang bisa memastikan. Tidak menghalangi: hook dan
+    aturan manual tetap berlaku.
 
 ### 2026-09-27 — Pindah ke repo organisasi
 - Branch / PR: `docs/serah-terima-repo-organisasi` → PR ke `develop`
