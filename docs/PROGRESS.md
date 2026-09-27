@@ -15,6 +15,14 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Identitas anggota A1–A5
+- Branch / PR: `docs/identitas-anggota` → PR ke `develop`
+- Perubahan: A1 `kvnlhm` (Database & Login, penggabung PR), A2 `azridalimunthe7`
+  (**Ketua Tim** & Tampilan Katalog), A3 `rizkikusnadi03`, A4 `astroceilo`,
+  A5 `fikarnugraha18`. Aturan review: 2 persetujuan = ketua tim + satu anggota.
+  Label Trello ikut diganti.
+- Verifikasi: hanya dokumen; tautan diperiksa.
+
 ### 2026-09-27 — Kevin Ilham — A1 · Buat database dan isi data contoh
 - Branch / PR: `feat/skema-database` → PR ke `develop`
 - Perubahan: `prisma/schema.prisma` 15 tabel PRD §9 (snake_case lewat `@map`,

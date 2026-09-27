@@ -46,14 +46,14 @@ fix: stok tidak kembali saat pesanan dibatalkan admin
 2. Isi template PR: masalah, perubahan, cara menguji, tangkapan layar, dan hasil
    verifikasi (`PASS` / `FAIL` / `NOT_RUN`).
 3. Pindahkan kartu Trello ke **Uji Coba**.
-4. PR butuh **2 persetujuan**: ketua tim (A1) + satu anggota lain.
+4. PR butuh **2 persetujuan**: ketua tim (A2, `@azridalimunthe7`) + satu anggota lain.
 5. Setelah di-merge: pindahkan kartu ke **Selesai**, hapus branch-nya.
 
 > **GitHub tidak memaksakan aturan ini.** Organisasi memakai paket Free dan
 > repo ini private, sehingga proteksi branch tidak tersedia (keputusan
 > `docs/OPEN_DECISIONS.md` D10). Tombol *Merge* tetap aktif walau belum ada
 > persetujuan. Karena itu:
-> - **Jangan menggabungkan PR sendiri.** Yang menekan *Merge* adalah A1,
+> - **Jangan menggabungkan PR sendiri.** Yang menekan *Merge* adalah A1 (`@kvnlhm`),
 >   setelah 2 persetujuan tercatat di tab *Reviews* dan CI hijau.
 > - **Pengecualian: pemilik proyek (akun `kvnlhm`)** boleh menggabungkan PR
 >   tanpa menunggu persetujuan anggota lain (keputusan pemilik proyek,

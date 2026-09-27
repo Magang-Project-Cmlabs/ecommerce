@@ -57,8 +57,10 @@ Katalog: `categories`, `products`, `product_images`, `product_variants`,
 
 ## 5. Peran tim (Trello)
 
-A1 ketua & database & auth · A2 tampilan katalog · A3 keranjang & checkout &
-akun · A4 logika pesanan · A5 admin & pengujian. Mengubah area anggota lain?
+A1 `kvnlhm` database & login, penggabung PR · A2 `azridalimunthe7` **ketua tim**
+& tampilan katalog · A3 `rizkikusnadi03` keranjang, checkout & akun · A4
+`astroceilo` logika pesanan · A5 `fikarnugraha18` admin & pengujian. Rincian:
+`docs/trello-board-plan.md`. Mengubah area anggota lain?
 Sebutkan di PR dan minta dia jadi salah satu reviewer.
 
 ## 6. Rujukan
