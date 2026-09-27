@@ -115,3 +115,4 @@ user. Prosedur: skill `tokokita-verifikasi`, [`docs/UJI_MANDIRI.md`](docs/UJI_MA
 | Bukti jalan & gerbang rilis | agent `qa-engineer`, skill `tokokita-verifikasi` |
 | Auth, upload, data pribadi, cron | agent `security-reviewer` |
 | Perbaikan bug/audit sampai PR | skill `perbaikan-terverifikasi` |
+| Review & gabungkan PR anggota | skill `tokokita-review-pr` |

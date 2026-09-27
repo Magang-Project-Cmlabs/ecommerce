@@ -51,6 +51,11 @@ lewat tes.
 
 ## 5. Blocker aktif
 
+- **`rizkikusnadi03` (A3) dan `fikarnugraha18` (A5) belum punya akses repo**
+  (dicek 27 Sep 2026: kolaborator hanya `azridalimunthe7` admin, `kvnlhm` dan
+  `astroceilo` write; keduanya juga bukan anggota organisasi). Repo private →
+  mereka tidak bisa clone maupun membuka PR. Perlu admin `azridalimunthe7`
+  mengundang dengan izin **Write** (A1 hanya Write, tidak bisa mengundang).
 - Keputusan D9 (payment gateway: route handler webhook, tombol bayar simulasi,
   akun production) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) masih perlu
   persetujuan pembimbing.

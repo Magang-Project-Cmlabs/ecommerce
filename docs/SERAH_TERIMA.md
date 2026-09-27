@@ -40,6 +40,8 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
    Actions aktif; cek ✓ di PR sebelum merge karena CI tidak bisa jadi syarat
    merge di paket Free), lihat
    [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
+   **Undang juga `rizkikusnadi03` (A3) dan `fikarnugraha18` (A5) dengan izin
+   Write** — per 27 Sep 2026 keduanya belum punya akses ke repo private ini.
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.
 3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
