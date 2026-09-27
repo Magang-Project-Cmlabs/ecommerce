@@ -39,8 +39,18 @@ cp -rn _scaffold/. .
 ```
 
 Setelahnya periksa: `README.md` dan `.gitignore` bawaan Next.js tidak ikut
-tersalin karena repo ini sudah punya versi sendiri yang lebih lengkap. Kalau
-`_scaffold` berisi berkas lain yang bentrok, bandingkan manual. Lalu:
+tersalin karena repo ini sudah punya versi sendiri yang lebih lengkap.
+
+**Tiga berkas wajib digabung manual** karena repo sudah punya versi kecilnya
+(dibuat untuk unit test modul pembayaran):
+
+| Berkas | Cara menggabung |
+|---|---|
+| `package.json` | Ambil milik `_scaffold` sebagai dasar, lalu tambahkan `devDependencies` `vitest` dari versi repo dan skrip di A3. |
+| `tsconfig.json` | Ambil milik `_scaffold` (punya plugin `next`, `jsx`, `include` untuk `.tsx`), lalu tambahkan `"noUncheckedIndexedAccess": true`. |
+| `package-lock.json` | Hapus, biarkan `npm install` membuat ulang. |
+
+`vitest.config.ts` dan `src/lib/payment/` tetap dipakai apa adanya. Lalu:
 
 ```bash
 rm -rf _scaffold
@@ -78,8 +88,9 @@ diganti namanya. Isi perintah Prisma sesuaikan dengan versinya.
 }
 ```
 
-`test` mengikuti keputusan D3. Untuk E2E pasang
-`npm i -D @playwright/test @axe-core/playwright`.
+Unit test memakai Vitest (sudah diputuskan, lihat OPEN_DECISIONS). Untuk E2E
+pasang `npm i -D @playwright/test @axe-core/playwright`. Pastikan
+`npm run test` masih lulus setelah penggabungan.
 
 ### A4. Commit dan Pull Request
 

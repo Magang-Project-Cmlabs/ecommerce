@@ -25,6 +25,7 @@ public/uploads/*
 
 # Tes
 coverage/
+.sandbox/
 /test-results/
 /playwright-report/
 tests/e2e/.auth/

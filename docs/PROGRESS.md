@@ -15,6 +15,34 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Modul payment gateway Midtrans (sandbox)
+- Branch / PR: `feat/payment-midtrans`, di-push ke `kvnlhm/ecommerce` (repo sementara), PR belum dibuka
+- Perubahan: `src/lib/payment/` — adapter Midtrans Snap via `fetch` (buat sesi,
+  ambil status), verifikasi `signature_key` SHA512 waktu-konstan, pemetaan
+  `transaction_status` → aksi pesanan, handler webhook dengan dependensi
+  disuntikkan (signature → pesanan → status diambil ulang dari API → jumlah
+  cocok → transisi idempoten; bayar ulang `INV-…~n`; uang masuk untuk pesanan
+  batal ditandai untuk admin). `package.json`/`tsconfig.json`/`vitest.config.ts`
+  minimal untuk test. Runbook `payment-midtrans.md`, `.env.example`, D9 di
+  OPEN_DECISIONS, D3 diputuskan Vitest, hook SessionStart mendeteksi scaffold
+  dari dependency `next`.
+- Verifikasi:
+  - `npm run test`: PASS (65/65)
+  - `npm run typecheck`: PASS
+  - Uji mutasi (cek jumlah, signature, percobaan aktif, total item dihapus satu
+    per satu): tiap mutasi membuat test gagal — PASS
+  - Endpoint sandbox Snap dan Status dipanggil dengan kunci palsu: keduanya
+    401, bentuk galat terbaca parser — PASS
+  - Uji sandbox sungguhan (`npm run test:sandbox`, pesanan
+    `UJI-1790477305694` Rp 324.300): sesi Snap dibuat termasuk diskon negatif
+    PASS; dibayar BCA VA di simulator → `settlement` PASS; handler webhook
+    dengan status API asli → dikonfirmasi sekali, notifikasi ulang
+    `sudah-diproses`, signature palsu 401 — PASS
+  - Kanal QRIS/Mandiri, `expire` sungguhan, dan notifikasi lewat internet ke
+    route handler: NOT_RUN (baru BCA VA dicoba; aplikasi belum ada)
+- Catatan: menyimpang dari PRD §21 atas permintaan pemilik proyek; perlu
+  persetujuan A1 dan pembimbing (D9).
+
 ### 2026-09-25 — Persiapan konfigurasi kerja
 - Branch / PR: commit awal langsung di `main` (repo baru dibuat), lalu `develop`
   dicabang dari commit yang sama

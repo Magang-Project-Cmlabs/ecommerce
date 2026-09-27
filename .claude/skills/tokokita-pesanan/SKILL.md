@@ -103,7 +103,15 @@ Hanya pemilik item pesanan berstatus `delivered`, maksimal 30 hari setelah
 maks. 3 foto. Setelah simpan, hitung ulang `products.rating` (1 desimal) dan
 `review_count` di transaksi yang sama.
 
-## 7. Selesai berarti
+## 7. Payment gateway (Midtrans sandbox)
+
+Modul `src/lib/payment/` sudah ada dan teruji; panduannya di
+`docs/runbooks/payment-midtrans.md`. Webhook tidak mengubah status sendiri:
+ia memanggil `konfirmasiBayar` / `batalkanOtomatis` yang wajib diarahkan ke
+`ubahStatus()` di §4. Jangan menulis ulang verifikasi signature atau pemetaan
+status di tempat lain.
+
+## 8. Selesai berarti
 
 Unit test untuk §1, §2, §4 lulus; tes integrasi konkurensi §3 lulus pada MySQL
 sungguhan (bukan mock); laporan status `PASS` / `FAIL` / `NOT_RUN`.

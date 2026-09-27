@@ -26,15 +26,6 @@ Terakhir diperbarui: **25 September 2026**
   untuk MySQL pada versi itu, kunci versinya, dan catat perintah yang benar di
   `runbooks/database-operations.md`.
 
-## D3. Test runner unit — *perlu sebelum kartu A4*
-
-- **Konteks:** PRD tidak menyebut test runner, padahal aturan stok, promo,
-  ongkir, dan status pesanan wajib diuji (Trello A4 · Hari 5 menguji dua pembeli
-  bersamaan).
-- **Opsi A (rekomendasi):** Vitest untuk unit/integrasi di `src/lib/`, Playwright
-  untuk E2E (kerangka sudah ada di `tests/e2e/`).
-- **Opsi B:** Jest. Lebih lambat disiapkan untuk TypeScript + ESM.
-
 ## D4. Tempat menyimpan hitungan rate limit login
 
 - **Konteks:** PRD §13 membatasi 5 percobaan/15 menit per IP untuk login dan lupa
@@ -78,12 +69,35 @@ Terakhir diperbarui: **25 September 2026**
   hash password (algoritma bcrypt, tanpa kompilasi native yang sering gagal di
   Windows).
 
+## D9. Payment gateway Midtrans — *menyimpang dari PRD §21*
+
+- **Konteks:** PRD §21 dan slide 19 menaruh payment gateway di luar cakupan
+  (Midtrans/Xendit mensyaratkan PT/CV). Pada 27 September 2026 diputuskan
+  membangun integrasi **Midtrans Snap mode sandbox** lebih dulu: modul
+  `src/lib/payment/`, panduan `runbooks/payment-midtrans.md`.
+- **Yang sudah pasti:** sandbox, tanpa SDK (fetch), status dikonfirmasi lewat
+  API Status, konfirmasi/batal tetap lewat `ubahStatus()`. COD dan konfirmasi
+  manual admin tetap ada.
+- **Masih terbuka:**
+  1. Menambah 4 kolom di `orders` (`payment_attempt`, `payment_transaction_id`,
+     `payment_url`, `payment_type`) — di luar skema PRD §9. Rekomendasi: setuju.
+  2. Route handler ketiga `POST /api/payment/midtrans` (aturan keras CLAUDE.md
+     #5 hanya mengizinkan dua). Rekomendasi: setuju; webhook memang tidak bisa
+     lewat Server Action.
+  3. Apakah tombol "Bayar Sekarang (simulasi)" PRD §7.7 tetap ada untuk demo
+     tanpa internet. Rekomendasi: tetap ada, hanya di `NODE_ENV !== 'production'`.
+  4. Production: akun Midtrans atas nama badan usaha. Tanpa itu rilis tetap
+     memakai konfirmasi manual admin.
+- **Perlu disetujui:** ketua tim (A1) dan pembimbing magang, karena mengubah
+  cakupan PRD.
+
 ---
 
 ## Sudah diputuskan
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.ts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |
 | — | Alur Git: branch fitur → `develop` → `main`, PR 2 reviewer | Presentasi slide 15 |
 | — | Tanpa payment gateway; pembayaran simulasi/konfirmasi manual | PRD §21, slide 19 |

@@ -1,0 +1,17 @@
+{
+  "name": "tokokita",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TokoKita - toko online (Next.js + Prisma + MySQL). Sementara hanya berisi perkakas test; digabung dengan package.json hasil create-next-app saat scaffold.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:sandbox": "vitest run src/lib/payment/midtrans.sandbox.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0"
+  }
+}

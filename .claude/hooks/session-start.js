@@ -34,8 +34,11 @@ try {
       !!(gs && gs.hooks && gs.hooks.SessionStart);
   }
 
-  var scaffolded = has(path.join(root, 'package.json'));
-  var pkg = scaffolded ? readJson(path.join(root, 'package.json')) : null;
+  // package.json bisa ada sebelum scaffold (perkakas test modul pembayaran),
+  // jadi tanda scaffold adalah dependency `next`, bukan keberadaan berkasnya.
+  var pkg = readJson(path.join(root, 'package.json'));
+  var deps = pkg ? Object.assign({}, pkg.dependencies || {}, pkg.devDependencies || {}) : {};
+  var scaffolded = !!deps.next;
   var scripts = pkg && pkg.scripts ? Object.keys(pkg.scripts) : [];
 
   if (!globalActive) {
@@ -58,13 +61,12 @@ try {
     count(path.join(root, '.claude', 'agents')) + ' agent tingkat project di .claude/');
   out.push('Stack    : Next.js App Router + TS, Prisma, MySQL, Tailwind, shadcn/ui (PRD §5)');
   if (!scaffolded) {
-    out.push('Kondisi  : BELUM di-scaffold (tidak ada package.json). Lihat');
-    out.push('           docs/runbooks/local-setup.md bagian A sebelum menulis kode.');
-  } else {
-    var wajib = ['typecheck', 'lint', 'test', 'build', 'e2e'];
-    var kurang = wajib.filter(function (s) { return scripts.indexOf(s) === -1; });
-    if (kurang.length) out.push('Skrip    : belum ada ' + kurang.join(', ') + ' -> laporkan NOT_RUN, jangan PASS');
+    out.push('Kondisi  : Next.js BELUM di-scaffold. Lihat docs/runbooks/local-setup.md');
+    out.push('           bagian A sebelum menulis kode aplikasi.');
   }
+  var wajib = ['typecheck', 'lint', 'test', 'build', 'e2e'];
+  var kurang = wajib.filter(function (s) { return scripts.indexOf(s) === -1; });
+  if (kurang.length) out.push('Skrip    : belum ada ' + kurang.join(', ') + ' -> laporkan NOT_RUN, jangan PASS');
   out.push('Rute     : db/migration/seed -> database-agent | action/auth/cron -> backend-engineer |');
   out.push('           UI -> skill tokokita-ui + frontend-shadcn | stok/promo/ongkir -> tokokita-pesanan |');
   out.push('           bukti -> qa-engineer | sebelum merge -> security-reviewer.');

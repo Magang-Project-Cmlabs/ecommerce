@@ -76,6 +76,18 @@ Kode di bawah adalah **usulan** (PRD hanya menyebut nama). Kunci di
 | `bank_mandiri` | Transfer Bank Mandiri | Batas bayar 24 jam |
 | `cod` | Bayar di Tempat (COD) | Langsung `confirmed`, `unpaid` |
 
+Metode yang dibayar lewat Midtrans Snap (sandbox, D9) dan kanal yang dibuka:
+`qris` → `gopay`, `other_qris` · `bank_bca` → `bca_va` · `bank_mandiri` →
+`echannel` (Mandiri Bill Payment). COD tidak lewat gateway. Sumber:
+`src/lib/payment/midtrans.ts`.
+
+| Istilah | Kode | Arti |
+|---|---|---|
+| Sesi bayar | `SesiBayar` | Token + URL halaman Snap untuk satu percobaan bayar |
+| Percobaan bayar | `payment_attempt` | Ke-n kali pembeli membuka sesi bayar; id transaksi `INV-…~n` untuk n ≥ 2 |
+| Id transaksi gateway | `payment_transaction_id` | `order_id` di Midtrans; sama dengan nomor pesanan pada percobaan pertama |
+| Notifikasi | webhook | Kabar status dari Midtrans ke `/api/payment/midtrans` |
+
 ## 6. Format
 
 | Hal | Contoh | Catatan |

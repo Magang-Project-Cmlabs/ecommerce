@@ -13,7 +13,8 @@ Sebelum kerja: baca [`docs/MULAI_DI_SINI.md`](docs/MULAI_DI_SINI.md) lalu
 Next.js App Router + React + TypeScript · MySQL 8 / MariaDB 10.4+ · Prisma ·
 Tailwind CSS · shadcn/ui · Lucide · Framer Motion · Zustand (keranjang di
 localStorage) · React Hook Form + Zod · bcrypt + JWT di cookie httpOnly ·
-Nodemailer · penyimpanan gambar lokal (dev) / S3-compatible (prod) · date-fns `id`.
+Nodemailer · penyimpanan gambar lokal (dev) / S3-compatible (prod) · date-fns `id` ·
+Vitest (unit test) · Midtrans Snap sandbox lewat `fetch` (tanpa SDK, D9).
 
 Jangan menambah ORM, library UI, state manager, atau library auth lain. Butuh
 sesuatu di luar daftar ini? Tulis dulu di `docs/OPEN_DECISIONS.md`.
@@ -33,8 +34,9 @@ tests/e2e/     Playwright (lihat tests/e2e/README.md)
 
 ## Perintah
 
-Belum ada `package.json` — proyek belum di-scaffold (kartu A1 · Hari 1). Cara
-scaffold tanpa bentrok dengan berkas yang sudah ada:
+Next.js belum di-scaffold (kartu A1 · Hari 1). `package.json` sementara hanya
+berisi `test` (Vitest) dan `typecheck` untuk modul `src/lib/payment/`. Cara
+scaffold dan menggabung `package.json`/`tsconfig.json`:
 [`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md). Skrip yang
 disepakati: `dev` `build` `start` `lint` `typecheck` `test` `db:migrate`
 `db:seed` `db:reset` `db:studio` `e2e`. Jangan menulis perintah yang belum ada di
@@ -54,7 +56,9 @@ disepakati: `dev` `build` `start` `lint` `typecheck` `test` `db:migrate`
    Berkas `"use client"` tidak pernah mengimpor Prisma. Hindari query di dalam
    loop — pakai `include`/`select`/`in`.
 5. **Mutasi hanya lewat Server Actions.** Route handler hanya
-   `GET /api/search` dan `GET /api/cron/orders` (dijaga `CRON_SECRET`).
+   `GET /api/search`, `GET /api/cron/orders` (dijaga `CRON_SECRET`), dan
+   webhook `POST /api/payment/midtrans` (dijaga signature, usulan
+   `docs/OPEN_DECISIONS.md` D9).
 6. **Validasi Zod di server** untuk setiap input, skema di `src/lib/validations/`
    dipakai bersama oleh form dan action.
 7. **Authz di setiap aksi.** Cek sesi, kepemilikan (`userId`), dan role `admin`
@@ -95,6 +99,7 @@ user. Prosedur: skill `tokokita-verifikasi`, [`docs/UJI_MANDIRI.md`](docs/UJI_MA
 | Skema Prisma, migration, seed, indeks | agent `database-agent`, skill `tokokita-akses-data` |
 | Server action, data layer, auth, email, cron | agent `backend-engineer` |
 | Stok, promo, ongkir, status pesanan | skill `tokokita-pesanan` (TDD wajib) |
+| Payment gateway (Midtrans sandbox) | `src/lib/payment/`, [`docs/runbooks/payment-midtrans.md`](docs/runbooks/payment-midtrans.md) |
 | Halaman & komponen | skill `tokokita-ui`, agent `frontend-shadcn` |
 | Bukti jalan & gerbang rilis | agent `qa-engineer`, skill `tokokita-verifikasi` |
 | Auth, upload, data pribadi, cron | agent `security-reviewer` |

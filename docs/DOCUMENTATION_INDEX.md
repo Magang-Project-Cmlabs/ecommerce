@@ -44,6 +44,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | [`database-operations.md`](runbooks/database-operations.md) | Migration, seed, reset, backup & restore |
 | [`security-audit.md`](runbooks/security-audit.md) | Checklist keamanan sebelum merge dan sebelum rilis |
 | [`deployment.md`](runbooks/deployment.md) | VPS, PM2, Nginx, HTTPS, cron, backup |
+| [`payment-midtrans.md`](runbooks/payment-midtrans.md) | Payment gateway Midtrans sandbox: alur, akun, cara menyambung ke aplikasi, cara menguji |
 
 ## 4. Perawatan
 

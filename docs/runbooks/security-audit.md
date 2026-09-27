@@ -41,6 +41,13 @@ data pribadi (alamat, telepon, email).
 - [ ] Maks. 2 MB, min. 800×800 px, maks. 8 gambar per produk
 - [ ] Nama berkas dibuat server (acak), bukan dari nama unggahan
 
+**Payment gateway (Midtrans)**
+- [ ] `MIDTRANS_SERVER_KEY` hanya dibaca di server, tanpa prefiks `NEXT_PUBLIC_`
+- [ ] Webhook memverifikasi `signature_key` lalu mengambil ulang status lewat API
+- [ ] Jumlah dibayar dicocokkan dengan `grand_total` di database
+- [ ] Konfirmasi/pembatalan lewat `ubahStatus()` bersyarat (notifikasi ganda aman)
+- [ ] "Bayar Sekarang" hanya untuk pesanan milik pembeli sendiri yang masih pending
+
 **Rahasia & privasi**
 - [ ] Tidak ada rahasia di kode, log, atau pesan error
 - [ ] `.env` dan dump database tidak ter-commit

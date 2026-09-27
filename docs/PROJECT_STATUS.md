@@ -7,7 +7,10 @@
 ## 1. Ringkasan
 
 Tahap **Hari 0 — persiapan.** PRD, presentasi, dan rencana Trello sudah ada.
-Konfigurasi kerja AI dan dokumen tim sudah disiapkan. Kode aplikasi belum ada.
+Konfigurasi kerja AI dan dokumen tim sudah disiapkan. Aplikasi Next.js belum
+di-scaffold. Satu modul sudah ada lebih dulu: **payment gateway Midtrans
+sandbox** di `src/lib/payment/` (branch `feat/payment-midtrans`), teruji unit
+test tetapi belum tersambung ke aplikasi (OPEN_DECISIONS D9).
 
 ## 2. Kemajuan per tahap (PRD §6)
 
@@ -24,9 +27,10 @@ Konfigurasi kerja AI dan dokumen tim sudah disiapkan. Kode aplikasi belum ada.
 
 | Pemeriksaan | Status | Catatan |
 |---|---|---|
-| `npm run typecheck` | NOT_RUN | Proyek belum di-scaffold |
-| `npm run lint` | NOT_RUN | Proyek belum di-scaffold |
-| `npm run test` | NOT_RUN | Proyek belum di-scaffold |
+| `npm run typecheck` | PASS | 27 Sep 2026, cakupan `src/lib/payment/` saja |
+| `npm run lint` | NOT_RUN | Skrip belum ada (ESLint datang bersama scaffold) |
+| `npm run test` | PASS | 27 Sep 2026, 65/65 unit test modul pembayaran |
+| `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
 | `npm run build` | NOT_RUN | Proyek belum di-scaffold |
 | `npm run e2e` | NOT_RUN | Aplikasi belum ada |
 
@@ -39,4 +43,4 @@ atau lewat tes.
 
 - Keputusan D1 (versi Next.js) dan D2 (versi Prisma) di
   [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) perlu dijawab sebelum scaffold;
-  D3 (test runner) sebelum kartu A4 pertama.
+  D9 (payment gateway) perlu persetujuan A1 dan pembimbing.
