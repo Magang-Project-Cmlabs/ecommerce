@@ -20,6 +20,11 @@ const TANDA = '<!-- aturan-review -->';
 const MIN = Number(process.env.MIN_PERSETUJUAN || 2);
 const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_EVENT_NAME, GITHUB_EVENT_PATH } = process.env;
 const DRY_RUN = process.env.DRY_RUN === '1';
+// Akun yang boleh menggabungkan PR tanpa persetujuan (pemilik proyek). Pisah koma.
+const BEBAS_REVIEW = (process.env.PENGGABUNG_BEBAS_REVIEW || '')
+  .split(',')
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
 
 if (!GITHUB_TOKEN || !GITHUB_REPOSITORY || !GITHUB_EVENT_NAME || !GITHUB_EVENT_PATH) {
   console.error('::error::Variabel GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_EVENT_NAME, GITHUB_EVENT_PATH wajib ada');
@@ -73,6 +78,10 @@ async function cekPullRequest() {
   const penggabung = pr.merged_by?.login ?? 'tidak diketahui';
   console.log(`PR #${pr.number}: ${penyetuju.length} persetujuan (${penyetuju.join(', ') || '-'}), digabung oleh ${penggabung}.`);
   if (penyetuju.length >= MIN) return 0;
+  if (BEBAS_REVIEW.includes(penggabung.toLowerCase())) {
+    console.log(`${penggabung} boleh menggabungkan tanpa persetujuan (CONTRIBUTING.md bagian 3). OK.`);
+    return 0;
+  }
 
   const pesan =
     `${TANDA}\n**Aturan review dilanggar.** PR ini digabung oleh @${penggabung} dengan ` +

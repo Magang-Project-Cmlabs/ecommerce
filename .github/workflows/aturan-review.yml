@@ -28,3 +28,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MIN_PERSETUJUAN: '2'
+          # Pemilik proyek boleh merge tanpa persetujuan (CONTRIBUTING.md bagian 3)
+          PENGGABUNG_BEBAS_REVIEW: 'kvnlhm'

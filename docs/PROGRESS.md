@@ -20,7 +20,8 @@ Format entri:
 - Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset
   ditolak GitHub (HTTP 403); akun `kvnlhm` hanya Write (admin: `azridalimunthe7`);
   PR #1 ter-merge tanpa persetujuan.
-- Keputusan: tetap Free + private (D10). Aturan dijaga disiplin tim dan tiga
+- Keputusan: tetap Free + private (D10). Pemilik proyek (`kvnlhm`) boleh merge
+  tanpa persetujuan anggota lain (`PENGGABUNG_BEBAS_REVIEW`). Aturan dijaga disiplin tim dan tiga
   penjaga gratis: CI (`.github/workflows/ci.yml`), pendeteksi pelanggaran
   (`aturan-review.yml` + `.github/scripts/cek-aturan-review.mjs`), hook
   `.githooks/pre-push` (dipasang `npm install` lewat skrip `prepare`).

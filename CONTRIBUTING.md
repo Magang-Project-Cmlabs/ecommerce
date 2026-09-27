@@ -55,6 +55,11 @@ fix: stok tidak kembali saat pesanan dibatalkan admin
 > persetujuan. Karena itu:
 > - **Jangan menggabungkan PR sendiri.** Yang menekan *Merge* adalah A1,
 >   setelah 2 persetujuan tercatat di tab *Reviews* dan CI hijau.
+> - **Pengecualian: pemilik proyek (akun `kvnlhm`)** boleh menggabungkan PR
+>   tanpa menunggu persetujuan anggota lain (keputusan pemilik proyek,
+>   27 Sep 2026). Pendeteksi aturan review tidak menandai merge oleh akun ini.
+>   PR tetap wajib dibuat — pengecualian ini hanya untuk syarat persetujuan,
+>   bukan izin push langsung ke `develop`/`main`.
 > - Jangan `git push` langsung ke `develop` atau `main`.
 > - PR yang ter-merge tanpa 2 persetujuan tetap di-review susulan dan dicatat
 >   di rapat pagi.
