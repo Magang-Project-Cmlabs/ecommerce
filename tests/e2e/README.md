@@ -4,14 +4,16 @@ Tes ini membuka TokoKita di browser sungguhan dan memeriksanya seperti pengguna
 biasa. Kalau perubahan kode diam-diam merusak sebuah halaman, tes ini yang
 ketahuan lebih dulu, sebelum pembeli yang menemukannya.
 
-> **Status:** kerangka siap, aplikasinya belum ada. Semua halaman di
-> `helpers/pages.ts` masih bertanda `belumAda: true`, jadi tes dilewati dengan
-> alasan jelas. Hapus tandanya satu per satu saat halaman selesai dibangun.
+> **Status:** `/masuk` dan `/daftar` sudah aktif diuji. Halaman lain di
+> `helpers/pages.ts` masih bertanda `belumAda: true` sehingga dilewati dengan
+> alasan jelas. Hapus tandanya saat halaman selesai dibangun. Tes akun butuh
+> database berisi seed (`npm run db:reset`) dan `tests/e2e/.env.e2e`.
 
 ## Yang diperiksa
 
 | Berkas | Isinya |
 |---|---|
+| `specs/akun.spec.ts` | Daftar, masuk, keluar; pesan gagal seragam; cookie httpOnly 30 hari; open redirect lewat `next` ditolak |
 | `specs/navigation.spec.ts` | Semua halaman dibuka satu per satu: tanpa galat HTTP, tanpa error JavaScript, tepat satu `<h1>` |
 | `specs/auth-guard.spec.ts` | Tamu dialihkan ke `/masuk?next=…`; pembeli tidak bisa membuka `/admin` |
 | `specs/accessibility.spec.ts` | Pemindaian axe-core (WCAG 2.1 AA, tingkat serious & critical) |

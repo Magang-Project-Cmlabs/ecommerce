@@ -15,6 +15,26 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Fitur daftar, masuk, dan keluar akun
+- Branch / PR: `feat/auth-daftar-masuk-keluar` → PR ke `develop`
+- Perubahan: `/daftar` dan `/masuk` (shadcn, keadaan loading/galat per kolom/
+  pesan umum, `noindex`), Server Action `daftar`/`masuk`/`keluar`, validasi Zod
+  bersama (`src/lib/validations/auth.ts`, termasuk batas 72 byte bcrypt dan
+  penyaring `next` anti open redirect), JWT HS256 `jose` (`src/lib/auth/token.ts`,
+  bisa dipakai proxy), cookie httpOnly 30 hari (`sesi.ts`), data pengguna
+  (`src/lib/data/pengguna.ts`), bar akun sementara di layout (dipindah A2 ke
+  header). Gagal masuk: pesan dan lama respons sama untuk email tidak terdaftar
+  dan password salah. Perbaikan font: `--font-sans` merujuk diri sendiri sejak
+  scaffold sehingga semua halaman tampil serif.
+- Verifikasi: unit 109 PASS (40 baru) · typecheck PASS · lint PASS · build PASS ·
+  e2e 12 lulus / 0 gagal (6 skenario alur akun) PASS · cek tampilan desktop &
+  360 px PASS · checklist keamanan autentikasi PASS
+- Review `security-reviewer`: tidak ada temuan wajib; tiga catatan dicatat di
+  OPEN_DECISIONS (pesan "email sudah terdaftar" = risiko diterima, rate limit
+  juga untuk /daftar, otorisasi wajib lewat `ambilPenggunaSaatIni()`).
+- Di luar cakupan (kartu lain): proxy.ts & halaman admin, lupa password, batas
+  5 percobaan masuk.
+
 ### 2026-09-27 — Trello memakai akun GitHub
 - Branch / PR: `docs/trello-pakai-akun` → PR ke `develop`
 - Perubahan di Trello (lewat API web Trello dari sesi login pemilik proyek):

@@ -20,8 +20,13 @@ test.describe('Responsif · 360 px', () => {
       expect(lebar.scroll, 'halaman bisa digulir ke samping').toBeLessThanOrEqual(lebar.client + 1);
 
       const kekecilan = await page.evaluate((min) => {
+        // Checkbox/radio yang punya <label> dikecualikan: labelnya ikut bisa
+        // diklik sehingga area sentuhnya besar (pengecualian WCAG 2.5.8).
+        const berlabel = (el: HTMLElement) =>
+          ['checkbox', 'radio'].includes(el.getAttribute('role') ?? '') &&
+          ((el.id && document.querySelector(`label[for="${CSS.escape(el.id)}"]`)) || el.closest('label'));
         return Array.from(document.querySelectorAll<HTMLElement>('button, [role="button"]'))
-          .filter((el) => el.offsetParent !== null)
+          .filter((el) => el.offsetParent !== null && !berlabel(el))
           .map((el) => ({ el, r: el.getBoundingClientRect() }))
           .filter(({ r }) => r.width > 0 && (r.width < min || r.height < min))
           .map(({ el, r }) => `${el.getAttribute('aria-label') || el.textContent?.trim() || el.tagName} (${Math.round(r.width)}×${Math.round(r.height)})`);

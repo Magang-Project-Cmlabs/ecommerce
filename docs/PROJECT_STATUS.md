@@ -16,7 +16,7 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 
 | Tahap | Status |
 |---|---|
-| 1. Fondasi (setup, skema, seed, layout, auth) | Berjalan — setup, skema, seed selesai; layout dan auth belum |
+| 1. Fondasi (setup, skema, seed, layout, auth) | Berjalan — setup, skema, seed, daftar/masuk/keluar selesai; batasi halaman, lupa password, layout belum |
 | 2. Katalog | Belum mulai |
 | 3. Keranjang & Checkout | Belum mulai |
 | 4. Akun & Admin | Belum mulai |
@@ -29,12 +29,12 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 |---|---|---|
 | `npm run typecheck` | PASS | 27 Sep 2026, setelah `npm ci` bersih |
 | `npm run lint` | PASS | 27 Sep 2026 |
-| `npm run test` | PASS | 27 Sep 2026, 69/69 unit test modul pembayaran |
+| `npm run test` | PASS | 27 Sep 2026, 109 unit test (pembayaran + validasi, token, password akun) |
 | `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
 | `npx prisma validate` | PASS | 27 Sep 2026, 15 tabel; `migrate status` sinkron (2 migration) |
 | `npm run build` | PASS | 27 Sep 2026 |
 | `npm run dev` | PASS | 27 Sep 2026, beranda 200, `lang="id"` |
-| `npm run e2e` | NOT_RUN | Harness jalan (40 tes), semua dilewati karena halaman TokoKita belum ada |
+| `npm run e2e` | PASS | 27 Sep 2026: 12 lulus (alur akun, navigasi/aksesibilitas/360 px untuk /masuk & /daftar), 34 dilewati karena halamannya belum ada |
 | `npm run db:seed` | PASS | 27 Sep 2026: 23 cek aturan PRD §10 = 0 pelanggaran, hasil identik saat diulang |
 | `npm run db:reset` | PASS | 27 Sep 2026, dengan persetujuan pemilik proyek: migrate reset → generate → seed, data lengkap, cek aturan 0 pelanggaran |
 

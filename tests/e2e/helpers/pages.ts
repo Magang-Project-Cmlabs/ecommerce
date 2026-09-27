@@ -14,8 +14,8 @@ export type Halaman = {
 export const HALAMAN_PUBLIK: Halaman[] = [
   { path: '/', judul: 'Beranda', belumAda: true },
   { path: '/produk', judul: 'Daftar Produk', belumAda: true },
-  { path: '/masuk', judul: 'Masuk', belumAda: true },
-  { path: '/daftar', judul: 'Daftar', belumAda: true },
+  { path: '/masuk', judul: 'Masuk' },
+  { path: '/daftar', judul: 'Daftar' },
   { path: '/lupa-password', judul: 'Lupa Password', belumAda: true },
   { path: '/kebijakan-privasi', judul: 'Kebijakan Privasi', belumAda: true },
   { path: '/syarat-ketentuan', judul: 'Syarat & Ketentuan', belumAda: true },
