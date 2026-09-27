@@ -16,7 +16,7 @@ Format entri:
 ---
 
 ### 2026-09-27 — Kevin Ilham — A1 · Batasi halaman yang butuh login
-- Branch / PR: `feat/batasi-halaman-login` → PR #11 ke `develop`; tindak lanjut review di `fix/perketat-penjaga-halaman` (PR #12)
+- Branch / PR: `feat/batasi-halaman-login` → PR #11 ke `develop`; tindak lanjut review di `fix/perketat-penjaga-halaman` (PR #13)
 - Perubahan: `src/proxy.ts` (cek optimistis cookie untuk `/checkout`, `/akun`,
   `/wishlist`, `/admin` → `/masuk?next=`), `src/lib/auth/rute.ts` (daftar rute,
   murni), `src/lib/auth/akses.ts` (`requireUser`/`requireAdmin` lewat
