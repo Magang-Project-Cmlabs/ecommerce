@@ -1,7 +1,7 @@
 # Keputusan Terbuka — TokoKita
 
 Hal yang tidak dijawab PRD atau perlu dipastikan sebelum dikerjakan. Setiap
-butir punya rekomendasi; yang memutuskan adalah ketua tim (A1) kecuali disebut
+butir punya rekomendasi; yang memutuskan adalah ketua tim (`azridalimunthe7`) bersama A1 (`kvnlhm`) kecuali disebut
 lain. Setelah diputuskan, pindahkan ke bagian **Sudah diputuskan** beserta
 tanggalnya.
 
@@ -72,7 +72,7 @@ Terakhir diperbarui: **27 September 2026**
      tanpa internet. Rekomendasi: tetap ada, hanya di `NODE_ENV !== 'production'`.
   4. Production: akun Midtrans atas nama badan usaha. Tanpa itu rilis tetap
      memakai konfirmasi manual admin.
-- **Perlu disetujui:** ketua tim (A1) dan pembimbing magang, karena mengubah
+- **Perlu disetujui:** ketua tim (`azridalimunthe7`) dan pembimbing magang, karena mengubah
   cakupan PRD.
 
 ---

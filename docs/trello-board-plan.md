@@ -24,14 +24,18 @@ Ditambah kolom 👥 Semua (Rencana, Selesai) dan 💤 Lanjutan (Backlog).
 
 ## Label (pemilik kartu)
 
-| Warna | Anggota | Peran |
-|---|---|---|
-| Merah | A1 | Ketua Tim & Database |
-| Kuning | A2 | Tampilan Katalog |
-| Hijau | A3 | Tampilan Keranjang & Checkout |
-| Biru | A4 | Logika Pesanan |
-| Ungu | A5 | Admin & Pengujian |
-| Oranye | Blocker | Harus selesai duluan, anggota lain menunggu |
+| Warna | Kode | Peran | Anggota (GitHub) |
+|---|---|---|---|
+| Merah | A1 | Database & Login | `kvnlhm` (Kevin Ilham) — paling berpengalaman, penggabung PR |
+| Kuning | A2 | **Ketua Tim** & Tampilan Katalog | `azridalimunthe7` (Azri Dalimunthe) |
+| Hijau | A3 | Tampilan Keranjang & Checkout | `rizkikusnadi03` |
+| Biru | A4 | Logika Pesanan | `astroceilo` |
+| Ungu | A5 | Admin & Pengujian | `fikarnugraha18` |
+| Oranye | Blocker | Harus selesai duluan, anggota lain menunggu | — |
+
+Pemetaan disepakati 27 Sep 2026, mengikuti anggota organisasi GitHub (sama
+dengan repo `article-website/news-times`). Presentasi slide 14 menyebut
+"Anggota 1 = Ketua Tim"; kenyataannya ketua tim adalah A2.
 
 ## Cara pakai
 
@@ -50,7 +54,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 - Hari 0 · Rapat awal tim — baca PRD bersama, sepakati cara pakai GitHub, jadwal sinkronisasi 20 menit, belajar dasar Next.js & Prisma
 - Hari 6 · Gabungkan semua, perbaiki bug, dan uji akhir — cek 22 kriteria sukses PRD bagian 22
 
-### A1 — Ketua Tim & Database
+### A1 — Database & Login (`kvnlhm`)
 - Hari 1 · Siapkan proyek awal dan bagikan ke tim **(Blocker)**
 - Hari 1 · Buat database dan isi data contoh **(Blocker)** — dikerjakan **Kevin Ilham**
 - Hari 2 · Fitur daftar, masuk, dan keluar akun
@@ -59,7 +63,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 - Hari 3–6 · Cek dan gabungkan pekerjaan anggota
 - Hari 6 · Online-kan website
 
-### A2 — Tampilan Katalog
+### A2 — Ketua Tim & Tampilan Katalog (`azridalimunthe7`)
 - Hari 1 · Siapkan warna, font, dan komponen dasar
 - Hari 1 · Header dan footer website
 - Hari 2 · Halaman beranda
@@ -69,7 +73,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 - Hari 5 · Tampilan saat loading, kosong, dan error
 - Hari 5 · SEO agar mudah ditemukan di Google
 
-### A3 — Tampilan Keranjang & Checkout
+### A3 — Tampilan Keranjang & Checkout (`rizkikusnadi03`)
 - Hari 1 · Simpan isi keranjang di browser
 - Hari 2 · Keranjang belanja (panel samping)
 - Hari 3 · Checkout langkah 1 & 2: alamat dan kurir
@@ -78,7 +82,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 - Hari 5 · Halaman akun saya
 - Hari 5 · Halaman riwayat pesanan
 
-### A4 — Logika Pesanan
+### A4 — Logika Pesanan (`astroceilo`)
 - Hari 1 · Aturan cek isian form (dipakai semua) **(Blocker)**
 - Hari 2 · Fungsi ambil data produk dan kategori
 - Hari 2 · Cek kode promo
@@ -89,7 +93,7 @@ Kartu bersama memakai `Semua · …`, kartu Lanjutan tanpa hari (`A3 · Wishlist
 - Hari 5 · Batal otomatis setelah 24 jam
 - Hari 5 · Tes dua orang membeli barang terakhir bersamaan
 
-### A5 — Admin & Pengujian
+### A5 — Admin & Pengujian (`fikarnugraha18`)
 - Hari 1 · Tampilan dasar halaman admin
 - Hari 2 · Kelola produk
 - Hari 2 · Kelola kategori
