@@ -1,8 +1,20 @@
 # Runbook — Operasi Database
 
-MySQL 8 / MariaDB 10.4+, charset `utf8mb4_unicode_ci`, diakses lewat Prisma.
-Perintah Prisma di bawah perlu dicocokkan dengan versi yang terpasang (lihat
-OPEN_DECISIONS D2) — perbarui runbook ini setelah scaffold.
+MySQL 8 / MariaDB 10.4+, charset `utf8mb4_unicode_ci`, diakses lewat **Prisma 7.10.0**.
+
+Yang berbeda dari panduan Prisma lama di internet:
+
+| Hal | Di repo ini |
+|---|---|
+| Konfigurasi | `prisma7.config.ts` (URL database dari `.env` lewat `dotenv`), bukan `url` di `schema.prisma` |
+| Generator | `provider = "prisma-client"`, output `src/generated/prisma/` (diabaikan Git) |
+| Import client | `import { PrismaClient } from "@/generated/prisma/client"` |
+| Koneksi MySQL | wajib driver adapter `PrismaMariaDb` dari `@prisma/adapter-mariadb` |
+| Generate | tidak otomatis setelah migrate; jalankan `npm run db:generate` (juga jalan saat `npm install`) |
+| Seed | diatur di `prisma7.config.ts` → `migrations.seed` (mis. `tsx prisma/seed.ts`; runner `tsx` dipasang saat kartu seed). `migrate reset`/`migrate dev` **tidak lagi menjalankan seed otomatis** — karena itu `npm run db:reset` merangkai reset → generate → seed |
+| `migrate reset` oleh AI agent | diblokir Prisma sampai user memberi persetujuan eksplisit |
+
+Rujukan cepat: skill `prisma-cli`, `prisma-client-api`, `prisma-database-setup`.
 
 ## Mengubah skema
 

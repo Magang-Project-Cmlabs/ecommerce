@@ -15,6 +15,23 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Scaffold Next.js (A1 · Siapkan proyek awal)
+- Branch / PR: `chore/scaffold-nextjs` (ditumpuk di atas PR #2) → PR ke `develop`
+- Perubahan: Next.js 16.3.6 (App Router, `src/`, Turbopack), Tailwind 4, ESLint,
+  shadcn (Radix, preset Nova, paket `cn` resmi shadcn), Prisma 7.10.0 dikunci
+  persis (`prisma7.config.ts`, client di `src/generated/prisma/`, adapter
+  MariaDB), dependency PRD §5. Skrip `typecheck` = `next typegen && tsc`,
+  `postinstall` = `prisma generate`, `db:reset` merangkai reset → generate →
+  seed (Prisma 7 tidak seed otomatis). `lang="id"`, judul TokoKita. Dari 9 skill
+  yang dipasang `prisma init`, 3 yang relevan disimpan sebagai folder biasa.
+  Blok `nextjs-agent-rules` disisipkan `next dev` ke `AGENTS.md`.
+  Runbook bagian A ditulis ulang sesuai langkah nyata (termasuk koreksi
+  `_scaffold` yang ditolak npm). D1 & D2 diputuskan.
+- Verifikasi (setelah `npm ci` bersih): typecheck PASS · lint PASS · test 69/69
+  PASS · build PASS · `prisma validate` PASS · dev server beranda 200 PASS ·
+  hook `pre-push` terpasang otomatis PASS · e2e NOT_RUN (semua halaman
+  `belumAda`) · `db:reset` NOT_RUN (skema kosong)
+
 ### 2026-09-27 — Aturan review di GitHub Free (D10)
 - Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR #2 ke `develop`
 - Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset

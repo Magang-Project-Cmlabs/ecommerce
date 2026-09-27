@@ -7,9 +7,9 @@ panel admin. Proyek magang kelompok (5 anggota, ± 1 minggu).
 **Stack:** Next.js (App Router, TypeScript) · Prisma · MySQL · Tailwind CSS ·
 shadcn/ui
 
-> Status: **belum di-scaffold.** Repo ini baru berisi dokumen perencanaan dan
-> konfigurasi kerja. Langkah pertama ada di kartu Trello *A1 · Hari 1 · Siapkan
-> proyek awal* dan di [`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md).
+> Status: **fondasi proyek sudah siap** (Next.js 16, Prisma 7, Tailwind 4,
+> shadcn). Halaman dan skema database belum dibangun. Cara menyalakan di
+> laptop: [`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md) bagian B.
 
 ## Mulai dari mana
 
