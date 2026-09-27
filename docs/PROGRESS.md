@@ -16,7 +16,7 @@ Format entri:
 ---
 
 ### 2026-09-27 — Scaffold Next.js (A1 · Siapkan proyek awal)
-- Branch / PR: `chore/scaffold-nextjs` (ditumpuk di atas PR #2) → PR ke `develop`
+- Branch / PR: `chore/scaffold-nextjs` → PR #3 (ditumpuk di atas PR #4)
 - Perubahan: Next.js 16.3.6 (App Router, `src/`, Turbopack), Tailwind 4, ESLint,
   shadcn (Radix, preset Nova, paket `cn` resmi shadcn), Prisma 7.10.0 dikunci
   persis (`prisma7.config.ts`, client di `src/generated/prisma/`, adapter
@@ -33,7 +33,8 @@ Format entri:
   `belumAda`) · `db:reset` NOT_RUN (skema kosong)
 
 ### 2026-09-27 — Aturan review di GitHub Free (D10)
-- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR #2 ke `develop`
+- Branch / PR: `docs/aturan-review-tanpa-proteksi` → PR #2 (hanya commit pertama
+  yang ikut digabung) dan PR #4 (hook, CI, pendeteksi, pengecualian pemilik)
 - Temuan: organisasi paket Free + repo private → proteksi branch dan ruleset
   ditolak GitHub (HTTP 403); akun `kvnlhm` hanya Write (admin: `azridalimunthe7`);
   PR #1 ter-merge tanpa persetujuan.

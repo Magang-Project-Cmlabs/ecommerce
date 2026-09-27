@@ -25,7 +25,7 @@ Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
 ## Yang sedang dikerjakan
 
 Scaffold Next.js selesai di branch `chore/scaffold-nextjs` (PR ke `develop`,
-digabung setelah PR #2). Setelah menarik `develop`, jalankan `npm install`.
+digabung setelah PR #4). Setelah menarik `develop`, jalankan `npm install`.
 
 
 Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplikasi
