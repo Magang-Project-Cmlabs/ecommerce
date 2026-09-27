@@ -69,7 +69,11 @@ user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
 6. **Validasi Zod di server** untuk setiap input, skema di `src/lib/validations/`
    dipakai bersama oleh form dan action.
 7. **Authz di setiap aksi.** Cek sesi, kepemilikan (`userId`), dan role `admin`
-   di server. `proxy.ts` hanya pengalih, bukan pelindung.
+   di server lewat `requireUser(path)` / `requireAdmin(path)`
+   (`src/lib/auth/akses.ts`) — di baris awal setiap `page.tsx` di `/checkout`,
+   `/akun`, `/wishlist`, `/admin` (dijaga test `penjaga-halaman.test.ts`) dan
+   di setiap Server Action. `proxy.ts` hanya pengalih optimistis, bukan pelindung;
+   cek di layout tidak cukup.
 8. **Status pesanan hanya lewat satu fungsi transisi** yang menegakkan tabel
    PRD §10.6 dan menulis `order_status_logs` di transaksi yang sama.
 9. **Skema hanya lewat migration Prisma.** Migration yang sudah masuk `develop`
@@ -111,3 +115,4 @@ user. Prosedur: skill `tokokita-verifikasi`, [`docs/UJI_MANDIRI.md`](docs/UJI_MA
 | Bukti jalan & gerbang rilis | agent `qa-engineer`, skill `tokokita-verifikasi` |
 | Auth, upload, data pribadi, cron | agent `security-reviewer` |
 | Perbaikan bug/audit sampai PR | skill `perbaikan-terverifikasi` |
+| Review & gabungkan PR anggota | skill `tokokita-review-pr` |

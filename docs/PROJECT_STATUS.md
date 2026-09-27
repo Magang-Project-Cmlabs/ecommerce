@@ -16,7 +16,7 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 
 | Tahap | Status |
 |---|---|
-| 1. Fondasi (setup, skema, seed, layout, auth) | Berjalan — setup, skema, seed selesai; layout dan auth belum |
+| 1. Fondasi (setup, skema, seed, layout, auth) | Berjalan — setup, skema, seed, seluruh auth A1 (daftar/masuk/keluar, batasi halaman, lupa password + rate limit) selesai; layout belum |
 | 2. Katalog | Belum mulai |
 | 3. Keranjang & Checkout | Belum mulai |
 | 4. Akun & Admin | Belum mulai |
@@ -29,12 +29,13 @@ ada (branch `feat/skema-database`). Belum ada halaman TokoKita maupun auth. Modu
 |---|---|---|
 | `npm run typecheck` | PASS | 27 Sep 2026, setelah `npm ci` bersih |
 | `npm run lint` | PASS | 27 Sep 2026 |
-| `npm run test` | PASS | 27 Sep 2026, 69/69 unit test modul pembayaran |
+| `npm run test` | PASS | 27 Sep 2026, 175 unit test (pembayaran, akun, rute & penjaga halaman, rate limit, token reset, email) |
 | `npm run test:sandbox` | PASS | 27 Sep 2026, bayar BCA VA di Midtrans sandbox → dikonfirmasi |
 | `npx prisma validate` | PASS | 27 Sep 2026, 15 tabel; `migrate status` sinkron (2 migration) |
 | `npm run build` | PASS | 27 Sep 2026 |
 | `npm run dev` | PASS | 27 Sep 2026, beranda 200, `lang="id"` |
-| `npm run e2e` | NOT_RUN | Harness jalan (40 tes), semua dilewati karena halaman TokoKita belum ada |
+| CI GitHub Actions | PASS | 27 Sep 2026, `develop` 79934a1 (typecheck, lint, test, build). Sempat merah sejak PR #10 sampai diperbaiki di PR #14 |
+| `npm run e2e` | PASS | 27 Sep 2026: 42 lulus (alur akun, pembatasan halaman, lupa/reset password, rate limit, navigasi/aksesibilitas/360 px), 22 dilewati karena halamannya belum ada |
 | `npm run db:seed` | PASS | 27 Sep 2026: 23 cek aturan PRD §10 = 0 pelanggaran, hasil identik saat diulang |
 | `npm run db:reset` | PASS | 27 Sep 2026, dengan persetujuan pemilik proyek: migrate reset → generate → seed, data lengkap, cek aturan 0 pelanggaran |
 
@@ -50,6 +51,11 @@ lewat tes.
 
 ## 5. Blocker aktif
 
+- **`rizkikusnadi03` (A3) dan `fikarnugraha18` (A5) belum punya akses repo**
+  (dicek 27 Sep 2026: kolaborator hanya `azridalimunthe7` admin, `kvnlhm` dan
+  `astroceilo` write; keduanya juga bukan anggota organisasi). Repo private →
+  mereka tidak bisa clone maupun membuka PR. Perlu admin `azridalimunthe7`
+  mengundang dengan izin **Write** (A1 hanya Write, tidak bisa mengundang).
 - Keputusan D9 (payment gateway: route handler webhook, tombol bayar simulasi,
   akun production) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) masih perlu
   persetujuan pembimbing.

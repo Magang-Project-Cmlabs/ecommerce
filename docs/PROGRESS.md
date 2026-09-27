@@ -15,6 +15,104 @@ Format entri:
 
 ---
 
+### 2026-09-27 — Kevin Ilham — A1 · Cek dan gabungkan pekerjaan anggota (mulai)
+- Branch / PR: `docs/review-pr-anggota` → PR ke `develop`
+- Keadaan: belum ada PR maupun branch dari anggota; semua kartu A2–A5 masih
+  *Rencana*. Temuan: A3 (`rizkikusnadi03`) dan A5 (`fikarnugraha18`) belum punya
+  akses repo — dicatat sebagai blocker, butuh admin `azridalimunthe7`.
+- Perubahan: skill `tokokita-review-pr` (prosedur cek → gerbang lokal → aturan
+  keras → review GitHub → merge dengan CI hijau + 2 persetujuan), didaftarkan di
+  `CLAUDE.md`; blocker akses di `PROJECT_STATUS.md` dan `SERAH_TERIMA.md`.
+- Verifikasi: hanya dokumen/skill; CI PR dicek sebelum merge.
+
+### 2026-09-27 — Kevin Ilham — Dokumen: GitHub Actions ternyata aktif
+- Branch / PR: `docs/actions-aktif` → PR ke `develop`
+- Temuan: Actions sudah berjalan sejak 27 Sep 2026 13.44 WIB (29 run CI, 22 run
+  Aturan review), bukan mati seperti dicatat sebelumnya. CI merah sejak PR #10
+  (`next build` gagal: `DATABASE_URL` kosong di CI) dan tidak terlihat karena
+  status CI tidak dicek sebelum merge PR #10, #11, #13; diperbaiki di PR #14
+  (placeholder `DATABASE_URL` di `ci.yml`).
+- Perubahan: `CONTRIBUTING.md` bagian 3 (CI & aturan review **Aktif**, wajib cek
+  ✓ sebelum merge), `SERAH_TERIMA.md`, D10, `PROJECT_STATUS.md`.
+- Verifikasi: hanya dokumen; CI PR ini dicek sebelum merge.
+
+### 2026-09-27 — Kevin Ilham — A1 · Fitur lupa password
+- Branch / PR: `feat/lupa-password` → PR ke `develop`
+- Perubahan: `/lupa-password` dan `/reset-password?token=` (shadcn, keadaan
+  kirim/sukses/galat/link tidak berlaku, `noindex`, `referrer: no-referrer`),
+  Server Action `lupaPassword`/`resetPassword`, tautan "Lupa password?" dan
+  pesan sukses di `/masuk`. Token 32 byte acak, disimpan SHA-256, berlaku 1 jam,
+  sekali pakai (update bersyarat dalam transaksi), token lama dibuang saat
+  minta baru, jeda 1 menit per akun. Pencarian akun + kirim email lewat
+  `after()` agar respons seragam. Rate limit 5/15 menit per IP untuk masuk,
+  daftar, lupa password (D4 opsi A; masuk berhasil mengosongkan hitungan).
+  `src/lib/email/` (Nodemailer, konsol saat dev — D6), link dari `APP_URL`.
+- Keputusan baru: D11 (sesi lama belum dicabut setelah reset), D12 (rate limit
+  hanya per IP). Runbook deploy: Nginx wajib `X-Real-IP`, log tanpa query.
+- Review keamanan: layak digabung dengan syarat. Diperbaiki: IP tak dikenal
+  tidak lagi jatuh ke satu hitungan bersama (bisa mengunci semua pengunjung),
+  mode email konsol hanya untuk `development`/`test`. Dicatat: D12, log Nginx.
+- Verifikasi: unit 175 PASS · typecheck/lint/build PASS · e2e 42 lulus 0 gagal
+  PASS (10 skenario baru, termasuk dua tab memakai link yang sama) · uji mutasi
+  (syarat sekali pakai dihapus, pengosongan hitungan dihapus) tertangkap PASS ·
+  cek visual desktop di Chrome PASS
+
+### 2026-09-27 — Kevin Ilham — A1 · Batasi halaman yang butuh login
+- Branch / PR: `feat/batasi-halaman-login` → PR #11 ke `develop`; tindak lanjut review di `fix/perketat-penjaga-halaman` (PR #13)
+- Perubahan: `src/proxy.ts` (cek optimistis cookie untuk `/checkout`, `/akun`,
+  `/wishlist`, `/admin` → `/masuk?next=`), `src/lib/auth/rute.ts` (daftar rute,
+  murni), `src/lib/auth/akses.ts` (`requireUser`/`requireAdmin` lewat
+  `ambilPenggunaSaatIni()`; selain admin → 404), halaman sementara `/akun`,
+  `/checkout`, `/wishlist`, `/admin` dengan penjaga terpasang, test statis yang
+  mewajibkan setiap `page.tsx` terlindungi memanggil penjaga + matcher proxy
+  sinkron dengan daftar rute.
+- Review keamanan: layak digabung, tanpa temuan wajib. Catatan ditindaklanjuti:
+  test statis kini mewajibkan penjaga di badan komponen halaman sebelum `return`
+  (bukan sekadar ada di berkas); `butuhMasuk` menormalisasi percent-encoding dan
+  huruf besar; keterbatasan query hilang pada redirect penjaga server dicatat di
+  `akses.ts` (jalur normal tamu tetap membawa query lewat proxy).
+- Verifikasi: unit 143 PASS · uji mutasi jaring pengaman (tanpa penjaga,
+  admin pakai requireUser, penjaga hanya di komentar/string, penjaga di fungsi
+  lain di berkas yang sama) semua tertangkap PASS · typecheck/lint/build PASS ·
+  e2e 26 lulus 0 gagal PASS
+
+### 2026-09-27 — Kevin Ilham — A1 · Fitur daftar, masuk, dan keluar akun
+- Branch / PR: `feat/auth-daftar-masuk-keluar` → PR ke `develop`
+- Perubahan: `/daftar` dan `/masuk` (shadcn, keadaan loading/galat per kolom/
+  pesan umum, `noindex`), Server Action `daftar`/`masuk`/`keluar`, validasi Zod
+  bersama (`src/lib/validations/auth.ts`, termasuk batas 72 byte bcrypt dan
+  penyaring `next` anti open redirect), JWT HS256 `jose` (`src/lib/auth/token.ts`,
+  bisa dipakai proxy), cookie httpOnly 30 hari (`sesi.ts`), data pengguna
+  (`src/lib/data/pengguna.ts`), bar akun sementara di layout (dipindah A2 ke
+  header). Gagal masuk: pesan dan lama respons sama untuk email tidak terdaftar
+  dan password salah. Perbaikan font: `--font-sans` merujuk diri sendiri sejak
+  scaffold sehingga semua halaman tampil serif.
+- Verifikasi: unit 109 PASS (40 baru) · typecheck PASS · lint PASS · build PASS ·
+  e2e 12 lulus / 0 gagal (6 skenario alur akun) PASS · cek tampilan desktop &
+  360 px PASS · checklist keamanan autentikasi PASS
+- Review `security-reviewer`: tidak ada temuan wajib; tiga catatan dicatat di
+  OPEN_DECISIONS (pesan "email sudah terdaftar" = risiko diterima, rate limit
+  juga untuk /daftar, otorisasi wajib lewat `ambilPenggunaSaatIni()`).
+- Di luar cakupan (kartu lain): proxy.ts & halaman admin, lupa password, batas
+  5 percobaan masuk.
+
+### 2026-09-27 — Trello memakai akun GitHub
+- Branch / PR: `docs/trello-pakai-akun` → PR ke `develop`
+- Perubahan di Trello (lewat API web Trello dari sesi login pemilik proyek):
+  25 kolom, 43 judul kartu, dan 5 label — A1–A5 diganti akun GitHub
+  (`kvnlhm`, `azridalimunthe7`, `rizkikusnadi03`, `astroceilo`, `fikarnugraha18`).
+  Dokumen `trello-board-plan.md` menyesuaikan.
+- Verifikasi: uji kering 73 perubahan tanpa sisa A1–A5; uji tulis 1 kolom;
+  baca ulang board setelah diterapkan: 73/73 berubah, 0 sisa A1–A5 — PASS
+
+### 2026-09-27 — Identitas anggota A1–A5
+- Branch / PR: `docs/identitas-anggota` → PR ke `develop`
+- Perubahan: A1 `kvnlhm` (Database & Login, penggabung PR), A2 `azridalimunthe7`
+  (**Ketua Tim** & Tampilan Katalog), A3 `rizkikusnadi03`, A4 `astroceilo`,
+  A5 `fikarnugraha18`. Aturan review: 2 persetujuan = ketua tim + satu anggota.
+  Label Trello ikut diganti.
+- Verifikasi: hanya dokumen; tautan diperiksa.
+
 ### 2026-09-27 — Kevin Ilham — A1 · Buat database dan isi data contoh
 - Branch / PR: `feat/skema-database` → PR ke `develop`
 - Perubahan: `prisma/schema.prisma` 15 tabel PRD §9 (snake_case lewat `@map`,

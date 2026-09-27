@@ -14,22 +14,24 @@ export type Halaman = {
 export const HALAMAN_PUBLIK: Halaman[] = [
   { path: '/', judul: 'Beranda', belumAda: true },
   { path: '/produk', judul: 'Daftar Produk', belumAda: true },
-  { path: '/masuk', judul: 'Masuk', belumAda: true },
-  { path: '/daftar', judul: 'Daftar', belumAda: true },
-  { path: '/lupa-password', judul: 'Lupa Password', belumAda: true },
+  { path: '/masuk', judul: 'Masuk' },
+  { path: '/daftar', judul: 'Daftar' },
+  { path: '/lupa-password', judul: 'Lupa Password' },
+  // Tanpa token menampilkan "Link tidak berlaku"; alur lengkap di lupa-password.spec.ts.
+  { path: '/reset-password', judul: 'Reset Password' },
   { path: '/kebijakan-privasi', judul: 'Kebijakan Privasi', belumAda: true },
   { path: '/syarat-ketentuan', judul: 'Syarat & Ketentuan', belumAda: true },
   { path: '/bantuan', judul: 'Bantuan', belumAda: true },
 ];
 
 export const HALAMAN_PEMBELI: Halaman[] = [
-  { path: '/akun', judul: 'Akun', belumAda: true },
+  { path: '/akun', judul: 'Akun' },
   { path: '/akun/pesanan', judul: 'Pesanan Saya', belumAda: true },
-  { path: '/wishlist', judul: 'Wishlist', belumAda: true },
+  { path: '/wishlist', judul: 'Wishlist' },
 ];
 
 export const HALAMAN_ADMIN: Halaman[] = [
-  { path: '/admin', judul: 'Ringkasan', belumAda: true },
+  { path: '/admin', judul: 'Ringkasan' },
   { path: '/admin/pesanan', judul: 'Pesanan', belumAda: true },
   { path: '/admin/produk', judul: 'Produk', belumAda: true },
   { path: '/admin/kategori', judul: 'Kategori', belumAda: true },
@@ -39,9 +41,10 @@ export const HALAMAN_ADMIN: Halaman[] = [
 
 // Halaman yang wajib mengalihkan tamu ke /masuk?next=... (PRD §12).
 export const HALAMAN_TERLINDUNGI: Halaman[] = [
-  { path: '/checkout', judul: 'Checkout', belumAda: true },
-  { path: '/akun', judul: 'Akun', belumAda: true },
-  { path: '/akun/pesanan', judul: 'Pesanan Saya', belumAda: true },
-  { path: '/wishlist', judul: 'Wishlist', belumAda: true },
-  { path: '/admin', judul: 'Admin', belumAda: true },
+  { path: '/checkout', judul: 'Checkout' },
+  { path: '/akun', judul: 'Akun' },
+  // Halamannya belum ada, tetapi proxy.ts sudah mengalihkan seluruh prefix /akun.
+  { path: '/akun/pesanan', judul: 'Pesanan Saya' },
+  { path: '/wishlist', judul: 'Wishlist' },
+  { path: '/admin', judul: 'Admin' },
 ];

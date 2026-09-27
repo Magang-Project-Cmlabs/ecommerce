@@ -36,14 +36,22 @@ Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplik
 
 1. Admin organisasi (`azridalimunthe7`): jadikan `develop` default branch.
    Proteksi branch tidak dipakai (paket Free, D10); aturan review dijaga
-   disiplin tim + hook `pre-push` (CI dan pendeteksi disiapkan, belum aktif karena
-   GitHub Actions tampaknya mati di organisasi), lihat
+   disiplin tim + hook `pre-push` + CI dan pendeteksi aturan review (GitHub
+   Actions aktif; cek ✓ di PR sebelum merge karena CI tidak bisa jadi syarat
+   merge di paket Free), lihat
    [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
+   **Undang juga `rizkikusnadi03` (A3) dan `fikarnugraha18` (A5) dengan izin
+   Write** — per 27 Sep 2026 keduanya belum punya akses ke repo private ini.
 2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
    terpasang.
 3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-4. A1: kartu *Daftar, masuk, dan keluar akun* dan *Batasi halaman yang butuh
-   login* (PRD §7.7, §13; OPEN_DECISIONS D4, D8).
+4. Auth A1 lengkap (daftar/masuk/keluar, batasi halaman, lupa password +
+   rate limit). Halaman baru di rute terlindungi wajib memanggil
+   `requireUser`/`requireAdmin` (test akan merah bila lupa). Email dikirim lewat
+   `kirimEmail()` di `src/lib/email/` — tanpa SMTP, isinya tercetak di konsol
+   `npm run dev`. Kartu A1 berikutnya: *Cek dan gabungkan pekerjaan anggota*.
+   Keputusan D4/D6 sudah diterapkan sesuai rekomendasi dan D11 (cabut sesi
+   setelah reset) menunggu konfirmasi ketua tim.
 5. A2–A5 kini bisa membaca data sungguhan lewat `src/lib/data/` +
    `src/lib/db.ts`. Gambar demo memakai `picsum.photos` (sudah diizinkan di
    `next.config.ts`).

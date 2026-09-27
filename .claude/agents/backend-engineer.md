@@ -28,10 +28,10 @@ promo, ongkir, dan status ada di skill `tokokita-pesanan`; pola query di skill
 ```ts
 "use server";
 export async function namaAksi(prev: State, formData: FormData): Promise<State> {
-  const sesi = await requireUser();                 // atau requireAdmin()
+  const pengguna = await requireUser('/checkout');   // atau requireAdmin('/admin/...')
   const parsed = skema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { ok: false, errors: parsed.error.flatten().fieldErrors };
-  // cek kepemilikan: where { id, userId: sesi.userId }
+  // cek kepemilikan: where { id, userId: pengguna.id }
   // kerjakan (transaksi bila > 1 tulis)
   revalidatePath(...);
   return { ok: true };
@@ -46,7 +46,7 @@ export async function namaAksi(prev: State, formData: FormData): Promise<State> 
 
 ## Auth dan sesi
 
-- `requireUser()` / `requireAdmin()` di `src/lib/auth.ts` dipakai **semua**
+- `requireUser(path)` / `requireAdmin(path)` di `src/lib/auth/akses.ts` dipakai **semua**
   action dan halaman terlindungi; `proxy.ts` hanya mengalihkan.
 - JWT di cookie `httpOnly`, `sameSite=lax`, `secure` di production, 30 hari.
 - Login dan lupa password: rate limit 5/15 menit per IP (OPEN_DECISIONS D4);

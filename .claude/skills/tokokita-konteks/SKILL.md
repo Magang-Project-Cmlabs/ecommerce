@@ -44,6 +44,7 @@ sudah jadi dan apa yang sedang dikerjakan orang lain.
 | Skema Zod | `src/lib/validations/<domain>.ts` — dipakai form **dan** action |
 | Hitungan murni (ongkir, promo, transisi status) | `src/lib/<domain>.ts`, tanpa Prisma, mudah di-unit-test |
 | Label, tarif kurir, batas angka | `src/lib/constants.ts` |
+| Halaman di `/checkout`, `/akun`, `/wishlist`, `/admin` | panggil `await requireUser(path)` / `await requireAdmin(path)` di baris awal (`src/lib/auth/akses.ts`) |
 | Format Rp dan tanggal | `src/lib/format.ts` |
 | Komponen shadcn | `src/components/ui/` (hasil `npx shadcn add`) |
 | Komponen fitur | `src/components/{layout,product,cart,checkout,admin}/` |
@@ -57,8 +58,10 @@ Katalog: `categories`, `products`, `product_images`, `product_variants`,
 
 ## 5. Peran tim (Trello)
 
-A1 ketua & database & auth · A2 tampilan katalog · A3 keranjang & checkout &
-akun · A4 logika pesanan · A5 admin & pengujian. Mengubah area anggota lain?
+A1 `kvnlhm` database & login, penggabung PR · A2 `azridalimunthe7` **ketua tim**
+& tampilan katalog · A3 `rizkikusnadi03` keranjang, checkout & akun · A4
+`astroceilo` logika pesanan · A5 `fikarnugraha18` admin & pengujian. Rincian:
+`docs/trello-board-plan.md`. Mengubah area anggota lain?
 Sebutkan di PR dan minta dia jadi salah satu reviewer.
 
 ## 6. Rujukan

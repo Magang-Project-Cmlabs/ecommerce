@@ -32,4 +32,10 @@ jobs:
       - run: npm run lint --if-present
       # Uji sandbox Midtrans dilewati otomatis (butuh Server Key); tidak ada rahasia di CI.
       - run: npm run test
+      # src/lib/db.ts menolak DATABASE_URL kosong saat modul dimuat, dan `next build`
+      # memuat modul untuk mengumpulkan konfigurasi halaman. Build tidak pernah
+      # membuka koneksi (semua halaman ber-DB dinamis), jadi cukup placeholder ke
+      # port mati — bukan kredensial.
       - run: npm run build --if-present
+        env:
+          DATABASE_URL: mysql://ci:ci@127.0.0.1:1/ci
