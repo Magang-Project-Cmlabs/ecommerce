@@ -1,0 +1,30 @@
+# Mendeteksi pelanggaran aturan review yang tidak bisa dicegah di paket Free:
+# PR digabung dengan < 2 persetujuan, push langsung, atau force push ke
+# develop/main. Pelanggaran = job merah + komentar di PR. Lihat
+# .github/scripts/cek-aturan-review.mjs dan CONTRIBUTING.md bagian 3.
+name: Aturan review
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  cek:
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - run: node .github/scripts/cek-aturan-review.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MIN_PERSETUJUAN: '2'
