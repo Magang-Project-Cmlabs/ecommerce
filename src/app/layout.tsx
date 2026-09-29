@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
-import { StatusAkun } from "@/components/layout/status-akun";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +13,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Font Inter, token warna, header, dan footer dikerjakan di kartu A2
-// (lihat DESIGN.md). Scaffold hanya menyetel bahasa dan judul.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
   title: "TokoKita",
   description: "Toko online TokoKita",
@@ -27,16 +29,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {/* Bar akun sementara; dipindah ke header oleh A2 (kartu Header & footer). */}
-        <div className="border-b">
-          <div className="mx-auto flex h-11 max-w-7xl items-center justify-between px-4">
-            <Link href="/" className="text-sm font-semibold">
-              TokoKita
-            </Link>
-            <StatusAkun />
-          </div>
-        </div>
+      <body className={`${jakarta.className} min-h-full flex flex-col`}>
+        <Navbar />
         {children}
       </body>
     </html>
