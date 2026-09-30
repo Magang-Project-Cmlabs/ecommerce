@@ -27,7 +27,16 @@ describe('konfigurasiDb', () => {
       password: 'rahasia',
       database: 'defaultdb',
       ssl: { ca: CA, rejectUnauthorized: true },
+      connectTimeout: 10_000,
     });
+  });
+
+  it('batas waktu sambung bisa diatur lewat URL (bawaan driver 1 detik terlalu pendek untuk TLS lintas benua)', () => {
+    const hasil = konfigurasiDb({
+      DATABASE_URL: 'mysql://u:p@h:1/d?connectTimeout=20000',
+      DATABASE_CA_CERT: CA,
+    });
+    expect(hasil).toMatchObject({ connectTimeout: 20_000 });
   });
 
   it('password dengan karakter khusus di-decode, port bawaan 3306', () => {
