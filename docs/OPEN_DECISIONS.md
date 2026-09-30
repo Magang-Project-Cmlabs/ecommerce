@@ -5,7 +5,7 @@ butir punya rekomendasi; yang memutuskan adalah ketua tim (`azridalimunthe7`) be
 lain. Setelah diputuskan, pindahkan ke bagian **Sudah diputuskan** beserta
 tanggalnya.
 
-Terakhir diperbarui: **27 September 2026**
+Terakhir diperbarui: **30 September 2026**
 
 ---
 
@@ -115,6 +115,23 @@ Terakhir diperbarui: **27 September 2026**
      memakai konfirmasi manual admin.
 - **Perlu disetujui:** ketua tim (`azridalimunthe7`) dan pembimbing magang, karena mengubah
   cakupan PRD.
+
+## D13. Batas isian checkout dan rute halaman sukses
+
+- **Konteks:** kontrak data UI checkout (A3) ↔ logika pesanan (A4) ada di
+  [`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md). Lima hal di bawah tidak diatur
+  PRD §7.6/§10, padahal skema Zod dan UI harus memakai angka yang sama.
+- **Rekomendasi:**
+  1. `quantity` per baris 1–99 (stok tetap dicek terpisah).
+  2. Maksimal 50 baris per pesanan.
+  3. `notes` (catatan untuk penjual) maksimal 500 karakter.
+  4. Alamat baru disimpan lewat action alamat terpisah (dipakai ulang oleh buku
+     alamat `/akun`); checkout hanya menerima `addressId`.
+  5. Halaman sukses di `/checkout/berhasil/[nomor]`, dijaga `requireUser` dan
+     kepemilikan pesanan.
+- **Perlu disepakati:** A3 (`rizkikusnadi03`) dan A4 (`astroceilo`), disetujui
+  ketua tim. Setelah sepakat, pindahkan ke **Sudah diputuskan** dan hapus tanda
+  *(D13)* di kontrak.
 
 ---
 

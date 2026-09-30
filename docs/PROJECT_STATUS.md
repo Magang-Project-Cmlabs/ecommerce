@@ -2,7 +2,7 @@
 
 **Repositori:** `https://github.com/Magang-Project-Cmlabs/ecommerce` (private)
 **Cabang utama:** `main` (stabil) · `develop` (integrasi)
-**Terakhir diperbarui:** 27 September 2026
+**Terakhir diperbarui:** 30 September 2026
 
 ## 1. Ringkasan
 
@@ -60,3 +60,9 @@ lewat tes.
   akun production) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) masih perlu
   persetujuan pembimbing.
 - Admin organisasi belum menjadikan `develop` default branch (opsional).
+- **`main` mendahului `develop` 4 commit** (30 Sep 2026): PR #17 dan #18
+  (`feature/header`, A2) di-merge langsung ke `main`. Perlu dibawa ke `develop`
+  lewat PR `main` → `develop` dan direview (menambah `src/lib/data.ts` di luar
+  `src/lib/data/`, mengubah `package-lock.json`).
+- Kontrak checkout di [`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md) menunggu
+  kesepakatan A3 + A4 atas D13.

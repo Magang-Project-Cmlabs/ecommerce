@@ -15,6 +15,18 @@ Format entri:
 
 ---
 
+### 2026-09-30 — Kevin Ilham — Kontrak data checkout & pesanan
+- Branch / PR: `docs/kontrak-checkout` → PR ke `develop`
+- Pemicu: A4 menanyakan field checkout/order untuk skema validasi agar sama
+  dengan UI A3. Belum ada yang ditetapkan.
+- Perubahan: `docs/KONTRAK_CHECKOUT.md` (item keranjang, alamat, pratinjau,
+  input/hasil `buatPesanan`, isi `orders`, halaman sukses), D13 di
+  `OPEN_DECISIONS.md` (batas quantity/baris/catatan, alamat terpisah, rute
+  sukses), entri di `DOCUMENTATION_INDEX.md`.
+- Temuan: PR #17 dan #18 (`feature/header`, A2) di-merge langsung ke `main`, tidak
+  lewat `develop`; `develop` tertinggal 4 commit dari `main`.
+- Verifikasi: hanya dokumen; CI PR dicek sebelum merge.
+
 ### 2026-09-27 — Kevin Ilham — A1 · Cek dan gabungkan pekerjaan anggota (mulai)
 - Branch / PR: `docs/review-pr-anggota` → PR ke `develop`
 - Keadaan: belum ada PR maupun branch dari anggota; semua kartu A2–A5 masih
