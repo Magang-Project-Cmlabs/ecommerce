@@ -13,14 +13,13 @@ import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { konfigurasiDb } from "../src/lib/konfigurasi-db";
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("Seed demo tidak boleh dijalankan di production (PRD §20, runbooks/deployment.md).");
 }
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("DATABASE_URL belum diisi di .env");
 
-const prisma = new PrismaClient({ adapter: new PrismaMariaDb(DATABASE_URL) });
+const prisma = new PrismaClient({ adapter: new PrismaMariaDb(konfigurasiDb(process.env)) });
 
 // ---------------------------------------------------------------------------
 // Utilitas
