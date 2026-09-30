@@ -29,6 +29,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Konstitusi | Alur Git, format commit, aturan PR |
 | [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) | Peta | Orientasi cepat, jebakan |
 | [`GLOSSARY.md`](GLOSSARY.md) | Peta | Istilah domain ↔ nama di DB ↔ label UI |
+| [`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md) | Spesifikasi | Field input/output checkout & pesanan antara UI (A3) dan logika pesanan (A4) |
 | [`PROJECT_STATUS.md`](PROJECT_STATUS.md) | Status | Kondisi terkini, hasil verifikasi terakhir |
 | [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) | Status | Keputusan yang belum diambil |
 | [`PROGRESS.md`](PROGRESS.md) | Riwayat | Log pekerjaan per sesi |
