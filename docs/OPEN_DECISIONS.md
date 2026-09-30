@@ -93,6 +93,22 @@ Terakhir diperbarui: **30 September 2026**
 - Token reset di query string: mitigasinya log Nginx tanpa query
   (`runbooks/deployment.md` §4).
 
+## D14. Deploy demo di Vercel + Aiven — *menyimpang dari PRD §16*
+
+- **Konteks:** PRD §16 menargetkan VPS (PM2 + Nginx + MySQL 8). Untuk demo
+  cepat, A1 men-deploy salinan repo (`kvnlhm/ecommerce`, private) ke Vercel
+  dengan MySQL terkelola Aiven. Repo organisasi tidak berubah.
+- **Sudah ada:** koneksi TLS terverifikasi lewat `DATABASE_CA_CERT`
+  (`src/lib/konfigurasi-db.ts`); langkah di `runbooks/deployment.md` §8.
+- **Yang belum cocok dengan serverless:** rate limit di memori (D4) tidak
+  efektif karena tiap instance punya hitungan sendiri · `STORAGE_DRIVER=local`
+  tidak bisa dipakai (filesystem hanya-baca) · job cron perlu penjadwal Vercel
+  atau eksternal (D7).
+- **Opsi A (rekomendasi):** Vercel + Aiven hanya untuk demo/pratinjau; rilis
+  akhir tetap VPS sesuai PRD.
+- **Opsi B:** Vercel jadi target rilis — butuh revisi PRD §16 dan penyelesaian
+  tiga butir di atas.
+
 ## D9. Payment gateway Midtrans — *menyimpang dari PRD §21*
 
 - **Konteks:** PRD §21 dan slide 19 menaruh payment gateway di luar cakupan

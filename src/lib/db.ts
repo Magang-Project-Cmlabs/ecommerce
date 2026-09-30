@@ -7,13 +7,12 @@
 import "server-only";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/generated/prisma/client";
+import { konfigurasiDb } from "@/lib/konfigurasi-db";
 
 const globalUntukPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function buatKlien(): PrismaClient {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL belum diisi di .env");
-  return new PrismaClient({ adapter: new PrismaMariaDb(url) });
+  return new PrismaClient({ adapter: new PrismaMariaDb(konfigurasiDb(process.env)) });
 }
 
 export const prisma = globalUntukPrisma.prisma ?? buatKlien();

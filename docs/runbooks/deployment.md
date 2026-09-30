@@ -83,3 +83,38 @@ memori (OPEN_DECISIONS D4).
 - [ ] Email pesanan benar-benar terkirim
 - [ ] Job cron tercatat berjalan
 - [ ] Catat tanggal rilis dan commit di `PROJECT_STATUS.md`
+
+## 8. Deploy demo: Vercel + Aiven MySQL
+
+Bukan target PRD §16 (lihat `OPEN_DECISIONS.md` D14); dipakai untuk demo cepat
+dari salinan repo `kvnlhm/ecommerce`.
+
+**Variabel di Vercel** (Settings → Environment Variables):
+
+| Variabel | Isi |
+|---|---|
+| `DATABASE_URL` | Service URI dari Aiven, mis. `mysql://avnadmin:<password>@<host>:<port>/defaultdb?connectionLimit=3` |
+| `DATABASE_CA_CERT` | Isi berkas `ca.pem` dari Aiven (Overview → CA certificate), utuh beserta baris `BEGIN`/`END` |
+| `APP_URL` | Alamat https dari Vercel |
+| `AUTH_SECRET`, `CRON_SECRET` | Nilai acak baru, bukan dari laptop |
+| lainnya | Sesuai `.env.example` (SMTP, Midtrans sandbox, `STORE_CITY`) |
+
+- `DATABASE_URL` dipakai juga saat **build** (`src/lib/db.ts` menolak nilai
+  kosong), jadi centang environment Production **dan** Preview.
+- Aiven mewajibkan TLS dengan CA milik sendiri. Tanpa `DATABASE_CA_CERT`
+  koneksi ditolak; jangan diakali dengan mematikan verifikasi sertifikat.
+- `connectionLimit` kecil karena tiap instance serverless membuka pool sendiri
+  dan paket gratis Aiven membatasi jumlah koneksi.
+- **Install Command** di Vercel: `npm ci --ignore-scripts && npx prisma generate`
+  (skrip `prepare` memanggil `git config`, yang gagal di folder tanpa `.git`).
+
+**Skema dan data demo** dijalankan dari laptop, dengan `DATABASE_URL` dan
+`DATABASE_CA_CERT` Aiven di `.env` sementara:
+
+```bash
+npx prisma migrate deploy
+npm run db:seed        # hanya untuk demo; jangan di database production
+```
+
+Status uji: koneksi ke Aiven `NOT_RUN` sampai deploy pertama berhasil — perbarui
+bagian ini setelahnya.
