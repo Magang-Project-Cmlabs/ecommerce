@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Search, ScanBarcode, ShoppingCart, User, LogOut } from "lucide-react";
+import { Search, ScanBarcode, User, LogOut } from "lucide-react";
+import CartBadge from "@/components/cart/CartBadge";
 import { keluar } from "@/actions/auth";
 import { ambilPenggunaSaatIni } from "@/lib/data/pengguna";
 
@@ -27,7 +28,9 @@ export default async function Navbar() {
         <div className="flex h-[46px] flex-1 items-center overflow-hidden rounded-full bg-[#F1F1F1]">
           <Search className="ml-4 h-5 w-5 text-gray-600" />
           <input
-            type="text"
+            type="search"
+            name="q"
+            aria-label="Cari produk, merek..."
             placeholder="Cari produk, merek..."
             className="h-full flex-1 bg-transparent px-4 text-[15px] outline-none placeholder:text-gray-500"
           />
@@ -41,12 +44,7 @@ export default async function Navbar() {
         </div>
 
         <div className="flex items-center gap-8 pr-6">
-          <Link href="/checkout" aria-label="Keranjang" className="relative">
-            <ShoppingCart className="h-8 w-8" strokeWidth={1.5} />
-            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[11px] font-bold text-white">
-              3
-            </span>
-          </Link>
+          <CartBadge />
 
           <Link
             href={pengguna ? "/akun" : "/masuk"}

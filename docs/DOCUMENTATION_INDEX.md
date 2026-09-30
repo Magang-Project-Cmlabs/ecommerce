@@ -23,6 +23,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | Dokumen | Peran | Pemilik fakta tentang |
 |---|---|---|
 | [`PRD - E-Commerce.md`](PRD%20-%20E-Commerce.md) | Spesifikasi | Fitur, aturan bisnis, skema DB, keamanan, desain |
+| [`PRD_CHECKOUT_AKUN.md`](PRD_CHECKOUT_AKUN.md) | Spesifikasi | Detail fitur Checkout Langkah 3 & 4, Pesanan Berhasil, dan Halaman Akun |
 | [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | Pembagian peran (slide 14), alur kerja tim (slide 15), risiko |
 | [`trello-board-plan.md`](trello-board-plan.md) | Rencana | Kartu per anggota, urutan Blocker |
 | [`../CLAUDE.md`](../CLAUDE.md) | Konstitusi | Aturan keras, struktur, rute skill/agent |

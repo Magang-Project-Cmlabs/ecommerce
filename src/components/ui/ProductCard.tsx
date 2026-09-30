@@ -1,10 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, Star } from "lucide-react";
+import { Check, ShoppingCart, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatRupiah } from "@/lib/format";
+import { useCartStore } from "@/stores/cart-store";
 
 type Props = {
+  id?: number;
   name: string;
   image: string;
   rating: number;
@@ -14,6 +19,7 @@ type Props = {
 };
 
 export default function ProductCard({
+  id = 1,
   name,
   image,
   rating,
@@ -21,7 +27,27 @@ export default function ProductCard({
   originalPrice,
   price,
 }: Props) {
-  const discount = Math.round((1 - price / originalPrice) * 100);
+  const [ditambahkan, setDitambahkan] = useState(false);
+  const tambahItem = useCartStore((state) => state.tambahItem);
+
+  const handleTambah = () => {
+    tambahItem({
+      productId: id,
+      variantId: null,
+      quantity: 1,
+      slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      name,
+      variantName: null,
+      image,
+      price,
+    });
+    setDitambahkan(true);
+    setTimeout(() => setDitambahkan(false), 1500);
+  };
+  const hasDiscount = originalPrice > price && originalPrice > 0;
+  const discount = hasDiscount
+    ? Math.round((1 - price / originalPrice) * 100)
+    : 0;
 
   return (
     <Card size="sm" className="ring-0 shadow-[0_2px_10px_rgba(0,0,0,0.08)]">
@@ -44,23 +70,39 @@ export default function ProductCard({
         </div>
 
         <h3 className="text-[15px] font-medium">{name}</h3>
-        <p className="text-[13px] text-gray-400 line-through">
-          {formatRupiah(originalPrice)}
-        </p>
+        {hasDiscount && (
+          <p className="text-[13px] text-gray-400 line-through">
+            {formatRupiah(originalPrice)}
+          </p>
+        )}
 
         <div className="flex items-center justify-between">
           <p className="text-[17px] font-bold">{formatRupiah(price)}</p>
-          <span className="rounded bg-[#FFF0E5] px-2 py-0.5 text-xs font-semibold text-[#FF6B00]">
-            {discount}% OFF
-          </span>
+          {discount > 0 && (
+            <span className="rounded bg-[#FFF0E5] px-2 py-0.5 text-xs font-semibold text-[#FF6B00]">
+              {discount}% OFF
+            </span>
+          )}
         </div>
 
         <Button
           type="button"
-          className="mt-2 h-10 w-full rounded-full bg-[#FF6B00] text-sm font-semibold text-white hover:bg-[#e85f00]"
+          onClick={handleTambah}
+          disabled={ditambahkan}
+          aria-label={`Tambah ${name} ke keranjang`}
+          className="mt-2 h-10 w-full rounded-full bg-[#FF6B00] text-sm font-semibold text-white transition-colors hover:bg-[#e85f00] disabled:opacity-90"
         >
-          <ShoppingCart className="h-4 w-4" />
-          Tambah ke Keranjang
+          {ditambahkan ? (
+            <>
+              <Check className="h-4 w-4" />
+              Sudah Ditambahkan
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="h-4 w-4" />
+              Tambah ke Keranjang
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>
