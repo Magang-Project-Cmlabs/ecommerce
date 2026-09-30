@@ -16,8 +16,19 @@ export type KonfigurasiDb =
       password: string;
       database: string;
       ssl: { ca: string; rejectUnauthorized: true };
+      connectTimeout: number;
       connectionLimit?: number;
     };
+
+// Bawaan driver 1 detik. Jabat tangan TCP + MySQL + TLS ke server di benua lain
+// (mis. fungsi Vercel di AS ke Aiven di Singapura) bisa lebih lama; kalau
+// terlampaui, pool terus gagal dan kueri berakhir "pool timeout" setelah 10 detik.
+const BATAS_SAMBUNG_MS = 10_000;
+
+function angkaPositif(nilai: string | null): number | undefined {
+  const angka = Number(nilai);
+  return nilai !== null && Number.isInteger(angka) && angka > 0 ? angka : undefined;
+}
 
 export function konfigurasiDb(env: Record<string, string | undefined>): KonfigurasiDb {
   const alamat = env.DATABASE_URL?.trim();
@@ -40,7 +51,7 @@ export function konfigurasiDb(env: Record<string, string | undefined>): Konfigur
     throw new Error('DATABASE_URL harus berawalan mysql://');
   }
 
-  const batas = Number(url.searchParams.get('connectionLimit'));
+  const batasKoneksi = angkaPositif(url.searchParams.get('connectionLimit'));
   return {
     host: url.hostname,
     port: url.port ? Number(url.port) : 3306,
@@ -48,6 +59,7 @@ export function konfigurasiDb(env: Record<string, string | undefined>): Konfigur
     password: decodeURIComponent(url.password),
     database: decodeURIComponent(url.pathname.replace(/^\//, '')),
     ssl: { ca, rejectUnauthorized: true },
-    ...(Number.isInteger(batas) && batas > 0 ? { connectionLimit: batas } : {}),
+    connectTimeout: angkaPositif(url.searchParams.get('connectTimeout')) ?? BATAS_SAMBUNG_MS,
+    ...(batasKoneksi ? { connectionLimit: batasKoneksi } : {}),
   };
 }

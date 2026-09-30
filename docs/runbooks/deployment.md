@@ -105,6 +105,11 @@ dari salinan repo `kvnlhm/ecommerce`.
   koneksi ditolak; jangan diakali dengan mematikan verifikasi sertifikat.
 - `connectionLimit` kecil karena tiap instance serverless membuka pool sendiri
   dan paket gratis Aiven membatasi jumlah koneksi.
+- Samakan wilayah: Settings → Functions → Function Region = wilayah terdekat
+  dengan server Aiven (mis. Singapore `sin1`). Bawaan Vercel `iad1` (AS) menambah
+  ±250 ms per kueri. Batas waktu sambung 10 detik (bisa diubah dengan
+  `?connectTimeout=` di URL); bawaan driver 1 detik membuat semua kueri gagal
+  "pool timeout" dari `iad1` (terjadi 1 Okt 2026).
 - **Install Command** di Vercel: `npm ci --ignore-scripts && npx prisma generate`
   (skrip `prepare` memanggil `git config`, yang gagal di folder tanpa `.git`).
 
