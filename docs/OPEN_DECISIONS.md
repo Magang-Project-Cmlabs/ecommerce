@@ -116,29 +116,13 @@ Terakhir diperbarui: **30 September 2026**
 - **Perlu disetujui:** ketua tim (`azridalimunthe7`) dan pembimbing magang, karena mengubah
   cakupan PRD.
 
-## D13. Batas isian checkout dan rute halaman sukses
-
-- **Konteks:** kontrak data UI checkout (A3) ↔ logika pesanan (A4) ada di
-  [`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md). Lima hal di bawah tidak diatur
-  PRD §7.6/§10, padahal skema Zod dan UI harus memakai angka yang sama.
-- **Rekomendasi:**
-  1. `quantity` per baris 1–99 (stok tetap dicek terpisah).
-  2. Maksimal 50 baris per pesanan.
-  3. `notes` (catatan untuk penjual) maksimal 500 karakter.
-  4. Alamat baru disimpan lewat action alamat terpisah (dipakai ulang oleh buku
-     alamat `/akun`); checkout hanya menerima `addressId`.
-  5. Halaman sukses di `/checkout/berhasil/[nomor]`, dijaga `requireUser` dan
-     kepemilikan pesanan.
-- **Perlu disepakati:** A3 (`rizkikusnadi03`) dan A4 (`astroceilo`), disetujui
-  ketua tim. Setelah sepakat, pindahkan ke **Sudah diputuskan** dan hapus tanda
-  *(D13)* di kontrak.
-
 ---
 
 ## Sudah diputuskan
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 30 Sep 2026 | **D13 — Kontrak checkout & pesanan berlaku** ([`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md)). Hal yang tidak diatur PRD §7.6/§10: `quantity` per baris 1–99 (stok tetap dicek terpisah) · maksimal 50 baris per pesanan · `notes` maksimal 500 karakter · alamat baru lewat action alamat terpisah (dipakai ulang buku alamat `/akun`), checkout hanya menerima `addressId` · halaman sukses `/checkout/berhasil/[nomor]` dijaga `requireUser` + kepemilikan. Perubahan hanya lewat PR yang mengubah kontrak. | Pemilik proyek, PR #19 (pertanyaan A4) |
 | 27 Sep 2026 | **Pesan pendaftaran "Email sudah terdaftar" diterima sebagai risiko sadar.** Mengonfirmasi keberadaan akun (enumerasi), tetapi PRD §13 hanya mensyaratkan anti-enumerasi untuk masuk & lupa password, dan pembeli perlu tahu agar memakai Masuk alih-alih membuat akun ganda. Mitigasi: rate limit `/daftar` (D4). Masuk tetap memakai pesan & waktu yang seragam. | Review keamanan PR #10 |
 | 27 Sep 2026 | **Otorisasi selalu lewat `ambilPenggunaSaatIni()`**, bukan `ambilSesi()` mentah: JWT stateless tetap sah sampai kedaluwarsa (30 hari) walau pengguna keluar atau akun dihapus; hanya `ambilPenggunaSaatIni()` yang memastikan akun masih ada (`deleted_at IS NULL`). Pencabutan sesi instan (keluar dari semua perangkat) butuh tabel sesi — belum direncanakan. | Review keamanan PR #10 |
 | 27 Sep 2026 | **D1 — Next.js 16.3.6** (sesuai `proxy.ts` di PRD), dikunci persis. | Scaffold, `runbooks/local-setup.md` |

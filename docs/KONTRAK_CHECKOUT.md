@@ -5,8 +5,11 @@ pesanan (A4)**, agar nama field tidak berbeda saat integrasi. Sumber: PRD §7.5,
 §7.6, §10.1–10.5, `prisma/schema.prisma`, [`GLOSSARY.md`](GLOSSARY.md), dan aturan
 keras `CLAUDE.md`. Bila berbeda dengan PRD, PRD yang benar.
 
-**Status:** usulan 30 Sep 2026. Nilai yang tidak diatur PRD ditandai *(D13)* dan
-menunggu kesepakatan di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md#d13-batas-isian-checkout-dan-rute-halaman-sukses).
+**Status:** **berlaku sejak 30 Sep 2026.** A3 dan A4 memakai nama field dan
+batas di sini apa adanya. Nilai yang tidak diatur PRD ditandai *(D13)* dan
+diputuskan di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md) bagian *Sudah diputuskan*.
+Perubahan kontrak harus lewat PR yang mengubah berkas ini, tidak diubah diam-diam
+di kode.
 
 | Bagian | Berkas | Pemilik |
 |---|---|---|

@@ -20,9 +20,9 @@ Format entri:
 - Pemicu: A4 menanyakan field checkout/order untuk skema validasi agar sama
   dengan UI A3. Belum ada yang ditetapkan.
 - Perubahan: `docs/KONTRAK_CHECKOUT.md` (item keranjang, alamat, pratinjau,
-  input/hasil `buatPesanan`, isi `orders`, halaman sukses), D13 di
-  `OPEN_DECISIONS.md` (batas quantity/baris/catatan, alamat terpisah, rute
-  sukses), entri di `DOCUMENTATION_INDEX.md`.
+  input/hasil `buatPesanan`, isi `orders`, halaman sukses), **berlaku** sebagai
+  acuan A3 + A4; D13 diputuskan (batas quantity/baris/catatan, alamat terpisah,
+  rute sukses); entri di `DOCUMENTATION_INDEX.md`.
 - Temuan: PR #17 dan #18 (`feature/header`, A2) di-merge langsung ke `main`, tidak
   lewat `develop`; `develop` tertinggal 4 commit dari `main`.
 - Verifikasi: hanya dokumen; CI PR dicek sebelum merge.

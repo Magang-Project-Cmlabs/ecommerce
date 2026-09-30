@@ -64,5 +64,3 @@ lewat tes.
   (`feature/header`, A2) di-merge langsung ke `main`. Perlu dibawa ke `develop`
   lewat PR `main` → `develop` dan direview (menambah `src/lib/data.ts` di luar
   `src/lib/data/`, mengubah `package-lock.json`).
-- Kontrak checkout di [`KONTRAK_CHECKOUT.md`](KONTRAK_CHECKOUT.md) menunggu
-  kesepakatan A3 + A4 atas D13.
