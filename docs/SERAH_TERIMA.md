@@ -22,7 +22,7 @@ Migration tambahan `20261001080000_auth_rate_limits` terpasang di keduanya.
 Tes mutasi memakai `ecommerce_verifikasi_20261001` yang terpisah.
 Jangan menjalankan seed/reset pada toko untuk melanjutkan.
 
-Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
+Gambar demo di `public/demo/` adalah ilustrasi bertema (dibuat `npm run demo:ilustrasi`), bukan foto produk; foto asli diunggah lewat admin. Foto Picsum lama ada di riwayat Git (commit `984d01f`). Production upload wajib S3/R2.
 `.env`, `.env.aiven` dan `tests/e2e/.env.e2e` hanya lokal, diabaikan Git.
 
 ## Langkah berikutnya
@@ -108,6 +108,18 @@ Typecheck, lint dan 403 unit PASS. QRIS tetap FAIL (simulator Midtrans).
 Build lokal, suite lintas browser penuh dan Lighthouse NOT_RUN.
 Preview online: akun admin dan pembeli di `tokokita_preview` memakai kata sandi
 acak (berkas `.env.akun-preview`, Git-ignored); login online belum diuji.
+
+### Performa (Lighthouse 13, build produksi lokal, DB uji, 1 Okt 2026)
+
+Desktop: performa 99–100, aksesibilitas/best-practices 100, SEO 100 (detail 92,
+lihat bawah), LCP 0,8–0,9 dtk, CLS 0. Seluler, throttling DevTools: LCP 1,7 dtk
+(beranda) dan 2,2 dtk (detail), TBT 430/620 ms, CLS 0 (target PRD LCP < 2,5 dtk).
+Seluler, simulasi bawaan (Lantern): performa 85–90 dan LCP 3,6–4,2 dtk, **di atas
+target**; elemen LCP bukan masalah ukuran (gambar 11 KB), penyebabnya render-blocking
+CSS/JS di bawah CPU 4x. Uji `experimental.inlineCss` hanya memperbaiki 0,2 dtk
+sehingga tidak dipakai. Skor ini dari server lokal, bukan Vercel: ukur ulang setelah
+deploy produksi. SEO detail 92: Lighthouse tidak menemukan meta description karena
+Next menstream metadata untuk UA non-bot; HTML-nya berisi description.
 
 ### Menjalankan QA lanjutan
 
