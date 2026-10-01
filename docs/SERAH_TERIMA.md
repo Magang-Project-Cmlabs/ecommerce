@@ -22,7 +22,7 @@ Migration tambahan `20261001080000_auth_rate_limits` terpasang di keduanya.
 Tes mutasi memakai `ecommerce_verifikasi_20261001` yang terpisah.
 Jangan menjalankan seed/reset pada toko untuk melanjutkan.
 
-Gambar demo di `public/demo/` adalah ilustrasi bertema (dibuat `npm run demo:ilustrasi`), bukan foto produk; foto asli diunggah lewat admin. Foto Picsum lama ada di riwayat Git (commit `984d01f`). Production upload wajib S3/R2.
+Foto produk demo di `public/demo/` adalah foto CC0/domain publik yang dipilih sesuai produk (kredit: [KREDIT_FOTO](KREDIT_FOTO.md)); banner dan kategori berupa ilustrasi (`npm run demo:ilustrasi`). Foto asli toko diunggah lewat admin. Production upload wajib S3/R2.
 `.env`, `.env.aiven` dan `tests/e2e/.env.e2e` hanya lokal, diabaikan Git.
 
 ## Langkah berikutnya
