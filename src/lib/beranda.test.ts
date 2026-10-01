@@ -28,3 +28,36 @@ describe('bagiTanpaDuplikat', () => {
     expect(hasil.b).toEqual([]);
   });
 });
+
+import { pilihUlasanBeranda, samarkanNama } from './beranda';
+
+describe('samarkanNama', () => {
+  it('menampilkan nama depan dan inisial belakang saja', () => {
+    expect(samarkanNama('Budi Santoso')).toBe('Budi S.');
+    expect(samarkanNama('  Citra   Dewi Lestari ')).toBe('Citra L.');
+  });
+  it('nama satu kata tetap utuh, kosong menjadi Pembeli', () => {
+    expect(samarkanNama('Andi')).toBe('Andi');
+    expect(samarkanNama('   ')).toBe('Pembeli');
+  });
+});
+
+describe('pilihUlasanBeranda', () => {
+  const u = (id: number, productId: number, rating: number, content: string, name = 'Rina Putri') =>
+    ({ id, productId, rating, content, userName: name, productName: `Produk ${productId}`, productSlug: `p-${productId}` });
+  const panjang = 'Barangnya bagus, sesuai deskripsi dan pengiriman cepat sekali.';
+
+  it('hanya rating 4 ke atas dengan tulisan cukup panjang', () => {
+    const hasil = pilihUlasanBeranda([u(1, 1, 3, panjang), u(2, 2, 5, 'Bagus'), u(3, 3, 5, panjang)], 3);
+    expect(hasil.map((x) => x.id)).toEqual([3]);
+  });
+  it('satu ulasan per produk dan dibatasi jumlahnya', () => {
+    const hasil = pilihUlasanBeranda([u(1, 1, 5, panjang), u(2, 1, 5, panjang), u(3, 2, 4, panjang), u(4, 3, 5, panjang), u(5, 4, 5, panjang)], 3);
+    expect(hasil.map((x) => x.id)).toEqual([1, 3, 4]);
+  });
+  it('nama pembeli disamarkan dan isi dipangkas rapi', () => {
+    const [satu] = pilihUlasanBeranda([u(1, 1, 5, `${panjang} ${'x'.repeat(400)}`, 'Rina Putri')], 1);
+    expect(satu!.nama).toBe('Rina P.');
+    expect(satu!.isi.length).toBeLessThanOrEqual(221);
+  });
+});

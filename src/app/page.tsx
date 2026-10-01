@@ -3,7 +3,8 @@ import HeroBanner from '@/components/product/HeroBanner';
 import CategoryList from '@/components/product/CategoryList';
 import { ProductSection } from '@/components/product/ProductSection';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ambilBanner, ambilKategori, ambilPilihanBeranda } from '@/lib/data/katalog';
+import { UlasanPilihan } from '@/components/product/UlasanPilihan';
+import { ambilBanner, ambilKategori, ambilPilihanBeranda, ambilUlasanBeranda } from '@/lib/data/katalog';
 
 const sections = [
   { key: 'populer', title: 'Produk Terpopuler', subtitle: 'Terlaris dalam 30 hari terakhir', href: '/produk?urut=populer', count: 8 },
@@ -11,6 +12,10 @@ const sections = [
   { key: 'diskon', title: 'Penawaran Spesial', subtitle: 'Harga terbaik untuk produk pilihan', href: '/produk?promo=1', count: 4 },
   { key: 'terbaru', title: 'Produk Terbaru', href: '/produk?urut=terbaru', count: 4 },
 ] as const;
+
+async function AsyncUlasan() {
+  return <UlasanPilihan ulasan={await ambilUlasanBeranda()} />;
+}
 
 async function AsyncProductSections({ products }: { products: ReturnType<typeof ambilPilihanBeranda> }) {
   const pilihan = await products;
@@ -51,5 +56,6 @@ export default async function Home() {
     <HeroBanner slides={banner} />
     <CategoryList categories={kategori} />
     <Suspense fallback={<ProductSectionsSkeleton />}><AsyncProductSections products={products} /></Suspense>
+    <Suspense fallback={null}><AsyncUlasan /></Suspense>
   </main>;
 }
