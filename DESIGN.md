@@ -13,8 +13,8 @@ disebut di tabel "Dipakai langsung".
 
 | Token | Nilai | Peran |
 |---|---|---|
-| `--primary` | orange-500 | Tombol utama, badge keranjang, aksen merek |
-| `--primary-foreground` | zinc-950 | Teks di atas `bg-primary` — **gelap, bukan putih** |
+| `--primary` | orange-700 (`#c2410c`) | Tombol utama, badge keranjang, aksen merek |
+| `--primary-foreground` | white | Teks di atas `bg-primary`, kontras 5.18 (AA) |
 | `--secondary` | blue-600 | Langkah checkout aktif, tautan |
 | `--secondary-foreground` | white | |
 | `--destructive` | red-600 | Hapus, batal, galat |
@@ -35,7 +35,7 @@ disebut di tabel "Dipakai langsung".
 | Sukses (teks) | `text-green-700` | 5.02 |
 | Sukses (ikon/centang) | `text-green-600` | 3.30 (non-teks, min. 3) |
 
-**Kenapa berbeda dari PRD:** teks putih di atas orange-500 hanya 2.80:1,
+**Kenapa berbeda dari PRD:** teks putih di atas orange-500 hanya 2.80:1, maka `--primary` memakai orange-700 (5.18:1) agar tetap oranye bertulisan putih seperti mockup PPT. Lingkaran ikon kategori memakai orange-600 + ikon putih (3.56, lulus non-teks). Lainnya:
 `bg-red-500 text-white` di `text-xs` 3.76:1, dan green-500 di atas putih 2.28:1 —
 ketiganya gagal AA. Angka dihitung dari hex Tailwind v3; Tailwind v4 memakai
 oklch dengan nilai sedikit berbeda, jadi ukur ulang setelah token dipasang.
