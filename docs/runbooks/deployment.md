@@ -77,7 +77,9 @@ Ia membatalkan pending lewat 24 jam dan menyelesaikan shipped lewat 7 hari,
 memeriksa ulang kondisi dalam transaksi dan aman dipanggil berulang.
 
 Vercel Hobby membatasi cron sekali sehari, sehingga tidak memenuhi 15 menit.
-Pilih salah satu:
+`vercel.json` sudah memasang cron harian `0 17 * * *` (00.00 WIB) sebagai jaring
+pengaman: hanya berjalan pada deployment Production, dan Vercel mengirim
+`CRON_SECRET` sendiri. Untuk ketepatan 15 menit, pilih salah satu:
 
 - Pro: tambahkan cron `*/15 * * * *` ke Vercel, secret dikirim otomatis.
 - Hobby: penjadwal eksternal memanggil URL dengan header Bearer setiap 15 menit.
