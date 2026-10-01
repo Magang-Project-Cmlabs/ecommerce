@@ -12,6 +12,17 @@ shadcn/ui
 > ada di [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) dan
 > [`deployment.md`](docs/runbooks/deployment.md).
 
+## Demo online
+
+| Lingkungan | Alamat | Catatan |
+|---|---|---|
+| Produksi (cabang `develop`) | **https://ecommerce-peach-seven-47.vercel.app** | Publik. Database Aiven `tokokita`. |
+| Preview (cabang fitur) | https://ecommerce-git-feat-penyelesaian-tokokita-tes-2254s-projects.vercel.app | Perlu login Vercel. Database uji `tokokita_preview`. |
+
+Vercel membangun ulang otomatis setiap ada push ke repo `kvnlhm/ecommerce`
+(cermin repo organisasi). Akun admin/pembeli online tidak dicantumkan di sini;
+mintalah kepada ketua tim.
+
 ## Mulai dari mana
 
 | Kamu ingin… | Baca |
