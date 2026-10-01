@@ -1,0 +1,2 @@
+import { Skeleton } from '@/components/ui/skeleton';
+export default function Loading() { return <main aria-label="Memuat halaman" aria-busy="true" className="mx-auto w-full max-w-7xl space-y-6 px-4 py-5"><Skeleton className="h-[300px] w-full md:h-[400px]" /><Skeleton className="h-8 w-52" /><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="aspect-square" />)}</div></main>; }

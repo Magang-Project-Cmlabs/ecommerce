@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { buatPembatas } from './batas-percobaan';
+import { buatPembatas, driverBatasAuth } from './batas-percobaan';
 
 const MENIT = 60_000;
 
 describe('buatPembatas', () => {
+  it('production dan Vercel memakai database; development/test memakai memori', () => {
+    expect(driverBatasAuth({ NODE_ENV: 'production' })).toBe('database');
+    expect(driverBatasAuth({ NODE_ENV: 'test', VERCEL: '1' })).toBe('database');
+    expect(driverBatasAuth({ NODE_ENV: 'test' })).toBe('memori');
+    expect(driverBatasAuth({ NODE_ENV: 'development', VERCEL: '0' })).toBe('memori');
+  });
   it('mengizinkan 5 percobaan, menolak yang ke-6 dengan sisa waktu tunggu', () => {
     let t = 0;
     const batas = buatPembatas({ maks: 5, jendelaMs: 15 * MENIT, jam: () => t });

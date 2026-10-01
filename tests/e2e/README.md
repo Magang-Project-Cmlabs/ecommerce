@@ -4,10 +4,10 @@ Tes ini membuka TokoKita di browser sungguhan dan memeriksanya seperti pengguna
 biasa. Kalau perubahan kode diam-diam merusak sebuah halaman, tes ini yang
 ketahuan lebih dulu, sebelum pembeli yang menemukannya.
 
-> **Status:** `/masuk` dan `/daftar` sudah aktif diuji. Halaman lain di
-> `helpers/pages.ts` masih bertanda `belumAda: true` sehingga dilewati dengan
-> alasan jelas. Hapus tandanya saat halaman selesai dibangun. Tes akun butuh
-> database berisi seed (`npm run db:reset`) dan `tests/e2e/.env.e2e`.
+> **Status:** semua halaman di `helpers/pages.ts` sudah aktif diuji. Suite
+> mencakup katalog, akun, lifecycle checkout/pesanan/ulasan dan admin.
+> Tes mutasi wajib memakai database uji terpisah dan `tests/e2e/.env.e2e`;
+> jangan reset atau memakai database toko/Aiven untuk E2E.
 
 ## Yang diperiksa
 
@@ -18,9 +18,13 @@ ketahuan lebih dulu, sebelum pembeli yang menemukannya.
 | `specs/auth-guard.spec.ts` | Tamu dialihkan ke `/masuk?next=…`; pembeli tidak bisa membuka `/admin` |
 | `specs/accessibility.spec.ts` | Pemindaian axe-core (WCAG 2.1 AA, tingkat serious & critical) |
 | `specs/responsive.spec.ts` | Layar 360 px: tidak melebar, tombol minimal 44×44 px |
+| `specs/katalog.spec.ts` | Saran keyboard, filter/list/pagination, varian, zoom, wishlist dan metadata |
+| `specs/commerce.spec.ts` | Checkout nyata, admin konfirmasi/kirim, pembeli terima/ulasan, batal dan IDOR |
+| `specs/admin.spec.ts` | Produk delapan foto, stok/arsip, kategori/promo/banner dan transisi pesanan |
+| `specs/review-upload.spec.ts` | Tiga foto hampir 2 MB/file, token unggah dan batas request |
 
-Tes alur bisnis (checkout, promo, batal otomatis) ditambahkan di `specs/`
-oleh pemilik kartunya — lihat `docs/UJI_MANDIRI.md`.
+Race stok/promo dan pembatalan otomatis juga diuji pada suite integrasi MySQL
+(`npm run test:integration`) dengan penjagaan nama database uji.
 
 ## Persiapan sekali saja
 
@@ -40,7 +44,8 @@ Browser tidak perlu diunduh terpisah.
    ```bash
    cp tests/e2e/.env.e2e.example tests/e2e/.env.e2e
    ```
-3. Pastikan database berisi data demo: `npm run db:reset`.
+3. Arahkan `DATABASE_URL` ke database uji terpisah. Jalankan migration; seed
+   hanya untuk database uji baru/kosong, dengan memahami bahwa seed menghapus data.
 
 > **PowerShell:** kalau muncul *"npm.ps1 cannot be loaded"*, ketik `npm.cmd`
 > sebagai ganti `npm` (mis. `npm.cmd run e2e`), atau jalankan sekali
@@ -57,6 +62,44 @@ npm run e2e:report                                            # laporan kegagala
 
 Tanpa `E2E_BASE_URL`, Playwright menyalakan `npm run dev` sendiri atau memakai
 server yang sudah menyala di port 3000.
+
+## Verifikasi lintas browser
+
+Default tetap Chrome desktop dan Android 360 px. Untuk suite tambahan,
+pasang `npx playwright install firefox webkit` dan Microsoft Edge, lalu:
+
+```powershell
+$env:E2E_CROSS_BROWSER = '1'
+npm run e2e -- --project=edge --project=firefox --project=webkit --project=mobile-webkit
+```
+
+Mode ini memakai satu worker agar browser tidak saling mengubah fixture DB.
+WebKit desktop/iPhone adalah pengujian engine WebKit melalui Playwright;
+hasilnya tidak membuktikan seluruh versi Safari atau perangkat iOS fisik.
+Setiap browser memakai login nyata dan seluruh suite desktop/mobile terkait.
+
+Untuk menjalankan server uji bersamaan dengan demo lokal, gunakan port berbeda
+dan `E2E_ISOLATED_SERVER=1` pada proses Next.js. Build uji akan memakai
+`.sandbox/next-e2e`, yang diabaikan Git. Isi environment database uji pada proses
+server juga; `E2E_BASE_URL` hanya menentukan alamat yang dibuka browser.
+
+## Midtrans sandbox nyata (opt-in)
+
+Tes `payment-sandbox.spec.ts` dikecualikan dari suite biasa. Untuk menguji BCA,
+Mandiri dan QRIS melalui Snap dan simulator resmi, gunakan server lokal dengan database uji,
+kunci sandbox Midtrans dan kredensial pembeli uji, lalu:
+
+```powershell
+$env:E2E_BASE_URL = 'http://localhost:3002'
+$env:E2E_MIDTRANS_SANDBOX = '1'
+npm.cmd run e2e -- payment-sandbox --project=desktop
+```
+
+Tes membuat dan membersihkan fixture bertanda khusus, memeriksa API settlement,
+status/log DB setelah tombol Cek Pembayaran, webhook ulang serta signature palsu.
+Domain sandbox, mode/kunci sandbox, localhost dan nama database uji diperiksa
+sebelum simulasi. Authorization API memakai Node fetch agar tidak masuk trace
+browser. Ini tidak membuktikan webhook internet atau pembayaran production.
 
 ## Aturan yang dipelajari dengan mahal
 

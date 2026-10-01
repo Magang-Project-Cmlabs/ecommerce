@@ -15,7 +15,7 @@ test.describe('Batasi halaman yang butuh login', () => {
     await page.getByRole('button', { name: /^masuk$/i }).click();
 
     await page.waitForURL((u) => u.pathname === '/akun');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Akun saya');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pengaturan Akun');
   });
 
   test('query ikut dibawa di next', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('Batasi halaman yang butuh login', () => {
     try {
       const res = await page.goto('/admin', { waitUntil: 'load' });
       expect(res?.status()).toBe(200);
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText('Panel admin');
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ringkasan toko');
     } finally {
       await context.close();
     }
@@ -51,9 +51,9 @@ test.describe('Batasi halaman yang butuh login', () => {
     const context = await loginAs(browser, 'customer');
     const page = await context.newPage();
     try {
-      const res = await page.goto('/admin', { waitUntil: 'load' });
-      expect(res?.status()).toBe(404);
-      await expect(page.getByRole('heading', { name: 'Panel admin' })).toHaveCount(0);
+      await page.goto('/admin', { waitUntil: 'load' });
+      await expect(page.getByRole('heading', { name: /tidak ditemukan/ })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Ringkasan toko' })).toHaveCount(0);
     } finally {
       await context.close();
     }

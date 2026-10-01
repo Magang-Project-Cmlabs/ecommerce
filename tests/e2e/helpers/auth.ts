@@ -10,7 +10,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import type { Browser, BrowserContext, Page } from '@playwright/test';
+import { expect, type Browser, type BrowserContext, type Page } from '@playwright/test';
 
 export type Peran = 'customer' | 'admin';
 
@@ -41,6 +41,7 @@ export function alasanLewati(peran: Peran): string {
 // aksesibilitas), bukan pada nama kelas CSS.
 export async function performLogin(page: Page, peran: Peran): Promise<void> {
   const cfg = PERAN[peran];
+  await page.setExtraHTTPHeaders({ 'x-real-ip': `10.211.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
   await page.goto('/masuk', { waitUntil: 'load' });
   await page.getByLabel(/email/i).fill(process.env[cfg.userEnv]!);
   await page.getByLabel(/password|kata sandi/i).fill(process.env[cfg.passEnv]!);
@@ -57,6 +58,8 @@ export async function loginAs(browser: Browser, peran: Peran): Promise<BrowserCo
     const context = await browser.newContext({ storageState: file });
     const page = await context.newPage();
     await page.goto(PERAN[peran].halamanDalam, { waitUntil: 'load' });
+    // Streaming dapat menyelesaikan goto sebelum redirect server diterapkan.
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const masihHidup = !POLA_MASUK.test(page.url());
     await page.close();
     if (masihHidup) return context;

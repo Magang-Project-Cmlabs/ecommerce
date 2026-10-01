@@ -1,85 +1,109 @@
-# Runbook — Deployment
+# Deployment — Vercel + Aiven
 
-Target PRD §16: VPS Ubuntu di Indonesia, Next.js mode `standalone` dijalankan
-PM2 di belakang Nginx, MySQL 8, HTTPS Let's Encrypt. Kartu: *A1 · Hari 6 ·
-Online-kan website*.
+Target pemilik proyek sejak 1 Oktober 2026: Vercel dan Aiven, menggantikan
+VPS pada PRD lama. Konfigurasi proyek tersedia di `vercel.json`.
 
-> Runbook ini kerangka. Isi bagian yang ditandai `<…>` dan perbarui setelah
-> deployment pertama berhasil. Setiap langkah yang mengubah server production
-> dikerjakan bersama A1.
+## Konfigurasi Vercel
 
-## 1. Persiapan server (sekali)
+- Framework Next.js, Node 22 atau 24, root directory repo ini.
+- Install: `npm ci --ignore-scripts && npx prisma generate`.
+  `prepare` mengatur Git hook, sehingga dilewati pada folder build tanpa Git.
+- Build: `npm run build`; output directory mengikuti Next.js.
+- Region awal `sin1` (Singapura); samakan dengan lokasi layanan Aiven.
+- Environment Production dan Preview dipisahkan. Preview sebaiknya memakai
+  database uji sendiri agar tes tidak mengubah data toko.
+- Production branch harus menunjuk commit integrasi yang telah diverifikasi;
+  branch lokal `feat/penyelesaian-tokokita` belum otomatis menjadi production.
 
-- Node.js LTS, MySQL 8, Nginx, PM2 (`npm i -g pm2`), Certbot.
-- Buat database dan user MySQL khusus aplikasi (bukan `root`), hanya boleh dari
-  `localhost`.
-- Firewall: buka 22, 80, 443 saja. Port 3000 dan 3306 tidak dibuka ke internet.
+## Environment
 
-## 2. Konfigurasi
+Nilai rahasia dimasukkan lewat Vercel Environment Variables, bukan Git.
 
-- `next.config`: `output: 'standalone'`.
-- `.env` di server berisi nilai production: `APP_URL` https, `AUTH_SECRET` dan
-  `CRON_SECRET` baru (bukan dari laptop), SMTP asli, `STORAGE_DRIVER=s3`.
-- `.env` hanya bisa dibaca user aplikasi (`chmod 600`).
+| Variabel | Kebutuhan |
+|---|---|
+| `DATABASE_URL` | URL MySQL Aiven; tambahkan `connectionLimit=3&connectTimeout=10000` |
+| `DATABASE_CA_CERT` | PEM CA dari Aiven, termasuk BEGIN/END; baris asli atau `\n` |
+| `APP_URL` | Domain HTTPS resmi; digunakan email, metadata dan return pembayaran |
+| `AUTH_SECRET` | Acak ≥32 karakter; tetap sama antar instance/deployment agar sesi konsisten |
+| `CRON_SECRET` | Rahasia untuk header Bearer pemanggil cron |
+| `STORE_CITY` | Kota asal toko, default Jakarta |
+| `SMTP_HOST/PORT/USER/PASS`, `MAIL_FROM` | SMTP nyata untuk reset password dan notifikasi |
+| `STORAGE_DRIVER` | `s3` wajib untuk production |
+| `S3_ENDPOINT/BUCKET/ACCESS_KEY/SECRET_KEY/PUBLIC_URL` | Bucket S3/R2, endpoint HTTPS dan URL publik gambar |
+| `MIDTRANS_SERVER_KEY`, `MIDTRANS_IS_PRODUCTION` | Sandbox untuk demo; production hanya jika akun merchant siap |
+| `PAYMENT_SIMULATION_ENABLED` | `false`; production selalu menolak simulasi |
 
-## 3. Rilis
+Koneksi Aiven memverifikasi CA; jangan menonaktifkan verifikasi sertifikat.
+Environment build juga memerlukan `DATABASE_URL`, karena Next memuat modul
+server saat mengumpulkan route. Build tidak perlu melakukan reset/seed.
 
-```bash
-git pull origin main
-npm ci
-npx prisma migrate deploy
-npm run build
-# salin public/ dan .next/static/ ke dalam .next/standalone/ (syarat mode standalone)
-pm2 reload tokokita || pm2 start .next/standalone/server.js --name tokokita
-```
+## Database dan rilis
 
-PM2 dijalankan **satu instance** (mode fork) selama rate limit disimpan di
-memori (OPEN_DECISIONS D4).
+1. Uji koneksi TLS dari environment Aiven tanpa mencetak URL/password.
+2. Jalankan `npm run db:deploy` dengan environment Aiven sebelum
+   deployment aplikasi baru. Migration bersifat tambahan; jangan `db:reset`.
+   Wrapper `scripts/migrate-deploy.mjs` menyediakan CA PEM sementara untuk
+   engine Prisma Migrate dan menetapkan `sslaccept=strict`; adapter runtime
+   membaca CA langsung dari environment. Contoh lokal:
+   `node --env-file=.env.aiven scripts/migrate-deploy.mjs`.
+3. Deploy commit terverifikasi melalui Git integration atau `vercel --prod`.
+4. Periksa build log dan halaman HTTPS, kemudian login customer/admin asli.
+5. Uji unggah gambar, checkout, pembayaran, email dan cron pada domain resmi.
 
-## 4. Nginx + HTTPS
+Untuk demo, 26 produk seed yang sudah ada dapat tetap dipakai. Seed bersifat
+destruktif dan tidak perlu dijalankan lagi. `npm run demo:images` hanya
+memindahkan URL foto Picsum milik seed ke aset lokal; tidak mereset data.
 
-- Reverse proxy `server_name <domain>` → `http://127.0.0.1:3000`.
-- **Wajib** `proxy_set_header X-Real-IP $remote_addr;` di blok `location`.
-  Rate limit masuk/daftar/lupa password memakai header ini sebagai IP klien
-  (`src/lib/auth/ip.ts`); tanpa baris ini nilainya bisa dipalsukan klien.
-  Bila header kosong sama sekali, rate limit **nonaktif** dan log PM2 berisi
-  `[rate limit] IP klien tidak diketahui` — anggap itu galat konfigurasi.
-  Port 3000 hanya boleh terbuka untuk `127.0.0.1` (bukan publik), supaya semua
-  request lewat Nginx.
-- Cek setelah deploy: `curl -s -o /dev/null -w "%{http_code}" -H "X-Real-IP: 1.2.3.4" https://<domain>/masuk`
-  lalu pastikan log aplikasi tidak pernah memakai `1.2.3.4` (Nginx harus menimpanya).
-- **Access log tanpa query string.** Link reset berbentuk
-  `/reset-password?token=…` (berlaku 1 jam, sekali pakai); jangan sampai token
-  tercatat di log (sejalan dengan D7). Pakai format log dengan `$uri`, bukan
-  `$request`/`$request_uri`:
+## Perilaku serverless
 
-  ```nginx
-  log_format tanpa_query '$remote_addr - [$time_local] "$request_method $uri" $status $body_bytes_sent "$http_user_agent"';
-  access_log /var/log/nginx/tokokita.access.log tanpa_query;
-  ```
-- `certbot --nginx -d <domain>`; cek perpanjangan otomatis dengan
-  `certbot renew --dry-run`.
-- `client_max_body_size` cukup untuk upload gambar: 2 MB per berkas; kalau
-  8 gambar dikirim dalam satu request butuh ± `20m`. Batas body Server Actions
-  di `next.config` harus disamakan (bawaannya 1 MB).
+- Rate limit login/daftar/reset memakai tabel bersama `auth_rate_limits` pada
+  production. Kunci IP disimpan sebagai HMAC; instance tidak mempunyai kuota
+  terpisah. Di Vercel hanya `x-vercel-forwarded-for` yang dipercaya.
+- Unggah produk maksimal 8 foto, ulasan maksimal 3 foto, masing-masing ≤2 MB.
+  Foto ulasan harus terikat item pesanan sendiri yang layak diulas, dengan
+  kuota bersama 5 file/15 menit per item. Browser mengunggah satu file per
+  request, lalu mengirim token bertanda
+  tangan yang terikat pengguna dan tujuan. Request final tidak membawa file.
+- Batas Server Actions 3 MB; batas Vercel 4,5 MB tidak dapat dinaikkan dengan
+  Next config. File product minimal 800×800; banner/category mengikuti desain.
+- `STORAGE_DRIVER=local` hanya development; filesystem Vercel bukan storage
+  permanen. Token unggah tidak mengizinkan URL bebas atau foto pengguna lain.
+- Email dikirim setelah commit; kegagalan SMTP tidak membatalkan pesanan.
 
-## 5. Job terjadwal
+## Cron
 
-```cron
-*/15 * * * * curl -fsS -H "Authorization: Bearer <CRON_SECRET>" https://<domain>/api/cron/orders > /dev/null
-```
+Endpoint `GET /api/cron/orders` memerlukan `Authorization: Bearer CRON_SECRET`.
+Ia membatalkan pending lewat 24 jam dan menyelesaikan shipped lewat 7 hari,
+memeriksa ulang kondisi dalam transaksi dan aman dipanggil berulang.
 
-## 6. Backup & pemantauan
+Vercel Hobby membatasi cron sekali sehari, sehingga tidak memenuhi 15 menit.
+Pilih salah satu:
 
-- Backup: lihat `database-operations.md` (harian 7 hari, mingguan 4 minggu,
-  salin ke storage terpisah, uji restore bulanan).
-- Log error: `pm2 logs tokokita`; pasang `pm2 install pm2-logrotate`.
-- Uptime check halaman utama dari layanan pemantau eksternal.
+- Pro: tambahkan cron `*/15 * * * *` ke Vercel, secret dikirim otomatis.
+- Hobby: penjadwal eksternal memanggil URL dengan header Bearer setiap 15 menit.
+  Alternatif yang sudah disiapkan: `.github/workflows/orders-cron.yml`;
+  isi GitHub Actions variable `APP_URL` dan secret `CRON_SECRET`.
 
-## 7. Setelah rilis
+GitHub scheduled workflows memakai default branch dan dapat terlambat.
+Periksa kuota Actions pada repo private sebelum mengaktifkan jadwal penuh.
+Untuk uji manual: `node --env-file=.env scripts/run-orders-cron.mjs`.
 
-- [ ] Beranda, detail produk, checkout, dan `/admin` terbuka lewat HTTPS
-- [ ] Akun demo PRD §20 **tidak** ada di database production
-- [ ] Email pesanan benar-benar terkirim
-- [ ] Job cron tercatat berjalan
-- [ ] Catat tanggal rilis dan commit di `PROJECT_STATUS.md`
+## Backup dan verifikasi online
+
+Periksa backup yang tersedia pada paket Aiven, retensi dan uji restore ke
+database terpisah. Jika paket tidak menyediakan backup yang sesuai PRD,
+gunakan backup MySQL terjadwal ke storage terpisah. Jangan simpan dump di Git.
+
+Backup manual TLS dan restore Aiven telah diuji pada 1 Oktober 2026 ke
+DB lokal terpisah: 26 produk, 14 pengguna, 79 pesanan, 188 ulasan dan tiga
+migration. Dump hanya lokal dan diabaikan Git; jadwal/retensi backup cloud
+belum dikonfigurasi.
+
+Status online baru `PASS` setelah domain/build, query TLS, upload S3, email
+eksternal, pemanggil cron dan restore sungguhan dibuktikan. Tes lokal tidak
+membuktikan konfigurasi akun hosting sudah aktif.
+
+Sumber platform: [Vercel request headers](https://vercel.com/docs/headers/request-headers),
+[batas Functions](https://vercel.com/docs/functions/limitations),
+[batas cron](https://vercel.com/docs/cron-jobs/usage-and-pricing),
+[Aiven TLS CA](https://aiven.io/docs/platform/concepts/tls-ssl-certificates).

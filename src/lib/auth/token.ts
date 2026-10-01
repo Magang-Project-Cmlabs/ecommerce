@@ -6,7 +6,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 
 export type Role = 'customer' | 'admin';
-export type IsiSesi = { userId: number; role: Role };
+export type IsiSesi = { userId: number; role: Role; passwordVersion?: string };
 
 /** Nama cookie sesi; dipakai sesi.ts (server) dan proxy.ts. */
 export const NAMA_COOKIE_SESI = 'tokokita_sesi';
@@ -31,7 +31,7 @@ export async function buatTokenSesi(
   kunci: Uint8Array,
   sekarangDetik = Math.floor(Date.now() / 1000),
 ): Promise<string> {
-  return new SignJWT({ role: isi.role })
+  return new SignJWT({ role: isi.role, ...(isi.passwordVersion ? { pv: isi.passwordVersion } : {}) })
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(String(isi.userId))
     .setIssuedAt(sekarangDetik)
@@ -47,7 +47,8 @@ export async function bacaTokenSesi(token: string | undefined, kunci: Uint8Array
     const role = payload.role as Role;
     if (!ROLE_SAH.includes(role)) return null;
     if (!payload.sub || !/^[1-9]\d*$/.test(payload.sub)) return null;
-    return { userId: Number(payload.sub), role };
+    if (payload.pv !== undefined && (typeof payload.pv !== 'string' || !/^[a-f0-9]{64}$/.test(payload.pv))) return null;
+    return { userId: Number(payload.sub), role, ...(typeof payload.pv === 'string' ? { passwordVersion: payload.pv } : {}) };
   } catch {
     return null;
   }

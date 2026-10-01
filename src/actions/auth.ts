@@ -10,13 +10,15 @@ import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { z } from 'zod';
 import { Prisma } from '@/generated/prisma/client';
-import { batasAuth, pesanTerlaluSering } from '@/lib/auth/batas-percobaan';
+import { driverBatasAuth, pesanTerlaluSering } from '@/lib/auth/batas-percobaan';
+import { catatBatasAuth, hapusBatasAuth } from '@/lib/auth/pembatas-auth';
 import { ipKlien } from '@/lib/auth/ip';
 import { cocokkanPassword, cocokkanPasswordPalsu, hashPassword } from '@/lib/auth/password';
+import { versiPassword } from '@/lib/auth/password-version';
 import { hapusSesi, simpanSesi } from '@/lib/auth/sesi';
 import { MASA_TOKEN_RESET_MS, buatTokenReset, hashTokenReset } from '@/lib/auth/token-reset';
 import { buatAkunPembeli, cariAkunUntukMasuk } from '@/lib/data/pengguna';
-import { cariAkunUntukReset, pakaiTokenReset, simpanTokenReset } from '@/lib/data/reset-password';
+import { cariAkunUntukReset, pakaiTokenReset, simpanTokenReset, tokenResetMasihBerlaku } from '@/lib/data/reset-password';
 import { kirimEmail } from '@/lib/email';
 import { emailResetPassword } from '@/lib/email/templat';
 import { urlAplikasi } from '@/lib/url-aplikasi';
@@ -40,22 +42,26 @@ const teks = (formData: FormData, nama: string) => {
 
 let sudahPeringatkanIp = false;
 
-/**
- * Catat satu percobaan untuk aksi ini dari IP peminta. IP tidak diketahui
- * (header proxy tidak ada) = tidak dibatasi + peringatan di log, supaya salah
- * konfigurasi Nginx tidak mengunci semua pengunjung sekaligus.
- */
-async function catatPercobaan(aksi: 'masuk' | 'daftar' | 'lupa-password') {
-  const ip = ipKlien(await headers());
-  if (!ip) {
-    if (!sudahPeringatkanIp) {
-      sudahPeringatkanIp = true;
-      console.error('[rate limit] IP klien tidak diketahui (X-Real-IP kosong) — batas percobaan NONAKTIF. Periksa konfigurasi Nginx (docs/runbooks/deployment.md).');
+const BATAS_TIDAK_TERSEDIA = 'Layanan akun belum tersedia. Coba lagi beberapa saat.';
+
+/** Production fails closed when the trusted IP or shared limiter is unavailable. */
+async function catatPercobaan(aksi: 'masuk' | 'daftar' | 'lupa-password' | 'reset-password') {
+  try {
+    const ip = ipKlien(await headers());
+    if (!ip) {
+      if (driverBatasAuth() === 'database') throw new Error('Trusted client IP unavailable');
+      if (!sudahPeringatkanIp) {
+        sudahPeringatkanIp = true;
+        console.error('[rate limit] IP klien tidak diketahui; pembatas lokal tidak aktif');
+      }
+      return { kunci: null, boleh: true as const };
     }
-    return { kunci: null, boleh: true as const };
+    const kunci = `${aksi}:${ip}`;
+    return { kunci, ...await catatBatasAuth(kunci) };
+  } catch {
+    console.error('[rate limit] pembatas percobaan belum tersedia');
+    return { kunci: null, boleh: false as const, message: BATAS_TIDAK_TERSEDIA };
   }
-  const kunci = `${aksi}:${ip}`;
-  return { kunci, ...batasAuth.catat(kunci) };
 }
 
 export async function daftar(_: StateFormAkun, formData: FormData): Promise<StateFormAkun> {
@@ -69,12 +75,13 @@ export async function daftar(_: StateFormAkun, formData: FormData): Promise<Stat
   if (!hasil.success) return { errors: z.flattenError(hasil.error).fieldErrors, values };
 
   const batas = await catatPercobaan('daftar');
-  if (!batas.boleh) return { message: pesanTerlaluSering(batas.tungguDetik), values };
+  if (!batas.boleh) return { message: 'message' in batas ? batas.message : pesanTerlaluSering(batas.tungguDetik), values };
 
   const { name, email, phone, password } = hasil.data;
+  const passwordHash = await hashPassword(password);
   let akun: { id: number; role: 'customer' | 'admin' };
   try {
-    akun = await buatAkunPembeli({ name, email, phone, passwordHash: await hashPassword(password) });
+    akun = await buatAkunPembeli({ name, email, phone, passwordHash });
   } catch (e) {
     // Email unik (juga menangkap dua pendaftaran bersamaan dengan email sama).
     // Pesan ini sengaja mengonfirmasi email terdaftar — risiko enumerasi yang
@@ -82,10 +89,11 @@ export async function daftar(_: StateFormAkun, formData: FormData): Promise<Stat
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
       return { errors: { email: ['Email sudah terdaftar. Silakan masuk.'] }, values };
     }
-    throw e;
+    console.error('[daftar] database belum dapat menyimpan akun');
+    return { message: 'Akun belum dapat dibuat. Coba lagi beberapa saat.', values };
   }
 
-  await simpanSesi({ userId: akun.id, role: akun.role });
+  await simpanSesi({ userId: akun.id, role: akun.role, passwordVersion: versiPassword(passwordHash) });
   redirect(amanNext(teks(formData, 'next')) ?? '/');
 }
 
@@ -97,19 +105,30 @@ export async function masuk(_: StateFormAkun, formData: FormData): Promise<State
   if (!hasil.success) return { errors: z.flattenError(hasil.error).fieldErrors, values };
 
   const batas = await catatPercobaan('masuk');
-  if (!batas.boleh) return { message: pesanTerlaluSering(batas.tungguDetik), values };
+  if (!batas.boleh) return { message: 'message' in batas ? batas.message : pesanTerlaluSering(batas.tungguDetik), values };
 
   const { email, password } = hasil.data;
-  const akun = await cariAkunUntukMasuk(email);
+  let akun: Awaited<ReturnType<typeof cariAkunUntukMasuk>>;
+  try { akun = await cariAkunUntukMasuk(email); }
+  catch {
+    console.error('[masuk] database belum dapat memeriksa akun');
+    return { message: 'Layanan masuk belum tersedia. Coba lagi beberapa saat.', values };
+  }
   // Pesan dan lama respons sama untuk "email tidak terdaftar", "akun dihapus",
   // dan "password salah", supaya daftar akun tidak bisa ditebak.
   const cocok =
     akun && !akun.deletedAt ? await cocokkanPassword(password, akun.passwordHash) : await cocokkanPasswordPalsu(password);
   if (!akun || akun.deletedAt || !cocok) return { message: GAGAL_MASUK, values };
 
-  if (batas.kunci) batasAuth.hapus(batas.kunci); // pengguna sah tidak ikut terkunci oleh salah ketiknya sendiri
-  await simpanSesi({ userId: akun.id, role: akun.role });
-  redirect(amanNext(teks(formData, 'next')) ?? '/');
+  try {
+    if (batas.kunci) await hapusBatasAuth(batas.kunci);
+  } catch {
+    console.error('[masuk] pembatas percobaan belum dapat dibersihkan');
+    return { message: BATAS_TIDAK_TERSEDIA, values };
+  }
+  await simpanSesi({ userId: akun.id, role: akun.role, passwordVersion: versiPassword(akun.passwordHash) });
+  // Admin masuk ke panelnya; pembeli ke beranda. Tujuan `next` yang aman tetap didahulukan.
+  redirect(amanNext(teks(formData, 'next')) ?? (akun.role === 'admin' ? '/admin' : '/'));
 }
 
 export async function keluar(): Promise<void> {
@@ -123,7 +142,7 @@ export async function lupaPassword(_: StateFormAkun, formData: FormData): Promis
   if (!hasil.success) return { errors: z.flattenError(hasil.error).fieldErrors, values };
 
   const batas = await catatPercobaan('lupa-password');
-  if (!batas.boleh) return { message: pesanTerlaluSering(batas.tungguDetik), values };
+  if (!batas.boleh) return { message: 'message' in batas ? batas.message : pesanTerlaluSering(batas.tungguDetik), values };
 
   // Pencarian akun, pembuatan token, dan pengiriman email berjalan SETELAH
   // respons terkirim: isi maupun lama respons sama untuk email terdaftar dan
@@ -162,7 +181,20 @@ export async function resetPassword(_: StateFormAkun, formData: FormData): Promi
   }
 
   const { token, password } = hasil.data;
-  const berhasil = await pakaiTokenReset(hashTokenReset(token), await hashPassword(password));
+  const batas = await catatPercobaan('reset-password');
+  if (!batas.boleh) return { message: 'message' in batas ? batas.message : pesanTerlaluSering(batas.tungguDetik) };
+  const tokenHash = hashTokenReset(token);
+  let berhasil: Awaited<ReturnType<typeof pakaiTokenReset>>;
+  try {
+    // A random/missing/used token never incurs bcrypt work. The precheck is
+    // advisory; consuming the token below remains conditional and atomic.
+    if (!await tokenResetMasihBerlaku(tokenHash)) return { message: LINK_TIDAK_BERLAKU };
+    berhasil = await pakaiTokenReset(tokenHash, await hashPassword(password));
+  }
+  catch {
+    console.error('[reset password] database belum dapat memperbarui akun');
+    return { message: 'Password belum dapat disimpan. Coba lagi beberapa saat.' };
+  }
   if (!berhasil) return { message: LINK_TIDAK_BERLAKU };
 
   // Sesi lama di browser ini (bila ada) ikut dibuang; pengguna masuk ulang

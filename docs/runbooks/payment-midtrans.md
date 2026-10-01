@@ -1,7 +1,9 @@
 # Runbook — Payment Gateway Midtrans (Sandbox)
 
-Status: **modul siap dan teruji di `src/lib/payment/`, belum tersambung ke
-aplikasi** (aplikasi belum di-scaffold). Keputusan dan batasannya:
+Status: **terintegrasi** pada checkout, detail pesanan, Server Actions dan
+webhook sejak 1 Oktober 2026. Kunci sandbox menghasilkan sesi Snap nyata;
+akun merchant production dan uji webhook pada domain rilis belum tersedia.
+Keputusan dan batasannya:
 [`../OPEN_DECISIONS.md`](../OPEN_DECISIONS.md) D9.
 
 > PRD §21 semula menaruh payment gateway di luar cakupan karena Midtrans
@@ -13,7 +15,7 @@ aplikasi** (aplikasi belum di-scaffold). Keputusan dan batasannya:
 
 ```
 Pembeli: "Bayar Sekarang" (pesanan pending, metode qris/bank_bca/bank_mandiri)
-  → server action: klien.buatSesi(pesanan)      → simpan idTransaksi, token, url
+  → server action: klien.buatSesi(pesanan)      → simpan idTransaksi, attempt, url
   → redirect ke halaman Snap Midtrans            (pembeli membayar di sandbox)
   → Midtrans POST notifikasi ke /api/payment/midtrans
   → tanganiNotifikasiMidtrans(body, deps)
@@ -34,7 +36,7 @@ berjalan; sesi Snap sengaja berakhir tepat di `payment_due_at`.
 | `midtrans.ts` | Konfigurasi, body Snap, klien HTTP (`buatSesi`, `ambilStatus`), verifikasi signature |
 | `status.ts` | `tentukanAksi()` — status Midtrans → konfirmasi / batalkan / abaikan |
 | `notifikasi.ts` | `tanganiNotifikasiMidtrans()` — logika webhook, dependensi disuntikkan |
-| `*.test.ts` | 65 unit test (`npm run test`) |
+| `*.test.ts` | Unit test konfigurasi, status, signature dan notifikasi (`npm run test`) |
 
 Keputusan desain yang perlu diketahui:
 - **Tanpa SDK** `midtrans-client`; cukup `fetch` dengan batas waktu 10 detik.
@@ -44,6 +46,10 @@ Keputusan desain yang perlu diketahui:
 - **Bayar ulang.** `order_id` Midtrans hanya bisa dipakai sekali. Setelah
   deny/cancel/failure, percobaan berikutnya memakai `INV-202609-0001~2`, `~3`, dst.
   Kedaluwarsanya percobaan lama tidak membatalkan pesanan.
+- **Attempt aktif diperiksa di transaksi.** Setelah pesanan dikunci `FOR UPDATE`,
+  konfirmasi membandingkan ID gateway dengan ID aktif. Dana pada attempt lama,
+  termasuk yang berganti saat API sedang diperiksa, menghasilkan
+  `perlu-tindakan-admin` untuk rekonsiliasi tanpa mengubah status/ID pesanan.
 - **Uang masuk untuk pesanan yang sudah batal** (dibayar tepat saat cron
   membatalkan) tidak mengubah apa pun; dicatat level `error` untuk refund manual
   oleh admin.
@@ -66,10 +72,10 @@ Keputusan desain yang perlu diketahui:
 
 Server key hanya di server. Jangan pernah memakai prefiks `NEXT_PUBLIC_` untuknya.
 
-## 4. Menyambungkan ke aplikasi (setelah scaffold dan tabel `orders` ada)
+## 4. Integrasi aplikasi yang sudah diterapkan
 
-**a. Skema** — tambahkan ke `orders` lewat migration baru (di luar 15 tabel
-PRD, lihat D9):
+**a. Skema** — kolom ini sudah ada pada migration awal `orders`; tidak perlu
+menambah atau mengulang migration (lihat D9):
 
 | Kolom | Tipe | Guna |
 |---|---|---|
@@ -91,18 +97,19 @@ tidak, `payment_attempt + 1`, `klien.buatSesi(...)` dengan item dari
 `tokokita-pesanan`) — jangan menulis status langsung. Email "Pembayaran
 diterima" dikirim setelah transaksi commit.
 
-**d. Tombol "Bayar Sekarang"** di `/akun/pesanan/[nomor]` menggantikan tombol
-simulasi PRD §7.7 untuk metode gateway.
+**d. Tombol pembayaran** ada di halaman sukses dan detail pesanan. Pembeli
+dapat membuka Snap atau mengecek status asli. Simulasi hanya ditampilkan jika
+flag development diaktifkan; production selalu menolaknya.
 
 **e. Syarat keamanan integrasi** (dari review `security-reviewer`, 27 Sep 2026):
 - Server action mengambil pesanan dengan `where: { orderNumber, userId: sesi.userId }`,
   bukan hanya nomor pesanan — pembeli lain tidak boleh membuka `payment_url`
   atau memicu `buatSesi` untuk pesanan orang lain.
-- `konfirmasiBayar` menimpa `payment_transaction_id` dengan id transaksi yang
-  membayar, dan mengembalikan `true` hanya bila `ubahStatus()` benar-benar
+- `konfirmasiBayar` memverifikasi ID transaksi terhadap attempt aktif pada row
+  yang dikunci, dan mengembalikan `true` hanya bila `ubahStatus()` benar-benar
   mengubah status pada panggilan itu. Email "Pembayaran diterima" hanya saat `true`.
-- Route handler menolak body lebih dari ± 16 KB (cek `Content-Length`) sebelum
-  `req.json()`, dan tidak dipasangi pemeriksaan sesi/proxy yang menghalangi Midtrans.
+- Route handler menolak body lebih dari 16 KB, termasuk pembacaan stream bila
+  header panjang tidak ada, dan tidak memakai sesi/proxy yang menghalangi Midtrans.
 - `catat` produksi tidak menulis body notifikasi mentah ke log yang bisa
   diakses luas; hasil `perlu-tindakan-admin` dan status tak dikenal (level
   `error`) harus terlihat oleh admin.
@@ -123,20 +130,28 @@ simulasi PRD §7.7 untuk metode gateway.
 Uji integrasi otomatis ke sandbox (butuh `MIDTRANS_SERVER_KEY` di `.env`):
 
 ```bash
-npm run test:sandbox -- -t buat   # buat sesi, cetak link Snap
+npm.cmd run test:sandbox -- "--testNamePattern=buat"   # buat sesi, cetak link Snap
 # buka link -> BCA Virtual Account -> bayar di simulator sandbox
-npm run test:sandbox -- -t cek    # status dari Midtrans + handler webhook
+npm.cmd run test:sandbox -- "--testNamePattern=cek"    # status dari Midtrans + handler webhook
 ```
 
 ## 6. Hasil verifikasi
 
 | Hal | Status | Bukti / alasan |
 |---|---|---|
-| Unit test modul (69 kasus) | PASS | `npm run test` |
+| Unit test modul | PASS | Bagian dari 403 unit test seluruh aplikasi pada 1 Okt |
 | Review keamanan (`security-reviewer`) | PASS | 27 Sep 2026: tanpa temuan kritis; 3 temuan kode (pembayaran ganda tanpa jejak, kontrak konfirmasi tanpa hasil, status tak dikenal) sudah diperbaiki |
-| Membuat sesi Snap dengan kunci sandbox asli (ongkir + diskon negatif) | PASS | 27 Sep 2026, `UJI-1790477305694`, Rp 324.300 |
-| Pembayaran BCA VA di simulator sandbox → status `settlement`, jumlah cocok | PASS | 27 Sep 2026, `ambilStatus` sungguhan |
-| Handler webhook dengan status dari API asli: dikonfirmasi sekali, notifikasi ulang `sudah-diproses`, signature palsu 401 | PASS | 27 Sep 2026, `npm run test:sandbox -- -t cek` |
-| Kanal `other_qris`/`gopay` dan `echannel` (Mandiri) | NOT_RUN | Baru BCA VA yang dicoba |
-| Notifikasi dikirim server Midtrans ke route handler lewat internet | NOT_RUN | Route handler belum ada (aplikasi belum di-scaffold), butuh tunnel |
+| Membuat sesi Snap dengan kunci sandbox asli (ongkir + diskon negatif) | PASS | Diulang dan dibayar 1 Okt 2026, Rp 324.300; skrip `test:sandbox` fase cek lulus |
+| BCA VA: Snap → simulator resmi → API settlement → Cek Pembayaran → DB | PASS | 1 Okt, fixture terisolasi Rp 114.000, paid/confirmed dan dua log status; stok tidak berubah |
+| Mandiri `echannel`: alur yang sama | PASS | 1 Okt, fixture terisolasi Rp 114.000, simulator VA resmi; tes otomatis lulus |
+| Webhook lokal dengan API asli: ulang idempoten, signature palsu 401 | PASS | 1 Okt, BCA dan Mandiri; tidak mengubah log/stok lagi |
+| QRIS melalui Snap dan simulator resmi | FAIL | 1 Okt: QR URL sama dengan `qris_url` response charge Snap, PNG valid HTTP 200; simulator menolak Scan QR dengan error 2603. Tidak dinyatakan settlement |
+| Race pergantian attempt / settlement ganda | PASS | Dua transaksi MySQL nyata; stale attempt tidak menimpa ID baru, hanya satu settlement menulis log/notifikasi |
+| Notifikasi dikirim server Midtrans ke route handler lewat internet | NOT_RUN | Route tersedia; perlu deployment domain HTTPS dan Notification URL yang aktif |
 | Kedaluwarsa (`expire`) membatalkan pesanan | NOT_RUN | Baru teruji di unit test |
+
+Tes browser opt-in beserta batasnya tersedia di
+[tests/e2e/README.md](../../tests/e2e/README.md#midtrans-sandbox-nyata-opt-in).
+Tes memakai DB verifikasi terpisah dan membersihkan fixture sendiri; jangan
+menjalankannya pada DB toko atau domain production. Bukti lokal tidak menggantikan
+uji Notification URL HTTPS pada deployment resmi.

@@ -6,7 +6,7 @@ import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
 import { amanNext } from '@/lib/validations/auth';
 
 export const metadata: Metadata = {
-  title: 'Masuk — TokoKita',
+  title: 'Masuk',
   robots: { index: false, follow: false },
 };
 

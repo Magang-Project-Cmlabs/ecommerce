@@ -1,0 +1,2 @@
+import { Skeleton } from '@/components/ui/skeleton';
+export default function Loading() { return <main aria-label="Memuat detail produk" aria-busy="true" className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 md:grid-cols-2"><Skeleton className="aspect-square w-full" /><div className="space-y-5"><Skeleton className="h-8 w-full" /><Skeleton className="h-8 w-40" /><Skeleton className="h-11 w-4/5" /><Skeleton className="h-11 w-full" /><Skeleton className="h-11 w-full" /></div></main>; }

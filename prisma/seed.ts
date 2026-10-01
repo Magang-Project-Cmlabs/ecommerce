@@ -10,17 +10,18 @@
 // berstatus delivered (§10.7), sehingga seed juga membuat 12 pembeli contoh.
 
 import "dotenv/config";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import bcrypt from "bcryptjs";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { konfigurasiDb } from "../src/lib/konfigurasi-db";
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("Seed demo tidak boleh dijalankan di production (PRD §20, runbooks/deployment.md).");
 }
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("DATABASE_URL belum diisi di .env");
 
-const prisma = new PrismaClient({ adapter: new PrismaMariaDb(DATABASE_URL) });
+const prisma = new PrismaClient({ adapter: new PrismaMariaDb(konfigurasiDb(process.env)) });
 
 // ---------------------------------------------------------------------------
 // Utilitas
@@ -62,7 +63,10 @@ const slugify = (teks: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const gambar = (kunci: string, i: number) => `https://picsum.photos/seed/tokokita-${kunci}-${i}/800/800`;
+const gambar = (kunci: string, i: number) => {
+  const local = `/demo/tokokita-${kunci}-${i}.webp`;
+  return existsSync(path.join(process.cwd(), 'public', local)) ? local : `https://picsum.photos/seed/tokokita-${kunci}-${i}/800/800`;
+};
 
 // ---------------------------------------------------------------------------
 // Aturan bisnis yang dipakai seed (PRD §10.3-10.4). Modul resmi di src/lib/
@@ -379,7 +383,7 @@ async function main() {
 
   // --- Rencana pesanan: akun demo (semua status, PRD §20) -----------------------
   const rencana: RencanaPesanan[] = [
-    { userId: demo.id, alamat: alamatRumah, items: [item("Kaos Polos Premium", 2, "M"), item("Celana Chino Slim", 1, "31")], metode: "bank_bca", kurir: "jne_reg", promo: "HEMAT10", dibuat: lalu(60), akhir: "delivered", ulasan: new Map([[0, 5]]) },
+    { userId: demo.id, alamat: alamatRumah, items: [item("Kaos Polos Premium", 2, "M"), item("Celana Chino Slim", 1, "31")], metode: "bank_bca", kurir: "jne_reg", promo: "ONGKIRFREE", dibuat: lalu(60), akhir: "delivered", ulasan: new Map([[0, 5]]) },
     { userId: demo.id, alamat: alamatRumah, items: [item("Serum Wajah Niacinamide 30 ml"), item("Sabun Cuci Muka Gentle 100 ml")], metode: "qris", kurir: "gosend_instant", promo: null, dibuat: lalu(45), akhir: "delivered" },
     { userId: demo.id, alamat: alamatKantor, items: [item("Botol Minum Stainless 750 ml", 1, "Biru")], metode: "cod", kurir: "sicepat_reg", promo: null, dibuat: lalu(38), akhir: "delivered" },
     { userId: demo.id, alamat: alamatRumah, items: [item("Earbuds Nirkabel TWS Pro", 1, "Hitam")], metode: "bank_mandiri", kurir: "jne_reg", promo: null, dibuat: lalu(12), akhir: "shipped", catatan: "Tolong dibungkus bubble wrap tebal." },

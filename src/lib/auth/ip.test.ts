@@ -4,6 +4,12 @@ import { ipKlien } from './ip';
 const h = (isi: Record<string, string>) => new Headers(isi);
 
 describe('ipKlien', () => {
+  it('di Vercel hanya mempercayai header IP yang ditulis platform', () => {
+    expect(ipKlien(h({ 'x-vercel-forwarded-for': '203.0.113.7', 'x-real-ip': '6.6.6.6', 'x-forwarded-for': '7.7.7.7' }), { VERCEL: '1' })).toBe('203.0.113.7');
+    expect(ipKlien(h({ 'x-real-ip': '6.6.6.6', 'x-forwarded-for': '7.7.7.7' }), { VERCEL: '1' })).toBeNull();
+    expect(ipKlien(h({ 'x-vercel-forwarded-for': '203.0.113.7, 6.6.6.6' }), { VERCEL: '1' })).toBeNull();
+    expect(ipKlien(h({ 'x-vercel-forwarded-for': 'invalid' }), { VERCEL: '1' })).toBeNull();
+  });
   it('memakai X-Real-IP yang ditulis Nginx', () => {
     expect(ipKlien(h({ 'x-real-ip': '203.0.113.7', 'x-forwarded-for': '1.1.1.1, 203.0.113.7' }))).toBe('203.0.113.7');
   });
