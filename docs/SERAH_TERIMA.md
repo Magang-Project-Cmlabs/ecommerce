@@ -97,6 +97,18 @@ Bukti di folder Git-ignored `tests/e2e/.artifacts/`: `cross-native-first`
 `cross-browser-first-report.*` sebagai bukti: artifact tersebut berasal dari
 `--list` dan seluruh kasus SKIP.
 
+### Bukti sesi 1 Oktober (commit ca7d72c, DB uji `ecommerce_verifikasi_20261001`)
+
+Setelah ikon kategori putih, judul tab tanpa sufiks ganda dan `--primary`
+orange-700 + teks putih (kontras 5,18): Playwright Chrome/Android PASS untuk
+commerce (2: belanja penuh sampai ulasan, pembatalan), aksesibilitas,
+responsif 360 px, navigasi, auth-guard dan katalog (55 kasus), serta
+payment-sandbox BCA dan Mandiri (Snap→simulator→cek bayar→webhook idempoten).
+Typecheck, lint dan 403 unit PASS. QRIS tetap FAIL (simulator Midtrans).
+Build lokal, suite lintas browser penuh dan Lighthouse NOT_RUN.
+Preview online: akun admin dan pembeli di `tokokita_preview` memakai kata sandi
+acak (berkas `.env.akun-preview`, Git-ignored); login online belum diuji.
+
 ### Menjalankan QA lanjutan
 
 Server uji wajib memuat `.env` lalu `tests/e2e/.env.e2e` override,
