@@ -7,7 +7,7 @@ import { buatPesananAdminUji, bacaPesananAdminUji, hapusPesananAdminUji, hapusPr
 const photo = async (width = 800, height = 800) => ({ name: 'produk.png', mimeType: 'image/png', buffer: await sharp({ create: { width, height, channels: 3, background: '#f97316' } }).png().toBuffer() });
 async function loginAs(browser: Browser, _role: 'admin') {
   const context = await browser.newContext(); const page = await context.newPage();
-  await performLogin(page, 'admin'); await expect(page.getByRole('navigation', { name: 'Akun', exact: true }).getByRole('button', { name: 'Keluar', exact: true })).toBeVisible();
+  await performLogin(page, 'admin'); await expect(page.getByRole('navigation', { name: 'Akun admin', exact: true }).getByRole('button', { name: 'Keluar', exact: true })).toBeVisible();
   await page.close(); return context;
 }
 test.describe('Admin: toko memakai data nyata', () => {

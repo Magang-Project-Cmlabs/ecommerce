@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SembunyiDiAdmin from '@/components/layout/SembunyiDiAdmin';
 import { Toaster } from '@/components/ui/sonner';
 import { WishlistProvider } from '@/components/product/WishlistProvider';
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
@@ -19,5 +20,5 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const pengguna = await ambilPenggunaSaatIni();
   const ids = pengguna ? await ambilIdWishlist(pengguna.id) : [];
-  return <html lang="id" className={`${inter.variable} min-h-full antialiased`}><body className="flex min-h-screen flex-col font-sans"><WishlistProvider key={`${pengguna?.id ?? 'tamu'}`} ids={ids} login={!!pengguna}><Navbar /><div id="konten-utama" className="flex flex-1 flex-col">{children}</div><Footer /><Toaster position="top-center" richColors closeButton /></WishlistProvider></body></html>;
+  return <html lang="id" className={`${inter.variable} min-h-full antialiased`}><body className="flex min-h-screen flex-col font-sans"><WishlistProvider key={`${pengguna?.id ?? 'tamu'}`} ids={ids} login={!!pengguna}><SembunyiDiAdmin><Navbar /></SembunyiDiAdmin><div id="konten-utama" className="flex flex-1 flex-col">{children}</div><SembunyiDiAdmin><Footer /></SembunyiDiAdmin><Toaster position="top-center" richColors closeButton /></WishlistProvider></body></html>;
 }
