@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/generated/prisma/client';
+import { bagiTanpaDuplikat } from '@/lib/beranda';
 import type { FilterKatalog, ProdukKartu, ProdukDetail } from '@/lib/katalog-types';
 
 const kartuSelect = {
@@ -66,17 +67,22 @@ export async function ambilProdukKatalog(filter: FilterKatalog) {
 async function bacaPilihanBeranda() {
   const sejak = new Date(Date.now() - 30 * 86400000);
   const [unggulan, terbaru, diskon, terjual] = await Promise.all([
-    prisma.product.findMany({ where: { isActive: true, isFeatured: true }, select: kartuSelect, take: 8, orderBy: { soldCount: 'desc' } }),
-    prisma.product.findMany({ where: { isActive: true }, select: kartuSelect, take: 4, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] }),
-    prisma.product.findMany({ where: { isActive: true, compareAtPrice: { gt: prisma.product.fields.price } }, select: kartuSelect, take: 4, orderBy: { price: 'asc' } }),
+    prisma.product.findMany({ where: { isActive: true, isFeatured: true }, select: kartuSelect, take: 16, orderBy: { soldCount: 'desc' } }),
+    prisma.product.findMany({ where: { isActive: true }, select: kartuSelect, take: 16, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] }),
+    prisma.product.findMany({ where: { isActive: true, compareAtPrice: { gt: prisma.product.fields.price } }, select: kartuSelect, take: 12, orderBy: { price: 'asc' } }),
     prisma.orderItem.groupBy({ by: ['productId'], where: { order: { createdAt: { gte: sejak }, status: { not: 'cancelled' } }, product: { isActive: true } }, _sum: { quantity: true }, orderBy: { _sum: { quantity: 'desc' } }, take: 8 }),
   ]);
   const populer = await prisma.product.findMany({ where: { isActive: true, id: { in: terjual.map((p) => p.productId) } }, select: kartuSelect });
   const urutan = new Map(terjual.map((p, i) => [p.productId, i]));
   populer.sort((a, b) => urutan.get(a.id)! - urutan.get(b.id)!);
-  return { unggulan: unggulan.map(kartu), terbaru: terbaru.map(kartu), diskon: diskon.map(kartu), populer: populer.map(kartu) };
+  // Urutan sama dengan tampilan beranda; produk tidak diulang antarbagian.
+  const b = bagiTanpaDuplikat([
+    { kunci: 'populer', calon: populer, batas: 8 }, { kunci: 'unggulan', calon: unggulan, batas: 8 },
+    { kunci: 'diskon', calon: diskon, batas: 4 }, { kunci: 'terbaru', calon: terbaru, batas: 4 },
+  ]);
+  return { populer: b.populer!.map(kartu), unggulan: b.unggulan!.map(kartu), diskon: b.diskon!.map(kartu), terbaru: b.terbaru!.map(kartu) };
 }
-export const ambilPilihanBeranda = unstable_cache(bacaPilihanBeranda, ['tokokita-beranda-v1', sumberCache], cachePublik);
+export const ambilPilihanBeranda = unstable_cache(bacaPilihanBeranda, ['tokokita-beranda-v2', sumberCache], cachePublik);
 
 export const ambilDetailProduk = cache(async (slug: string): Promise<ProdukDetail | null> => {
   const where = { slug, isActive: true };
