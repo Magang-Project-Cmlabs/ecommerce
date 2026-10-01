@@ -49,8 +49,8 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Settlement sandbox QRIS | FAIL | QR muncul pada Snap; simulator resmi mengembalikan error 2603 saat memproses QR. Penyelidikan kanal masih berlangsung |
 | Firefox/WebKit: regresi akun/katalog/unggahan | PASS | 24/24 setelah memperbaiki input sebelum hydration, refresh wishlist berlebih, fixture ulasan unik dan pengukuran multipart/cookie lintas engine |
 | Suite lintas browser penuh (310 kasus: Chrome/Android, Edge, Firefox, WebKit, mobile WebKit) | PASS | Putaran 1 Okt: 299 lulus, 11 gagal karena stok varian M Kaos Polos di DB uji habis dipakai tes (bukan bug). Stok diisi ulang, 28 kasus commerce+katalog diulang di semua browser: 28/28 lulus. Suite penuh tidak diulang utuh dalam satu putaran |
-| SMTP eksternal | NOT_RUN | Dua tes SMTP loopback lulus; kredensial production belum tersedia |
-| Bucket S3/R2 nyata | NOT_RUN | Validasi gambar/token/SigV4 diuji; kredensial bucket belum tersedia |
+| SMTP eksternal (Gmail) | PASS (login) / NOT_RUN (Vercel) | Login `smtp.gmail.com:587` dengan sandi aplikasi berhasil dan satu email uji terkirim ke kotak masuk toko (1 Okt). Variabel `SMTP_*`/`MAIL_FROM` BELUM terpasang di Vercel: jalankan `node scripts/pasang-env-vercel.mjs .env.smtp` |
+| Unggah gambar ke penyimpanan nyata | PASS | Vercel Blob (D15): tes E2E `unggah-blob.spec.ts` (opt-in) mengunggah lewat layar admin ke store sungguhan, gambar tampil lalu dibersihkan. R2 diaktifkan pemilik sebagai cadangan, belum dipakai |
 | Preview Vercel terbaru | PASS | Penyebab FAIL lama: `DATABASE_URL`/`DATABASE_CA_CERT` hanya ada di Production. Preview kini memakai `tokokita_preview`; halaman, pencarian dan login berjalan |
 | Rilis production terbaru | PASS | `develop` 38370ce; publik HTTP 200, `/admin` dialihkan ke masuk, webhook tanda tangan palsu HTTP 401, log galat kosong |
 | Cron pada domain resmi | NOT_RUN | Cron harian `0 17 * * *` terdaftar di Vercel; eksekusi pertama belum terjadi. 15 menit butuh Pro/GitHub secret |
@@ -60,7 +60,8 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Lighthouse produksi online (simulasi) | FAIL | Seluler perf 91–92, a11y/bp 100, LCP 2,9–3,1 s (> 2,5 s); desktop 100, LCP 0,5–0,6 s |
 | Lighthouse produksi online (DevTools) | FAIL | Seluler perf 71–78, FCP 2,7–2,9 s, LCP 3,4–3,7 s |
 | Latihan demo PPT 5 adegan | PASS | `demo-ppt.spec.ts` 30 dtk; 15 tangkapan layar di docs/screenshots/demo-ppt |
-| Bayar sandbox online sampai lunas | NOT_RUN | Kunci sandbox dan Notification URL terpasang; butuh pembeli login di situs online |
+| Bayar sandbox online sampai lunas | NOT_RUN | Butuh daftar akun/login di situs online (tidak dilakukan agen). Setara: BCA & Mandiri sandbox PASS di lokal dengan kode terbaru; webhook PRODUKSI: tanda tangan palsu HTTP 401, tanda tangan sah dengan kunci sandbox diterima (HTTP 404 untuk pesanan fiktif) |
+| Cadangan manual DB produksi | PASS | mysqldump TLS 1 Okt 2026: 155 KB, 17 tabel, "Dump completed"; disimpan di luar repo (`C:UsersIlhamcadangan-tokokita`). Jadwal backup otomatis Aiven NOT_RUN (halaman Backups gagal dimuat) |
 | CI commit terakhir di GitHub | PASS | [Run 36880551063](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36880551063), commit 35d5d60 (PR #25); `develop` 38370ce juga PASS |
 
 ## 4. Kriteria sukses PRD §22

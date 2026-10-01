@@ -36,14 +36,9 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 
 ## Menunggu pemilik
 
-1. ~~Cloudflare R2~~ (diganti Vercel Blob, lihat OPEN_DECISIONS D15; selesai setelah deploy): buat bucket + token, simpan di `.env.r2`; lalu minta skrip
-   pemasang env (`STORAGE_DRIVER=s3`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`,
-   `S3_SECRET_KEY`, `S3_PUBLIC_URL`). Tanpa ini unggah gambar online ditolak.
-2. **SMTP**: akun pengirim (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`,
-   `MAIL_FROM`), simpan di `.env.smtp`.
-3. **Uji bayar sandbox di produksi** sampai Dibayar, dengan akun pembeli baru
-   (akun demo lama di DB produksi sudah memakai HEMAT10). HEMAT10 minimal belanja
-   Rp 100.000.
+1. **Pasang SMTP ke Vercel**: `.env.smtp` sudah benar (login Gmail berhasil, email uji terkirim) tetapi belum dikirim ke Vercel. Jalankan `node scripts/pasang-env-vercel.mjs .env.smtp`, lalu minta deploy ulang. (Unggah gambar sudah aktif lewat Vercel Blob, OPEN_DECISIONS D15; R2 aktif sebagai cadangan.)
+2. Uji manusia di situs produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin.
+3. Cadangan: manual sudah dibuat (lihat PROJECT_STATUS); jadwal otomatis Aiven belum bisa dicek.
 4. Cron 15 menit (Vercel Pro atau secret GitHub Actions), jadwal backup Aiven,
    dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
 

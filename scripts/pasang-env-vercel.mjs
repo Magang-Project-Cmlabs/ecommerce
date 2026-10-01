@@ -34,6 +34,9 @@ if (jenis === 'smtp') {
 }
 if (salah.length) { console.error(salah.join('\n')); process.exit(1); }
 
+// Google menampilkan sandi aplikasi dalam empat kelompok berspasi; spasinya tidak bagian dari sandi.
+if (isi.SMTP_PASS) isi.SMTP_PASS = isi.SMTP_PASS.replace(/\s+/g, '');
+
 const RAHASIA = new Set(['S3_ACCESS_KEY', 'S3_SECRET_KEY', 'SMTP_PASS', 'SMTP_USER']);
 const pasangan = { ...Object.fromEntries(KELOMPOK[jenis].wajib.map((k) => [k, isi[k]])), ...KELOMPOK[jenis].tambahan };
 const vercel = (args, input) => spawnSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vercel', ...args], { input, encoding: 'utf8', shell: process.platform === 'win32' });
