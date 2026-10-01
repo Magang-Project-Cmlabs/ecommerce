@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import CountdownTimer from '@/components/checkout/CountdownTimer';
 import SalinTeksButton from '@/components/checkout/SalinTeksButton';
 
-export const metadata: Metadata = { title: 'Pesanan Berhasil — TokoKita', robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: 'Pesanan Berhasil', robots: { index: false, follow: false } };
 export default async function HalamanPesananBerhasil({ params }: { params: Promise<{ nomor: string }> }) {
   const pengguna = await requireUser('/checkout/berhasil');
   const { nomor } = await params;

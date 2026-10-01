@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AdminHeading, AdminEmpty, StatusBadge } from '@/components/admin/presentation';
 
-export const metadata: Metadata = { title: 'Admin — TokoKita', robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: 'Admin', robots: { index: false, follow: false } };
 
 export default async function HalamanAdmin() {
   const admin = await requireAdmin('/admin');

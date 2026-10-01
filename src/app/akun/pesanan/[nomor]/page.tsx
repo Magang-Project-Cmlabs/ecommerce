@@ -8,7 +8,7 @@ import { ambilDetailPesanan } from '@/lib/data/pesanan';
 import DetailPesananClient from '@/components/pesanan/DetailPesananClient';
 
 export const metadata: Metadata = {
-  title: 'Detail Pesanan — TokoKita',
+  title: 'Detail Pesanan',
   robots: { index: false, follow: false },
 };
 

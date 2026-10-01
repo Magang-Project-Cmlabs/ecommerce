@@ -10,7 +10,7 @@ import DaftarPesananClient from '@/components/pesanan/DaftarPesananClient';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Pesanan Saya — TokoKita',
+  title: 'Pesanan Saya',
   robots: { index: false, follow: false },
 };
 

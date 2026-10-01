@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-export const metadata: Metadata = { title: 'Pusat Bantuan — TokoKita' };
+export const metadata: Metadata = { title: 'Pusat Bantuan' };
 export default function Bantuan() {
   const questions = [
     ['Bagaimana cara berbelanja?', 'Pilih produk dan varian, masukkan ke keranjang, lalu klik Checkout. Masuk ke akun, pilih alamat dan kurir, pilih metode pembayaran, kemudian periksa ringkasan sebelum membuat pesanan.'],

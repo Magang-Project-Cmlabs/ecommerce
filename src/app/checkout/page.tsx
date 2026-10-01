@@ -7,7 +7,7 @@ import { ambilDaftarAlamat } from '@/lib/data/alamat';
 import CheckoutWizard from '@/components/checkout/CheckoutWizard';
 
 export const metadata: Metadata = {
-  title: 'Checkout — TokoKita',
+  title: 'Checkout',
   robots: { index: false, follow: false },
 };
 

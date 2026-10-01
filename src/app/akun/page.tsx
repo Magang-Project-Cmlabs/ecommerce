@@ -5,7 +5,7 @@ import { ambilProfilPengguna } from '@/lib/data/pengguna';
 import { ambilDaftarAlamat } from '@/lib/data/alamat';
 import AkunShell from '@/components/account/AkunShell';
 
-export const metadata: Metadata = { title: 'Akun Saya — TokoKita', robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: 'Akun Saya', robots: { index: false, follow: false } };
 export default async function HalamanAkun() {
   const pengguna = await requireUser('/akun');
   const [user, addresses] = await Promise.all([ambilProfilPengguna(pengguna.id), ambilDaftarAlamat(pengguna.id)]);
