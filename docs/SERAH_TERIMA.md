@@ -150,3 +150,15 @@ atau bukti manual pada folder induk. Tes integrasi menolak nama DB toko.
 `npm run db:deploy` menyediakan CA sementara bagi engine migrasi Aiven.
 `npm run demo:images` hanya memperbarui foto seed. `db:reset`/`db:seed`
 menghapus data; keduanya tidak diperlukan untuk deployment ini.
+
+### Pembaruan lanjutan 1 Oktober
+
+- Vercel: `MIDTRANS_SERVER_KEY` (sandbox) dan `MIDTRANS_IS_PRODUCTION=false` terpasang
+  untuk Preview dan Production. Preview sudah di-deploy ulang; uji bayar online NOT_RUN.
+- Akun `admin@tokokita.id` dan `demo@tokokita.id` di DB produksi `tokokita` diganti
+  kata sandi acak (berkas lokal `.env.akun-produksi`, Git-ignored); kata sandi seed
+  tidak lagi dipakai online. Verifikasi baca ulang DB produksi NOT_RUN (ditahan izin).
+- Cron harian Vercel (`vercel.json`) untuk pesanan lewat batas; 15 menit tetap butuh
+  Vercel Pro atau secret GitHub Actions.
+- PR #23 siap, CI hijau, menunggu merge oleh manusia (merge tanpa review ditahan).
+- Belum: Notification URL Midtrans, R2 untuk unggah gambar, SMTP.

@@ -3,5 +3,13 @@
   "framework": "nextjs",
   "installCommand": "npm ci --ignore-scripts && npx prisma generate",
   "buildCommand": "npm run build",
-  "regions": ["sin1"]
+  "regions": [
+    "sin1"
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/orders",
+      "schedule": "0 17 * * *"
+    }
+  ]
 }
