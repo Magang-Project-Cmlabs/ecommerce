@@ -6,7 +6,7 @@
 **PR:** [#23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23), draft.
 **Keadaan:** Codex dihentikan sementara atas permintaan pemilik agar token hemat;
 lanjutkan melalui Claude Code. Commit terakhir `984d01f` sudah di-push,
-tetapi perubahan sesi terakhir **belum di-commit/push**. Jangan reset/checkout
+tetapi perubahan sesi terakhir sudah di-commit (`2fcc207`) dan di-push. Jangan reset/checkout
 ulang atau membuang working tree.
 **Sesi:** Penyelesaian PPT/PRD dan perubahan target Vercel + Aiven
 
@@ -29,7 +29,7 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
 
 1. Baca CLAUDE.md, MULAI_DI_SINI dan PROJECT_STATUS. Lanjutkan perubahan lokal
    di branch ini; kepemilikan tugas anggota tetap berlaku. CI commit terakhir
-   PASS (run 36840193537, commit 984d01f); perubahan lokal belum masuk CI.
+   PASS (run 36852310169, commit 2fcc207, perubahan lokal sudah di-commit dan di-push).
    Periksa CI setiap commit lanjutan sebelum penggabungan. Server demo lokal berjalan
    di http://localhost:3000 dengan DB toko lokal `ecommerce` (bukan DB uji).
 2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
