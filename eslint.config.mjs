@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "tests/e2e/.report/**",
     "tests/e2e/.artifacts/**",
+    ".sandbox/**",
     // Perkakas AI (skrip Node CommonJS), bukan kode aplikasi
     ".claude/**",
   ]),

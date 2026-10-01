@@ -1,69 +1,55 @@
-import Image from "next/image";
+import { Suspense } from 'react';
+import HeroBanner from '@/components/product/HeroBanner';
+import CategoryList from '@/components/product/CategoryList';
+import { ProductSection } from '@/components/product/ProductSection';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ambilBanner, ambilKategori, ambilPilihanBeranda } from '@/lib/data/katalog';
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+const sections = [
+  { key: 'populer', title: 'Produk Terpopuler', subtitle: 'Terlaris dalam 30 hari terakhir', href: '/produk?urut=populer', count: 8 },
+  { key: 'unggulan', title: 'Produk Unggulan', href: '/produk', count: 8 },
+  { key: 'diskon', title: 'Penawaran Spesial', subtitle: 'Harga terbaik untuk produk pilihan', href: '/produk?promo=1', count: 4 },
+  { key: 'terbaru', title: 'Produk Terbaru', href: '/produk?urut=terbaru', count: 4 },
+] as const;
+
+async function AsyncProductSections({ products }: { products: ReturnType<typeof ambilPilihanBeranda> }) {
+  const pilihan = await products;
+  return sections.map(({ key, title, href, ...section }) => (
+    <ProductSection key={key} title={title} subtitle={'subtitle' in section ? section.subtitle : undefined} href={href} products={pilihan[key]} />
+  ));
+}
+
+function ProductSectionsSkeleton() {
+  return <div aria-busy="true" aria-label="Memuat pilihan produk">
+    <p role="status" className="sr-only">Memuat pilihan produk…</p>
+    {sections.map(({ key, title, count, ...section }) => <section key={key} className="pb-10">
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <div><h2 className="text-lg font-semibold">{title}</h2>{'subtitle' in section && <p className="mt-1 text-sm text-muted-foreground">{section.subtitle}</p>}</div>
+        <Skeleton aria-hidden="true" className="h-11 w-24 shrink-0" />
+      </div>
+      <div aria-hidden="true" className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {Array.from({ length: count }, (_, index) => <div key={index} className="flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm">
+          <Skeleton className="aspect-square w-full rounded-none" />
+          <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
+            <Skeleton className="h-4 w-16" />
+            <div className="space-y-1"><Skeleton className="h-[18px] w-full" /><Skeleton className="h-[18px] w-3/4" /></div>
+            <Skeleton className="h-4 w-24 max-w-full" />
+            <Skeleton className="h-7 w-28 max-w-full" />
+            <Skeleton className="h-4 w-20" />
+            <div className="mt-auto pt-2"><Skeleton className="h-11 w-full rounded-full" /></div>
+          </div>
+        </div>)}
+      </div>
+    </section>)}
+  </div>;
+}
+
+export default async function Home() {
+  const products = ambilPilihanBeranda();
+  const [banner, kategori] = await Promise.all([ambilBanner(), ambilKategori()]);
+  return <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-5">
+    <HeroBanner slides={banner} />
+    <CategoryList categories={kategori} />
+    <Suspense fallback={<ProductSectionsSkeleton />}><AsyncProductSections products={products} /></Suspense>
+  </main>;
 }

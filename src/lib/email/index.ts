@@ -15,6 +15,9 @@ function ambilTransport() {
     host: process.env.SMTP_HOST,
     port,
     secure: port === 465,
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
+    socketTimeout: 10000,
     auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined,
   });
   return transport;

@@ -1,9 +1,11 @@
 // Batas percobaan per kunci (mis. "masuk:<ip>") dengan jendela bergeser.
-// PRD §13: 5 percobaan / 15 menit per IP. Disimpan di memori proses
-// (OPEN_DECISIONS D4 opsi A): syaratnya PM2 satu instance; hitungan hilang saat
-// restart — dapat diterima.
+// Memori hanya untuk development/test lokal. Production/Vercel memakai MySQL.
 
-type Hasil = { boleh: true } | { boleh: false; tungguDetik: number };
+export type HasilBatasAuth = { boleh: true } | { boleh: false; tungguDetik: number };
+
+export function driverBatasAuth(env: { NODE_ENV?: string; VERCEL?: string } = process.env): 'database' | 'memori' {
+  return env.VERCEL === '1' || env.NODE_ENV === 'production' ? 'database' : 'memori';
+}
 
 export function buatPembatas({ maks, jendelaMs, jam = Date.now }: { maks: number; jendelaMs: number; jam?: () => number }) {
   /** kunci → waktu percobaan yang masih di dalam jendela, urut naik. */
@@ -21,7 +23,7 @@ export function buatPembatas({ maks, jendelaMs, jam = Date.now }: { maks: number
 
   return {
     /** Catat satu percobaan. Percobaan yang ditolak tidak ikut dihitung. */
-    catat(kunci: string): Hasil {
+    catat(kunci: string): HasilBatasAuth {
       const sekarang = jam();
       buangKedaluwarsa(sekarang);
       const waktu = (catatan.get(kunci) ?? []).filter((w) => w > sekarang - jendelaMs);

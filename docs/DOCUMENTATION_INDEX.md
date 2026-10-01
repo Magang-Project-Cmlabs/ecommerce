@@ -23,6 +23,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | Dokumen | Peran | Pemilik fakta tentang |
 |---|---|---|
 | [`PRD - E-Commerce.md`](PRD%20-%20E-Commerce.md) | Spesifikasi | Fitur, aturan bisnis, skema DB, keamanan, desain |
+| [`PRD_CHECKOUT_AKUN.md`](PRD_CHECKOUT_AKUN.md) | Spesifikasi | Detail fitur Checkout Langkah 3 & 4, Pesanan Berhasil, dan Halaman Akun |
 | [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | Pembagian peran (slide 14), alur kerja tim (slide 15), risiko |
 | [`trello-board-plan.md`](trello-board-plan.md) | Rencana | Kartu per anggota, urutan Blocker |
 | [`../CLAUDE.md`](../CLAUDE.md) | Konstitusi | Aturan keras, struktur, rute skill/agent |
@@ -44,8 +45,8 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | [`local-setup.md`](runbooks/local-setup.md) | Scaffold proyek (sekali) dan menyalakan proyek di laptop |
 | [`database-operations.md`](runbooks/database-operations.md) | Migration, seed, reset, backup & restore |
 | [`security-audit.md`](runbooks/security-audit.md) | Checklist keamanan sebelum merge dan sebelum rilis |
-| [`deployment.md`](runbooks/deployment.md) | VPS, PM2, Nginx, HTTPS, cron, backup |
-| [`payment-midtrans.md`](runbooks/payment-midtrans.md) | Payment gateway Midtrans sandbox: alur, akun, cara menyambung ke aplikasi, cara menguji |
+| [`deployment.md`](runbooks/deployment.md) | Vercel, Aiven TLS, environment, storage, cron dan backup |
+| [`payment-midtrans.md`](runbooks/payment-midtrans.md) | Payment gateway Midtrans sandbox: alur, akun, integrasi aplikasi, cara menguji |
 
 ## 4. Perawatan
 

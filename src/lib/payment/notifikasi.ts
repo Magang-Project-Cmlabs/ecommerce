@@ -18,6 +18,7 @@
 // walau dikirim ulang dijawab 2xx/4xx.
 
 import { nomorPesananDari, verifikasiSignature } from './midtrans';
+import { PaymentAttemptChangedError } from '@/lib/pesanan/galat';
 import { tentukanAksi } from './status';
 import type { StatusGateway } from './types';
 
@@ -47,7 +48,7 @@ export type DepsNotifikasi = {
    */
   konfirmasiBayar(nomorPesanan: string, info: { idTransaksi: string; paymentType?: string }): Promise<boolean>;
   /** Wajib lewat ubahStatus(): pending -> cancelled bersyarat, stok & kuota promo kembali. true bila terjadi sekarang. */
-  batalkanOtomatis(nomorPesanan: string, alasan: string): Promise<boolean>;
+  batalkanOtomatis(nomorPesanan: string, alasan: string, idTransaksi: string): Promise<boolean>;
   catat(level: 'info' | 'warn' | 'error', pesan: string, data: Record<string, unknown>): void;
 };
 
@@ -145,6 +146,10 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         deps.catat('warn', 'Pembayaran untuk pesanan yang tidak lagi pending', { nomor, status: pesanan.status });
         return { httpStatus: 200, hasil: 'sudah-diproses' };
       }
+      if (pesanan.idTransaksiAktif !== idTransaksi) {
+        deps.catat('error', 'Pembayaran diterima untuk percobaan tidak aktif, perlu rekonsiliasi admin', { nomor, idTransaksi, idTransaksiAktif: pesanan.idTransaksiAktif, jumlah: status.jumlah });
+        return { httpStatus: 200, hasil: 'perlu-tindakan-admin' };
+      }
       const terjadi = await deps.konfirmasiBayar(nomor, { idTransaksi, paymentType: aksi.paymentType });
       if (!terjadi) return { httpStatus: 200, hasil: 'sudah-diproses' }; // kalah balapan dengan request paralel
       deps.catat('info', 'Pembayaran dikonfirmasi', { nomor, idTransaksi });
@@ -158,13 +163,17 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         deps.catat('info', 'Percobaan bayar lama kedaluwarsa, diabaikan', { nomor, idTransaksi });
         return { httpStatus: 200, hasil: 'diabaikan' };
       }
-      const terjadi = await deps.batalkanOtomatis(nomor, aksi.alasan);
+      const terjadi = await deps.batalkanOtomatis(nomor, aksi.alasan, idTransaksi);
       return { httpStatus: 200, hasil: terjadi ? 'dibatalkan' : 'sudah-diproses' };
     }
 
     deps.catat(aksi.perluDiperiksa ? 'error' : 'info', `Notifikasi Midtrans diabaikan: ${aksi.alasan}`, { nomor, idTransaksi });
     return { httpStatus: 200, hasil: 'diabaikan' };
   } catch (e) {
+    if (e instanceof PaymentAttemptChangedError) {
+      deps.catat('error', 'Pembayaran diterima saat percobaan berubah, perlu rekonsiliasi admin', { nomor, idTransaksi });
+      return { httpStatus: 200, hasil: 'perlu-tindakan-admin' };
+    }
     deps.catat('error', 'Gagal memproses notifikasi Midtrans', {
       idTransaksi,
       galat: e instanceof Error ? e.message : String(e),

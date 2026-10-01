@@ -45,7 +45,8 @@ npm run db:reset    # HAPUS semua data, jalankan ulang migration + seed
 
 `db:reset` hanya untuk database lokal. `prisma/seed.ts` menolak berjalan bila
 `NODE_ENV=production`. Seed menghapus lalu mengisi ulang semua data dengan hasil
-yang sama setiap kali (acak deterministik), jadi aman diulang.
+yang sama setiap kali (acak deterministik). Ini tetap operasi destruktif:
+jangan mengulang pada database berisi data toko atau pesanan baru.
 
 Isi seed (PRD §20):
 
@@ -71,10 +72,21 @@ Atau HeidiSQL dari Laragon.
 
 ## Production
 
-- Migration saat rilis: `npx prisma migrate deploy` (bukan `migrate dev`,
+- Migration Aiven saat rilis: `npm run db:deploy` (bukan `migrate dev`,
   bukan `reset`).
 - Jangan menjalankan seed demo di production. Buat akun admin sendiri dengan
   password baru; akun demo PRD §20 tidak boleh ada di server.
+
+Target rilis Vercel + Aiven mengikuti [`deployment.md`](deployment.md).
+`DATABASE_CA_CERT` wajib memakai CA yang benar, dengan verifikasi sertifikat
+aktif. Wrapper `db:deploy` memasang CA sementara bagi engine Prisma Migrate;
+adapter aplikasi membacanya dari environment. Tidak ada reset saat deploy.
+
+Per 1 Oktober 2026 ada 15 tabel bisnis dan tabel infrastruktur
+`auth_rate_limits`. Tiga migration diterapkan pada database lokal dan Aiven.
+Tes mutasi dijalankan di database verifikasi terpisah. Foto demo kini dapat
+dibaca dari `public/demo/`; `npm run demo:images` memperbarui URL foto seed
+tanpa mengubah stok, akun atau status pesanan.
 
 ## Backup & restore (PRD §16)
 
@@ -86,6 +98,9 @@ mysqldump --single-transaction --routines -u <user> -p ecommerce | gzip > ecomme
 gunzip -c ecommerce-2026-09-25.sql.gz | mysql -u <user> -p ecommerce_restore_test
 ```
 
+- Sesuaikan backup terkelola dengan paket Aiven; jika belum mencakup retensi
+  PRD, gunakan dump TLS terjadwal ke storage terpisah. Jangan menganggap paket
+  gratis menyediakan backup sebelum memeriksa dashboard.
 - Simpan harian 7 hari, mingguan 4 minggu, salin ke storage terpisah.
 - Uji restore sebulan sekali; catat hasilnya di `PROGRESS.md`.
 - Berkas dump berisi data pribadi pembeli: jangan di-commit (`*.sql` sudah

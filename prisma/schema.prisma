@@ -17,6 +17,17 @@ datasource db {
   provider = "mysql"
 }
 
+// Infrastruktur D4: pembatas percobaan bersama untuk semua instance Vercel.
+// HMAC aksi + IP, bukan alamat IP mentah. Jendela tetap 15 menit.
+model AuthRateLimit {
+  keyHash   String   @id @map("key_hash") @db.Char(64)
+  attempts  Int      @default(0)
+  expiresAt DateTime @map("expires_at") @db.DateTime(3)
+
+  @@index([expiresAt])
+  @@map("auth_rate_limits")
+}
+
 // ---------------------------------------------------------------------------
 // Enum — nilai persis PRD §9 / GLOSSARY.md
 

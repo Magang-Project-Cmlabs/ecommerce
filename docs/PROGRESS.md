@@ -15,6 +15,31 @@ Format entri:
 
 ---
 
+### 2026-10-01 — Kevin Ilham / Codex — Penghentian sementara dan serah terima ke Claude Code
+- Pemilik meminta berhenti untuk menghemat token Codex. Goal dipause dan runner browser/server QA dihentikan; demo lokal 3000 tetap tersedia.
+- Branch / PR: `feat/penyelesaian-tokokita` / #23 draft. Commit terakhir pushed `984d01f`; perubahan terbaru tersimpan lokal, belum commit/push.
+- Perubahan: query katalog paralel, Suspense beranda, lazy validasi ulasan, perbaikan hydration pencarian/wishlist, penjagaan attempt pembayaran dalam row lock, fixture dan suite lintas browser/sandbox. Rincian dan langkah lanjut di SERAH_TERIMA.
+- Verifikasi PASS: typecheck, lint, 403 unit, 30 integrasi MySQL, build 31 route; 24 regresi Firefox/WebKit; pembayaran BCA/Mandiri sampai DB dan webhook lokal idempoten.
+- QRIS FAIL: simulator resmi error 2603 meski QR URL/PNG valid. Suite final 310 NOT_RUN sampai selesai: dihentikan setelah 89 kasus lulus. Performa terbaru, rilis cloud dan CI perubahan lokal belum selesai; tidak dinyatakan 100%.
+
+### 2026-10-01 — Kevin Ilham / Codex — Pemeriksaan akhir CI dan preview Vercel
+- Branch / PR: `feat/penyelesaian-tokokita` / [#23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23), draft.
+- CI PASS: run 36839552818 pada commit 8d8696a, kedua job berhasil. Working tree bersih sebelum pembaruan status ini.
+- Preview Vercel FAIL: integrasi Git repo pribadi membangun commit 1acd7c2, deployment `dpl_9g2dyzipY6uL8Q46t1iAhoH1yXxD` gagal. GitHub tidak menampilkan penyebab; pembacaan log CLI memerlukan login Vercel yang belum tersedia.
+- Production terbaru NOT_RUN; layanan eksternal/performa tetap mengikuti batas pada PROJECT_STATUS. Tidak mengubah production atau menjalankan tes mutasi pada Aiven.
+
+### 2026-10-01 — Kevin Ilham / Codex — Integrasi TokoKita sesuai PPT dan Vercel + Aiven
+- Branch / PR: `feat/penyelesaian-tokokita`, integrasi `develop@1fb10162` dan `feature@2d01e28`; [PR #23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23) ke `develop`.
+- Temuan awal: pekerjaan A3 sudah berlanjut pada `feature`. Implementasi itu diteruskan, termasuk akun, alamat dan komponen checkout; tidak mengubah kepemilikan kartu tim.
+- Perubahan: katalog/galeri/filter/search/wishlist/ulasan, checkout server dengan stok dan promo atomik, akun dan anonimisasi, riwayat/timeline serta seluruh admin produk/kategori/promo/banner/pesanan. Midtrans, webhook, cron dan email tersambung ke transisi tunggal.
+- Keamanan: JWT versi password, pembatas MySQL bersama, unggah satu file bertoken, proteksi edit stok usang, penolakan konversi varian saat pesanan nonvarian aktif, pembersihan PII catatan pembatalan, reset dibatasi sebelum bcrypt, foto ulasan terikat item eligible dan kuota bersama. Audit read-only diikuti tes regresi; tidak ada temuan tersisa.
+- Infrastruktur: pemilik mengganti VPS dengan Vercel + Aiven. TLS CA ketat dan wrapper migration, tiga migration tanpa reset toko; 87 foto seed lokal, storage S3/R2 production, workflow cron eksternal tersedia. Dependency audit nol kerentanan.
+- Verifikasi: `npm ci` PASS; typecheck PASS; lint PASS; unit PASS (392); integrasi MySQL PASS (28); Prisma validate PASS; build PASS; E2E PASS (83/83 tanpa skip); Snap sandbox create PASS; TLS/migration Aiven PASS; backup TLS dan restore DB terpisah PASS (26 produk, 14 pengguna, 79 pesanan, 188 ulasan, tiga migration).
+- CI awal: job 28 integrasi MySQL PASS; build FAIL karena APP_URL production belum disediakan oleh fixture CI. Tambahkan domain placeholder HTTPS pada workflow; CI ulang [36839184299](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36839184299) PASS untuk dua job (commit 1acd7c2).
+- Batas: deployment terbaru/SMTP eksternal/S3 bucket/jadwal cron online NOT_RUN karena akses/environment belum tersedia. Settlement sesi baru NOT_RUN. Target performa belum semuanya PASS; hasil aktual ada di `PROJECT_STATUS.md`. Tes lokal tidak membuktikan kesiapan hosting.
+- Status dan runbook diperbarui; tidak menjalankan reset pada database toko lokal maupun Aiven.
+
+
 ### 2026-09-30 — Kevin Ilham — Kontrak data checkout & pesanan
 - Branch / PR: `docs/kontrak-checkout` → PR ke `develop`
 - Pemicu: A4 menanyakan field checkout/order untuk skema validasi agar sama

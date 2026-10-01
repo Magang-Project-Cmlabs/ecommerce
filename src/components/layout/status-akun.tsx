@@ -28,6 +28,11 @@ export async function StatusAkun() {
 
   return (
     <nav aria-label="Akun" className="flex items-center gap-3 text-sm">
+      {pengguna.role === 'admin' && (
+        <Button asChild size="sm" className="pointer-coarse:h-11 pointer-coarse:px-4">
+          <Link href="/admin">Panel Admin</Link>
+        </Button>
+      )}
       <span className="text-muted-foreground max-w-[12rem] truncate">
         Halo, <span className="text-foreground font-medium">{pengguna.name}</span>
       </span>

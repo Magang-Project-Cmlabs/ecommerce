@@ -7,7 +7,7 @@ import { hashTokenReset, tokenResetBerbentukSah } from '@/lib/auth/token-reset';
 import { tokenResetMasihBerlaku } from '@/lib/data/reset-password';
 
 export const metadata: Metadata = {
-  title: 'Buat password baru — TokoKita',
+  title: 'Buat password baru',
   robots: { index: false, follow: false },
   // Token ada di URL: jangan bocorkan lewat header Referer ke situs lain.
   referrer: 'no-referrer',

@@ -59,3 +59,17 @@ Periksa satu per satu 13 kriteria sukses di PRD §22 dan catat hasilnya di
 `PROJECT_STATUS.md` bagian 4. Target performa: Lighthouse Performance ≥ 90 untuk
 beranda, daftar produk, dan detail produk (mode production: `npm run build &&
 npm run start`, bukan `dev`).
+
+
+## Pengukuran performa 1 Oktober 2026
+
+Build production lokal yang terhubung TLS Aiven diuji pada viewport mobile,
+4G dan CPU 4x. Lighthouse DevTools menghasilkan 93/93/96 untuk beranda,
+katalog/detail, LCP 2,344/2,351/2,246 detik dan CLS <0,001 (PASS). Simulasi
+bawaan menghasilkan 80/85/85 dan LCP sekitar 4,3-4,4 detik (FAIL). Kedua
+hasil dicatat; jangan mengganti laporan rendah dengan laporan tinggi tanpa
+menyebut metode. Domain Vercel terbaru masih NOT_RUN.
+
+Metode throttling adalah dua metode berbeda yang didokumentasikan oleh
+[Lighthouse](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md).
+Artifacts lokal berada di tests/e2e/.artifacts/ (diabaikan Git).

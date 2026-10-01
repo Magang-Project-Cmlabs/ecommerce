@@ -372,10 +372,11 @@ Script: `dev`, `build`, `start`, `db:migrate`, `db:seed`, `db:reset`, `db:studio
 - Tersedia halaman Kebijakan Privasi dan Syarat & Ketentuan (termasuk kebijakan pengembalian barang).
 
 ## 16. Deployment & Operasional
-- **Hosting:** VPS di Indonesia (Ubuntu), Next.js mode `standalone` dijalankan dengan PM2 di belakang Nginx
-- **Database:** MySQL 8 di server yang sama atau managed MySQL
-- **HTTPS:** Let's Encrypt
-- **Job terjadwal:** crontab memanggil `/api/cron/orders` setiap 15 menit
+- **Hosting:** Vercel (perubahan target oleh pemilik proyek, 1 Oktober 2026); fungsi Next.js di region terdekat dengan database
+- **Database:** Aiven managed MySQL dengan CA TLS terverifikasi, pool koneksi terbatas
+- **HTTPS:** sertifikat dikelola Vercel
+- **Job terjadwal:** pemanggil terautentikasi `/api/cron/orders` setiap 15 menit; Vercel Pro cron atau penjadwal eksternal untuk Hobby
+- **State serverless:** hitungan rate limit tersimpan di tabel `auth_rate_limits`, gambar unggahan tersimpan di S3/R2; tiap request unggah membawa satu file maksimal 2 MB
 - **Backup:** `mysqldump` harian (disimpan 7 hari) dan mingguan (disimpan 4 minggu), disalin ke storage terpisah; uji restore setiap bulan
 - **Migrasi:** `prisma migrate deploy` saat rilis
 - **Monitoring:** log error aplikasi dan uptime check halaman utama

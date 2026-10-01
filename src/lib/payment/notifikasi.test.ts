@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 import { tanganiNotifikasiMidtrans, type DepsNotifikasi, type PesananTersimpan } from './notifikasi';
+import { PaymentAttemptChangedError } from '@/lib/pesanan/galat';
 import type { StatusGateway } from './types';
 
 const SERVER_KEY = 'SB-Mid-server-contohKunciUji';
@@ -198,7 +199,7 @@ describe('tanganiNotifikasiMidtrans', () => {
     const hasil = await tanganiNotifikasiMidtrans(notifikasi({ transaction_status: 'expire', status_code: '407' }), deps);
 
     expect(hasil).toEqual({ httpStatus: 200, hasil: 'dibatalkan' });
-    expect(deps.batalkanOtomatis).toHaveBeenCalledWith('INV-202609-0001', 'Batas waktu pembayaran habis');
+    expect(deps.batalkanOtomatis).toHaveBeenCalledWith('INV-202609-0001', 'Batas waktu pembayaran habis', 'INV-202609-0001');
   });
 
   it('kedaluwarsanya percobaan lama tidak membatalkan pesanan yang sedang dibayar ulang', async () => {
@@ -220,13 +221,21 @@ describe('tanganiNotifikasiMidtrans', () => {
   });
 
   it('pembayaran lewat percobaan kedua tetap mengonfirmasi pesanan', async () => {
-    const deps = siapkan();
+    const deps = siapkan({ pesanan: { nomorPesanan: 'INV-202609-0001', status: 'pending', paymentStatus: 'unpaid', metodeBayar: 'bank_bca', grandTotal: 324_300, idTransaksiAktif: 'INV-202609-0001~2' } });
     const n = notifikasi({ order_id: 'INV-202609-0001~2' });
     const hasil = await tanganiNotifikasiMidtrans(n, deps);
 
     expect(deps.cariPesanan).toHaveBeenCalledWith('INV-202609-0001');
     expect(deps.ambilStatus).toHaveBeenCalledWith('INV-202609-0001~2');
     expect(hasil.hasil).toBe('dikonfirmasi');
+  });
+  it('dana percobaan tidak aktif memerlukan rekonsiliasi admin tanpa konfirmasi', async () => {
+    const deps = siapkan({ pesanan: { nomorPesanan: 'INV-202609-0001', status: 'pending', paymentStatus: 'unpaid', metodeBayar: 'bank_bca', grandTotal: 324_300, idTransaksiAktif: 'INV-202609-0001~2' } });
+    expect(await tanganiNotifikasiMidtrans(notifikasi(), deps)).toEqual({ httpStatus: 200, hasil: 'perlu-tindakan-admin' }); expect(deps.konfirmasiBayar).not.toHaveBeenCalled(); expect(deps.catat).toHaveBeenCalledWith('error', expect.stringContaining('percobaan'), expect.anything());
+  });
+  it('attempt berubah setelah pemeriksaan awal: transaksi menolak dan webhook memberi hasil rekonsiliasi', async () => {
+    const deps = siapkan(); deps.konfirmasiBayar = vi.fn(async () => { throw new PaymentAttemptChangedError(); });
+    expect(await tanganiNotifikasiMidtrans(notifikasi(), deps)).toEqual({ httpStatus: 200, hasil: 'perlu-tindakan-admin' }); expect(deps.catat).toHaveBeenCalledWith('error', expect.stringContaining('percobaan berubah'), expect.anything());
   });
 
   it('pesanan COD tidak pernah diubah oleh notifikasi gateway', async () => {

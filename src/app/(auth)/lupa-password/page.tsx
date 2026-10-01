@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
 
 export const metadata: Metadata = {
-  title: 'Lupa password — TokoKita',
+  title: 'Lupa password',
   robots: { index: false, follow: false },
 };
 

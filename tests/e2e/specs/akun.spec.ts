@@ -15,6 +15,9 @@ async function isiMasuk(page: Page, email: string, password: string) {
 }
 
 test.describe('Akun', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setExtraHTTPHeaders({ 'x-real-ip': `10.212.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
+  });
   test('daftar akun baru, langsung masuk, lalu keluar', async ({ page, context }) => {
     const errors = tangkapError(page);
     const email = `e2e-${Date.now()}@example.com`;
@@ -25,7 +28,15 @@ test.describe('Akun', () => {
     await page.getByLabel('Password', { exact: true }).fill('rahasia123');
     await page.getByLabel('Ulangi password').fill('rahasia123');
     await page.getByRole('checkbox', { name: /Syarat & Ketentuan/ }).check();
+    const registrationResponse = page.waitForResponse((response) => response.request().method() === 'POST' && new URL(response.url()).pathname === '/daftar');
     await page.getByRole('button', { name: /^daftar$/i }).click();
+    const sessionHeader = (await (await registrationResponse).headerValues('set-cookie')).find((header) => header.startsWith(`${NAMA_COOKIE}=`));
+    expect(Boolean(sessionHeader), 'Response pendaftaran menetapkan cookie sesi.').toBe(true);
+    // WebKit pada HTTP lokal dapat melaporkan sameSite=None di cookies();
+    // periksa atribut wire yang dikirim server, tanpa menampilkan nilai JWT.
+    const cookieAttributes = (sessionHeader ?? '').split(';').slice(1).map((attribute) => attribute.trim().toLowerCase());
+    expect(cookieAttributes).toContain('samesite=lax');
+    expect(cookieAttributes).toContain('httponly');
 
     await page.waitForURL((u) => u.pathname === '/');
     await expect(barAkun(page)).toContainText('Halo, Pembeli E2E');
@@ -33,7 +44,6 @@ test.describe('Akun', () => {
     const cookie = (await context.cookies()).find((c) => c.name === NAMA_COOKIE);
     expect(cookie, 'cookie sesi terpasang').toBeTruthy();
     expect(cookie!.httpOnly).toBe(true);
-    expect(cookie!.sameSite).toBe('Lax');
     expect(cookie!.expires - Date.now() / 1000).toBeGreaterThan(29 * 24 * 3600);
 
     await barAkun(page).getByRole('button', { name: 'Keluar' }).click();

@@ -1,0 +1,26 @@
+# Alternatif cron15menit untuk VercelHobby. Aktif setelah APP_URL/CRON_SECRET
+# pada GitHub Actions dikonfigurasi. URL bukan rahasia; token tidak dicetak.
+name: Pesanan otomatis
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: orders-cron
+  cancel-in-progress: false
+jobs:
+  pesanan:
+    if: vars.APP_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/run-orders-cron.mjs
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

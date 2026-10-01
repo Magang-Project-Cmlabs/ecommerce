@@ -11,6 +11,7 @@ test.describe('Penjaga login', () => {
       test.skip(!!h.belumAda, 'Halaman belum dibangun (tandai di helpers/pages.ts)');
 
       await page.goto(h.path, { waitUntil: 'load' });
+      await expect(page).toHaveURL(/\/masuk\?/);
       const url = new URL(page.url());
       expect(url.pathname).toBe('/masuk');
       expect(url.searchParams.get('next')).toBe(h.path);
@@ -27,10 +28,11 @@ test.describe('Penjaga role admin', () => {
     const page = await context.newPage();
     try {
       for (const h of HALAMAN_ADMIN.filter((x) => !x.belumAda)) {
-        const response = await page.goto(h.path, { waitUntil: 'load' });
-        const dialihkan = !new URL(page.url()).pathname.startsWith('/admin');
-        const ditolak = !!response && [403, 404].includes(response.status());
-        expect(dialihkan || ditolak, `${h.path} terbuka untuk pembeli (status ${response?.status()})`).toBe(true);
+        await page.goto(h.path, { waitUntil: 'load' });
+        // Next streaming mengirim status200 sebelum notFound: bukti penolakan
+        // adalah tampilan404 dan ketiadaan navigasi/data admin.
+        await expect(page.getByRole('heading', { name: /tidak ditemukan/ })).toBeVisible();
+        await expect(page.getByRole('navigation', { name: 'Menu admin' })).toHaveCount(0);
       }
     } finally {
       await context.close();
