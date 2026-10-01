@@ -15,7 +15,7 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
     <Image src={slide.image} alt="" fill loading="eager" fetchPriority="high" quality={50} sizes="(max-width: 1279px) 100vw, 1280px" className="object-cover" />
     <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
     <div className="relative flex h-full max-w-2xl flex-col justify-center px-12 pb-8 sm:px-16 md:px-20">
-      <h1 className="text-2xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">{slide.title}</h1>
+      <h1 className="text-balance text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">{slide.title}</h1>
       {slide.subtitle && <p className="mt-3 text-sm leading-relaxed text-white md:text-xl">{slide.subtitle}</p>}
       <Button asChild variant="outline" className="mt-5 h-11 w-fit rounded-full bg-background text-foreground"><Link href={href}>{slide.cta || 'Belanja Sekarang'}<ChevronRight className="size-4" /></Link></Button>
     </div>
