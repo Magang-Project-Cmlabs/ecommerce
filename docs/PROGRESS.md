@@ -16,12 +16,13 @@ Format entri:
 ---
 
 ### 2026-10-01 — Kevin Ilham / Codex — Integrasi TokoKita sesuai PPT dan Vercel + Aiven
-- Branch / PR: `feat/penyelesaian-tokokita`, integrasi `develop@1fb10162` dan `feature@2d01e28`; PR ke `develop`.
+- Branch / PR: `feat/penyelesaian-tokokita`, integrasi `develop@1fb10162` dan `feature@2d01e28`; [PR #23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23) ke `develop`.
 - Temuan awal: pekerjaan A3 sudah berlanjut pada `feature`. Implementasi itu diteruskan, termasuk akun, alamat dan komponen checkout; tidak mengubah kepemilikan kartu tim.
 - Perubahan: katalog/galeri/filter/search/wishlist/ulasan, checkout server dengan stok dan promo atomik, akun dan anonimisasi, riwayat/timeline serta seluruh admin produk/kategori/promo/banner/pesanan. Midtrans, webhook, cron dan email tersambung ke transisi tunggal.
 - Keamanan: JWT versi password, pembatas MySQL bersama, unggah satu file bertoken, proteksi edit stok usang, penolakan konversi varian saat pesanan nonvarian aktif, pembersihan PII catatan pembatalan, reset dibatasi sebelum bcrypt, foto ulasan terikat item eligible dan kuota bersama. Audit read-only diikuti tes regresi; tidak ada temuan tersisa.
 - Infrastruktur: pemilik mengganti VPS dengan Vercel + Aiven. TLS CA ketat dan wrapper migration, tiga migration tanpa reset toko; 87 foto seed lokal, storage S3/R2 production, workflow cron eksternal tersedia. Dependency audit nol kerentanan.
 - Verifikasi: `npm ci` PASS; typecheck PASS; lint PASS; unit PASS (392); integrasi MySQL PASS (28); Prisma validate PASS; build PASS; E2E PASS (83/83 tanpa skip); Snap sandbox create PASS; TLS/migration Aiven PASS; backup TLS dan restore DB terpisah PASS (26 produk, 14 pengguna, 79 pesanan, 188 ulasan, tiga migration).
+- CI awal: job 28 integrasi MySQL PASS; build FAIL karena APP_URL production belum disediakan oleh fixture CI. Tambahkan domain placeholder HTTPS pada workflow dan jalankan ulang.
 - Batas: deployment terbaru/SMTP eksternal/S3 bucket/jadwal cron online NOT_RUN karena akses/environment belum tersedia. Settlement sesi baru NOT_RUN. Target performa belum semuanya PASS; hasil aktual ada di `PROJECT_STATUS.md`. Tes lokal tidak membuktikan kesiapan hosting.
 - Status dan runbook diperbarui; tidak menjalankan reset pada database toko lokal maupun Aiven.
 

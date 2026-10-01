@@ -2,6 +2,8 @@
 
 **Tanggal:** 1 Oktober 2026
 **Branch:** `feat/penyelesaian-tokokita`
+
+**PR:** [#23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23), draft; implementasi sudah di-commit dan di-push.
 **Sesi:** Penyelesaian PPT/PRD dan perubahan target Vercel + Aiven
 
 ## Keadaan aplikasi
@@ -21,7 +23,8 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
 
 ## Langkah berikutnya
 
-1. Simpan branch/PR dan pastikan CI hijau sebelum penggabungan.
+1. Pastikan CI PR #23 hijau sebelum penggabungan. Server demo lokal berjalan
+   di http://localhost:3000 dengan DB toko lokal `ecommerce` (bukan DB uji).
 2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
    Proyek fork yang terlihat sebelumnya: `ecommerce` di `tes-2254s-projects`.
    Akses GitHub tidak memberikan akses konfigurasi Vercel; CLI belum login.

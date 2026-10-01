@@ -51,7 +51,7 @@ ke Vercel; toko online belum dinyatakan 100% siap.
 | Backup/restore manual Aiven | PASS | Dump TLS 155.148 bytes, restore DB terpisah: 26 produk/14 pengguna/79 pesanan/188 ulasan/3 migration |
 | Lighthouse DevTools mobile, 4G + CPU 4x | PASS | Beranda 93/LCP 2,344 s; katalog 93/2,351 s; detail 96/2,246 s; CLS <0,001. Build production dengan Aiven, cache hangat |
 | Lighthouse simulasi bawaan | FAIL | Beranda 80, katalog 85, detail 85; LCP sekitar 4,3–4,4 s. Hasil kedua metode dipertahankan; domain Vercel belum diuji |
-| CI perubahan ini | NOT_RUN | Menunggu publikasi PR |
+| CI perubahan ini | NOT_RUN | PR #23: job MySQL PASS; build pertama FAIL karena fixture APP_URL belum diisi. Konfigurasi diperbaiki dan CI ulang menunggu hasil |
 
 ## 4. Kriteria sukses PRD §22
 
