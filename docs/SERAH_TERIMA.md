@@ -23,7 +23,8 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
 
 ## Langkah berikutnya
 
-1. Pastikan CI PR #23 hijau sebelum penggabungan. Server demo lokal berjalan
+1. CI implementasi PR #23 sudah PASS (run 36839184299, commit 1acd7c2).
+   Periksa juga CI commit dokumentasi terbaru sebelum penggabungan. Server demo lokal berjalan
    di http://localhost:3000 dengan DB toko lokal `ecommerce` (bukan DB uji).
 2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
    Proyek fork yang terlihat sebelumnya: `ecommerce` di `tes-2254s-projects`.
