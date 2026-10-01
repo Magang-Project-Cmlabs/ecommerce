@@ -36,8 +36,8 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
    `tes-2254s-projects`. Preview gagal sebelumnya karena `DATABASE_URL` dan
    `DATABASE_CA_CERT` hanya ada untuk Production. Sekarang Preview memakai DB
    uji terpisah `tokokita_preview` di server Aiven yang sama (tiga migration
-   terpasang, kosong, bukan DB toko). Build Preview PASS; `/`, `/produk`, `/masuk`,
-   `/daftar` dan `/api/search` HTTP 200 (PASS, via `vercel curl`). Login, checkout,
+   terpasang, seed demo 26 produk/14 pengguna/79 pesanan sudah diisi, bukan DB toko). Build Preview PASS; `/`, `/produk`, `/masuk`,
+   `/daftar`, detail produk, `/sitemap.xml` dan `/api/search?q=celana` (hasil produk) HTTP 200 (PASS, via `vercel curl`). Login, checkout,
    upload, email dan Midtrans di Preview masih NOT_RUN. Mengganti env rahasia:
    hapus lalu tambah ulang, lalu `vercel redeploy` (env terikat saat deployment dibuat).
 3. Isi environment Production/Preview, SMTP dan S3/R2 mengikuti
