@@ -1,7 +1,7 @@
 ﻿import 'server-only';
 import { cariPesananGateway } from '@/lib/data/pesanan';
 import { ubahStatus } from '@/lib/pesanan/transisi';
-import { BusinessValidationError } from '@/lib/pesanan/galat';
+import { BusinessValidationError, PaymentAttemptChangedError } from '@/lib/pesanan/galat';
 import { bacaKonfigMidtrans, buatKlienMidtrans, type DepsNotifikasi } from '@/lib/payment';
 export function depsNotifikasiProduksi(): DepsNotifikasi {
   const config = bacaKonfigMidtrans();
@@ -15,11 +15,13 @@ export function depsNotifikasiProduksi(): DepsNotifikasi {
     ambilStatus: id => client.ambilStatus(id),
     async konfirmasiBayar(number, info) {
       const order = await cariPesananGateway(number);
-      if (!order || order.status !== 'pending') return false;
+      if (!order) return false;
+      if (order.paymentTransactionId !== info.idTransaksi) throw new PaymentAttemptChangedError();
+      if (order.status !== 'pending') return false;
       try {
         await ubahStatus(order.id, 'confirmed', 'sistem', { gatewayVerified: true, paymentTransactionId: info.idTransaksi, paymentType: info.paymentType });
         return true;
-      } catch (error) { if (error instanceof BusinessValidationError) return false; throw error; }
+      } catch (error) { if (error instanceof PaymentAttemptChangedError) throw error; if (error instanceof BusinessValidationError) return false; throw error; }
     },
     async batalkanOtomatis(number, reason, idTransaksi) {
       const order = await cariPesananGateway(number);

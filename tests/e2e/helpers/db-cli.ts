@@ -3,6 +3,7 @@
 // transform Playwright. Mencetak satu baris JSON ke stdout.
 
 import path from 'node:path';
+import { randomInt } from 'node:crypto';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient } from '../../../src/generated/prisma/client';
 import { konfigurasiDb } from '../../../src/lib/konfigurasi-db';
@@ -13,7 +14,7 @@ loadEnv(path.join(__dirname, '..', '..', '..', '.env'));
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL tidak ada di .env');
 const db = new PrismaClient({ adapter: new PrismaMariaDb(konfigurasiDb(process.env)) });
 
-async function jalankan(perintah: string | undefined, email: string | undefined, arg?: string): Promise<unknown> {
+async function jalankan(perintah: string | undefined, email: string | undefined, arg?: string, metodeSandbox = 'bank_bca'): Promise<unknown> {
   if (!email) throw new Error('email wajib');
   if (perintah === 'jumlah-token') return db.passwordResetToken.count({ where: { user: { email } } });
   if (perintah === 'pasang-token') {
@@ -29,20 +30,27 @@ async function jalankan(perintah: string | undefined, email: string | undefined,
     const database = new URL(process.env.DATABASE_URL!).pathname;
     if (!database.includes('verifikasi') && !database.endsWith('_test')) throw new Error('Fixture admin hanya boleh di database uji terisolasi.');
     if (perintah === 'admin-order-fixture') {
+      if (!['bank_bca', 'bank_mandiri', 'qris'].includes(metodeSandbox)) throw new Error('Metode sandbox tidak valid.');
+      const paymentMethod = arg === 'sandbox' ? metodeSandbox as 'bank_bca' | 'bank_mandiri' | 'qris' : 'bank_bca';
       const user = await db.user.findUniqueOrThrow({ where: { email }, select: { id: true } });
       const category = await db.category.findFirstOrThrow({ select: { id: true } });
       const stamp = String(Date.now());
+      // Gateway actions enforce the real invoice format; admin-only fixtures
+      // retain their visibly artificial order numbers.
+      const orderNumber = arg === 'sandbox'
+        ? `INV-${new Date().toISOString().slice(2, 10).replaceAll('-', '')}-${randomInt(100000000, 1000000000)}`
+        : `E2EA${stamp}`;
       const p = await db.product.create({ data: { name: 'Barang Uji Admin', slug: `admin-e2e-${stamp}`, categoryId: category.id, description: 'Barang uji lifecycle admin.', specs: {}, tags: [], brand: 'TokoKita', price: 99000, weight: 200, stock: 2, soldCount: 1, isActive: false } });
-      const order = await db.order.create({ data: { userId: user.id, orderNumber: `E2EA${stamp}`, subtotal: 99000, shippingCost: 15000, grandTotal: 114000, totalWeight: 200, paymentMethod: 'bank_bca', shippingMethod: 'jne_reg', paymentDueAt: new Date(Date.now() + 86400000), shippingAddress: { name: 'Penerima Uji', phone: '081234567890', street: 'Jalan Admin 1', district: 'Tebet', city: 'Jakarta', province: 'DKI Jakarta', postalCode: '12820' }, items: { create: { productId: p.id, name: p.name, price: p.price, weight: p.weight, quantity: 1 } }, statusLogs: { create: { status: 'pending', note: 'Pesanan uji dibuat' } } } });
+      const order = await db.order.create({ data: { userId: user.id, orderNumber, notes: `admin-e2e-${stamp}`, subtotal: 99000, shippingCost: 15000, grandTotal: 114000, totalWeight: 200, paymentMethod, shippingMethod: 'jne_reg', paymentDueAt: new Date(Date.now() + 86400000), shippingAddress: { name: 'Penerima Uji', phone: '081234567890', street: 'Jalan Admin 1', district: 'Tebet', city: 'Jakarta', province: 'DKI Jakarta', postalCode: '12820' }, items: { create: { productId: p.id, name: p.name, price: p.price, weight: p.weight, quantity: 1 } }, statusLogs: { create: { status: 'pending', note: 'Pesanan uji dibuat' } } } });
       return { orderId: order.id, productId: p.id, orderNumber: order.orderNumber };
     }
     if (perintah === 'admin-order-state') {
       const order = await db.order.findUniqueOrThrow({ where: { id: Number(arg) }, include: { statusLogs: true, items: { include: { product: { select: { stock: true } } } } } });
-      return { status: order.status, paymentStatus: order.paymentStatus, trackingNumber: order.trackingNumber, logs: order.statusLogs.length, stock: order.items[0]?.product.stock };
+      return { status: order.status, paymentStatus: order.paymentStatus, paymentTransactionId: order.paymentTransactionId, grandTotal: order.grandTotal, trackingNumber: order.trackingNumber, logs: order.statusLogs.length, stock: order.items[0]?.product.stock };
     }
     if (perintah === 'admin-clean-fixture') {
       const fixture = JSON.parse(arg ?? '{}') as { orderId: number; productId: number };
-      const order = await db.order.findFirst({ where: { id: fixture.orderId, orderNumber: { startsWith: 'E2EA' } }, select: { id: true } });
+      const order = await db.order.findFirst({ where: { id: fixture.orderId, user: { email }, notes: { startsWith: 'admin-e2e-' }, items: { some: { productId: fixture.productId, product: { slug: { startsWith: 'admin-e2e-' } } } } }, select: { id: true } });
       if (!order) throw new Error('Fixture admin tidak ditemukan.');
       await db.orderStatusLog.deleteMany({ where: { orderId: order.id } });
       await db.orderItem.deleteMany({ where: { orderId: order.id } });
@@ -70,6 +78,6 @@ async function jalankan(perintah: string | undefined, email: string | undefined,
   throw new Error(`perintah tidak dikenal: ${perintah}`);
 }
 
-jalankan(process.argv[2], process.argv[3], process.argv[4])
+jalankan(process.argv[2], process.argv[3], process.argv[4], process.argv[5])
   .then((hasil) => process.stdout.write(JSON.stringify(hasil)))
   .finally(() => db.$disconnect());

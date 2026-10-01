@@ -15,6 +15,13 @@ Format entri:
 
 ---
 
+### 2026-10-01 — Kevin Ilham / Codex — Penghentian sementara dan serah terima ke Claude Code
+- Pemilik meminta berhenti untuk menghemat token Codex. Goal dipause dan runner browser/server QA dihentikan; demo lokal 3000 tetap tersedia.
+- Branch / PR: `feat/penyelesaian-tokokita` / #23 draft. Commit terakhir pushed `984d01f`; perubahan terbaru tersimpan lokal, belum commit/push.
+- Perubahan: query katalog paralel, Suspense beranda, lazy validasi ulasan, perbaikan hydration pencarian/wishlist, penjagaan attempt pembayaran dalam row lock, fixture dan suite lintas browser/sandbox. Rincian dan langkah lanjut di SERAH_TERIMA.
+- Verifikasi PASS: typecheck, lint, 403 unit, 30 integrasi MySQL, build 31 route; 24 regresi Firefox/WebKit; pembayaran BCA/Mandiri sampai DB dan webhook lokal idempoten.
+- QRIS FAIL: simulator resmi error 2603 meski QR URL/PNG valid. Suite final 310 NOT_RUN sampai selesai: dihentikan setelah 89 kasus lulus. Performa terbaru, rilis cloud dan CI perubahan lokal belum selesai; tidak dinyatakan 100%.
+
 ### 2026-10-01 — Kevin Ilham / Codex — Pemeriksaan akhir CI dan preview Vercel
 - Branch / PR: `feat/penyelesaian-tokokita` / [#23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23), draft.
 - CI PASS: run 36839552818 pada commit 8d8696a, kedua job berhasil. Working tree bersih sebelum pembaruan status ini.

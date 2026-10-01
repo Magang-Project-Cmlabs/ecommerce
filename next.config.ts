@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Server E2E terpisah tidak mengunci/menimpa build atau demo lokal pengguna.
+  distDir: process.env.E2E_ISOLATED_SERVER === '1' ? '.sandbox/next-e2e' : '.next',
   output: 'standalone',
   experimental: { serverActions: { bodySizeLimit: '3mb' } },
   images: {

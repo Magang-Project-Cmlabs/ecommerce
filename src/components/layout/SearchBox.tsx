@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
@@ -9,7 +9,13 @@ import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import type { ProdukKartu } from '@/lib/katalog-types';
 import { formatRupiah } from '@/lib/format';
 
+const subscribeToHydration = () => () => {};
+const clientHydrated = () => true;
+const serverHydrated = () => false;
+
 export default function SearchBox() {
+  // Jangan menerima isian sebelum handler input terpasang pada HTML server.
+  const hydrated = useSyncExternalStore(subscribeToHydration, clientHydrated, serverHydrated);
   const [q, setQ] = useState('');
   const [hasil, setHasil] = useState<ProdukKartu[]>([]);
   const [open, setOpen] = useState(false);
@@ -37,12 +43,12 @@ export default function SearchBox() {
     <PopoverAnchor asChild><form ref={formRef} action="/produk" role="search" className="flex w-full items-center rounded-full bg-muted p-1" onSubmit={(e) => { if (aktif >= 0 && hasil[aktif]) { e.preventDefault(); router.push(`/produk/${hasil[aktif].slug}`); } setOpen(false); }}>
       <Search aria-hidden className="ml-3 size-5 shrink-0 text-muted-foreground" />
       <label htmlFor="pencarian-produk" className="sr-only">Cari produk, merek...</label>
-      <Input id="pencarian-produk" role="combobox" aria-expanded={open && q.trim().length >= 2} aria-controls="saran-pencarian" aria-autocomplete="list" aria-activedescendant={aktif >= 0 ? `saran-${aktif}` : undefined} type="search" name="q" maxLength={100} placeholder="Cari produk, merek..." value={q} onFocus={() => setOpen(true)} onChange={(e) => { setQ(e.target.value); setOpen(true); setAktif(-1); setHasil([]); }} onKeyDown={(e) => {
+      <Input id="pencarian-produk" role="combobox" disabled={!hydrated} aria-expanded={open && q.trim().length >= 2} aria-controls="saran-pencarian" aria-autocomplete="list" aria-activedescendant={aktif >= 0 ? `saran-${aktif}` : undefined} type="search" name="q" maxLength={100} placeholder="Cari produk, merek..." value={q} onFocus={() => setOpen(true)} onChange={(e) => { setQ(e.target.value); setOpen(true); setAktif(-1); setHasil([]); }} onKeyDown={(e) => {
         if (e.key === 'Escape') setOpen(false);
         if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setAktif((a) => Math.min(a + 1, hasil.length - 1)); }
         if (e.key === 'ArrowUp') { e.preventDefault(); setAktif((a) => Math.max(-1, a - 1)); }
       }} className="h-11 min-w-0 border-0 bg-transparent shadow-none" />
-      <Button type="submit" size="icon" aria-label="Cari produk" className="size-11 shrink-0 rounded-full"><Search className="size-5" /></Button>
+      <Button type="submit" size="icon" disabled={!hydrated} aria-label="Cari produk" className="size-11 shrink-0 rounded-full"><Search className="size-5" /></Button>
     </form></PopoverAnchor>
     <PopoverContent align="start" className="w-[var(--radix-popover-trigger-width)] min-w-[280px] p-2" onOpenAutoFocus={(e) => e.preventDefault()} onCloseAutoFocus={(e) => e.preventDefault()} onInteractOutside={(e) => { if (formRef.current?.contains(e.target as Node)) e.preventDefault(); }}>
       <div id="saran-pencarian" role="listbox" aria-label="Saran produk" aria-busy={loading}>

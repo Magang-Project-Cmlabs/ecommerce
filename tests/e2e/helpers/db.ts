@@ -19,7 +19,9 @@ async function panggil<T>(...args: string[]): Promise<T> {
 }
 export type AdminOrderFixture = { orderId: number; productId: number; orderNumber: string };
 export const buatPesananAdminUji = (email: string) => panggil<AdminOrderFixture>('admin-order-fixture', email);
-export const bacaPesananAdminUji = (email: string, orderId: number) => panggil<{ status: string; paymentStatus: string; trackingNumber: string | null; logs: number; stock: number }>('admin-order-state', email, String(orderId));
+export type MetodeSandbox = 'bank_bca' | 'bank_mandiri' | 'qris';
+export const buatPesananSandboxUji = (email: string, metode: MetodeSandbox = 'bank_bca') => panggil<AdminOrderFixture>('admin-order-fixture', email, 'sandbox', metode);
+export const bacaPesananAdminUji = (email: string, orderId: number) => panggil<{ status: string; paymentStatus: string; paymentTransactionId: string | null; grandTotal: number; trackingNumber: string | null; logs: number; stock: number }>('admin-order-state', email, String(orderId));
 export const hapusPesananAdminUji = (email: string, fixture: AdminOrderFixture) => panggil<boolean>('admin-clean-fixture', email, JSON.stringify(fixture));
 export const hapusProdukAdminUji = (email: string, slug: string) => panggil<boolean>('admin-clean-product', email, slug);
 export const hapusKontenAdminUji = (email: string, stamp: string) => panggil<boolean>('admin-clean-content', email, stamp);

@@ -32,8 +32,8 @@ sudah dicoba tetapi deployment FAIL; toko online belum dinyatakan 100% siap.
 |---|---|---|
 | `npm run typecheck` | PASS | Next typegen dan TypeScript |
 | `npm run lint` | PASS | Tanpa error/warning ESLint |
-| `npm run test` | PASS | 392 lulus; dua tes jaringan sandbox berjalan lewat skrip khusus |
-| `npm run test:integration` | PASS | 28 tes MySQL nyata: transaksi/race/stok/promo, admin, auth, preorder, SMTP dan limiter |
+| `npm run test` | PASS | 403 lulus; dua tes jaringan sandbox dipisahkan ke skrip khusus |
+| `npm run test:integration` | PASS | 30 tes MySQL nyata, termasuk race pergantian attempt dan settlement ganda |
 | `npx prisma validate` | PASS | 15 tabel bisnis + tabel infrastruktur limiter, tiga migration |
 | `npm run build` | PASS | Build production, 31 route |
 | `npm run e2e` | PASS | 83/83 tanpa skip: lifecycle pembeli/admin, IDOR, auth, axe dan mobile 360 px |
@@ -43,7 +43,10 @@ sudah dicoba tetapi deployment FAIL; toko online belum dinyatakan 100% siap.
 | TLS + migration Aiven | PASS | Verifikasi CA aktif, data lama dipertahankan |
 | Seed DB verifikasi terpisah | PASS | 14 pengguna, 26 produk, 79 pesanan, 188 ulasan; toko tidak di-reset |
 | Pembuatan Snap sandbox nyata | PASS | Sesi baru Rp 324.300 dibuat 1 Okt |
-| Settlement sandbox sesi baru | NOT_RUN | Memerlukan simulator; settlement 27 Sep adalah bukti historis |
+| Settlement sandbox BCA/Mandiri | PASS | Snap dan simulator resmi, API settlement Rp 114.000, tombol Cek Pembayaran menyimpan paid/confirmed di DB; webhook ulang idempoten dan signature salah HTTP 401 |
+| Settlement sandbox QRIS | FAIL | QR muncul pada Snap; simulator resmi mengembalikan error 2603 saat memproses QR. Penyelidikan kanal masih berlangsung |
+| Firefox/WebKit: regresi akun/katalog/unggahan | PASS | 24/24 setelah memperbaiki input sebelum hydration, refresh wishlist berlebih, fixture ulasan unik dan pengukuran multipart/cookie lintas engine |
+| Suite lintas browser penuh versi akhir | NOT_RUN | Runner 310 kasus dihentikan atas permintaan pemilik untuk beralih ke Claude Code; kasus 1–89 lulus sebelum dihentikan. Regresi Firefox/WebKit 24/24 PASS; suite awal 150/155 tetap bukti FAIL historis |
 | SMTP eksternal | NOT_RUN | Dua tes SMTP loopback lulus; kredensial production belum tersedia |
 | Bucket S3/R2 nyata | NOT_RUN | Validasi gambar/token/SigV4 diuji; kredensial bucket belum tersedia |
 | Preview Vercel terbaru | FAIL | Integrasi Git repo pribadi, commit 1acd7c2; deployment dpl_9g2dyzipY6uL8Q46t1iAhoH1yXxD gagal. Penyebab belum diketahui: CLI belum login untuk membaca log |
@@ -52,7 +55,7 @@ sudah dicoba tetapi deployment FAIL; toko online belum dinyatakan 100% siap.
 | Backup/restore manual Aiven | PASS | Dump TLS 155.148 bytes, restore DB terpisah: 26 produk/14 pengguna/79 pesanan/188 ulasan/3 migration |
 | Lighthouse DevTools mobile, 4G + CPU 4x | PASS | Beranda 93/LCP 2,344 s; katalog 93/2,351 s; detail 96/2,246 s; CLS <0,001. Build production dengan Aiven, cache hangat |
 | Lighthouse simulasi bawaan | FAIL | Beranda 80, katalog 85, detail 85; LCP sekitar 4,3–4,4 s. Hasil kedua metode dipertahankan; domain Vercel belum diuji |
-| CI implementasi dan dokumentasi | PASS | [Run 36839552818](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36839552818), commit 8d8696a: verifikasi dan transaksi_mysql lulus; build memakai fixture APP_URL HTTPS |
+| CI commit terakhir di GitHub | PASS | [Run 36840193537](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36840193537), commit 984d01f; perubahan lokal sesudahnya menunggu push dan CI baru |
 
 ## 4. Kriteria sukses PRD §22
 
@@ -69,10 +72,14 @@ sudah dicoba tetapi deployment FAIL; toko online belum dinyatakan 100% siap.
 | Email perubahan status | NOT_RUN | Loopback membuktikan pengiriman setelah commit; belum SMTP eksternal |
 | Riwayat/detail/timeline | PASS | E2E pembeli/admin |
 | Performa/SEO/aksesibilitas | FAIL | Metadata/axe lulus; target Lighthouse/LCP belum seluruhnya terbukti |
-| Reset/seed demo lengkap | PASS | Migration dan seed DB verifikasi baru; tanpa reset toko |
+| `npm run db:reset` menghasilkan demo lengkap | NOT_RUN | Tidak diulang pada 1 Okt: perintah destruktif memerlukan persetujuan. Migration/seed DB uji terpisah PASS; rangkaian reset PASS pada 27 Sep tercatat di PROGRESS |
 | Responsif | PASS | Mobile 360 px/desktop dan QA mengacu PPT |
 
 ## 5. Sisa rilis
+
+Pekerjaan Codex dihentikan sementara atas permintaan pemilik. Perubahan terbaru
+tersimpan di working tree dan belum di-commit/push. Claude Code dapat melanjutkan
+dari [SERAH_TERIMA](SERAH_TERIMA.md), tanpa mengulang implementasi.
 
 Login Vercel, tautkan proyek yang benar, isi environment, SMTP, S3/R2 dan
 penjadwal sesuai [runbook deployment](runbooks/deployment.md).

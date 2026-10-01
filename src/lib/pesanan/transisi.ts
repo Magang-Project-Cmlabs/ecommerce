@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/db';
 import { Prisma } from '@/generated/prisma/client';
 import { transisiStatusBoleh, LABEL_STATUS_PESANAN, type OrderStatus, type PelakuTransisi } from './status';
-import { BusinessValidationError, cobaUlangTransaksi } from './galat';
+import { BusinessValidationError, cobaUlangTransaksi, PaymentAttemptChangedError } from './galat';
 import { kirimNotifikasiPesanan } from './notifikasi';
 export type DataTransisi = { alasan?: string; trackingNumber?: string; changedById?: number | null; paymentType?: string; paymentTransactionId?: string; gatewayVerified?: boolean; gatewayExpiredTransactionId?: string };
 export async function ubahStatus(orderId: number, ke: OrderStatus, pelaku: PelakuTransisi, data?: DataTransisi) {
@@ -15,11 +15,21 @@ export async function ubahStatus(orderId: number, ke: OrderStatus, pelaku: Pelak
       const actor = data?.changedById ? await tx.user.findFirst({ where: { id: data.changedById, deletedAt: null }, select: { role: true } }) : null;
       if (!actor || (pelaku === 'admin' && actor.role !== 'admin')) throw new BusinessValidationError('Akses perubahan pesanan ditolak.');
     }
+    if (pelaku === 'sistem' && ke === 'confirmed') {
+      if (!data?.gatewayVerified) throw new BusinessValidationError('Pembayaran belum terverifikasi.');
+      // Check the locked row: a session may have been replaced while the
+      // webhook or polling request was fetching the gateway status.
+      if (data.paymentTransactionId) {
+        if (order.paymentTransactionId !== data.paymentTransactionId) throw new PaymentAttemptChangedError();
+      } else {
+        const simulasi = process.env.NODE_ENV !== 'production' && process.env.PAYMENT_SIMULATION_ENABLED === 'true' && order.paymentTransactionId === null;
+        if (!simulasi) throw new PaymentAttemptChangedError();
+      }
+    }
     if (!transisiStatusBoleh(order.status, ke, pelaku)) throw new BusinessValidationError('Status pesanan telah berubah atau tindakan ini tidak diizinkan.');
     if (order.status === 'pending' && ke === 'cancelled' && order.paymentStatus !== 'unpaid') throw new BusinessValidationError('Pesanan yang sudah dibayar tidak dapat dibatalkan melalui tindakan ini.');
     const now = new Date();
     if (pelaku === 'sistem') {
-      if (ke === 'confirmed' && !data?.gatewayVerified) throw new BusinessValidationError('Pembayaran belum terverifikasi.');
       if (ke === 'cancelled') {
         if (data?.gatewayExpiredTransactionId) {
           if (order.paymentTransactionId !== data.gatewayExpiredTransactionId) throw new BusinessValidationError('Percobaan pembayaran sudah berubah.');

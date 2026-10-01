@@ -21,7 +21,7 @@ export function WishlistButton({ productId, name, text = false }: { productId: n
     if (!login) { router.push(`/masuk?next=${encodeURIComponent(`/wishlist?tambah=${productId}`)}`); return; }
     startTransition(async () => {
       const hasil = await simpanWishlist({ productId, simpan: !tersimpan });
-      if (hasil.success) { ubah(productId, !tersimpan); toast.success(hasil.message); router.refresh(); }
+      if (hasil.success) { ubah(productId, !tersimpan); toast.success(hasil.message); }
       else toast.error(hasil.message);
     });
   }
@@ -36,7 +36,7 @@ export function LanjutkanWishlist({ productId }: { productId: number }) {
       if (!hidup) return;
       if (hasil.success) { ubah(productId, true); toast.success(hasil.message); }
       else toast.error(hasil.message);
-      router.replace('/wishlist'); router.refresh();
+      router.replace('/wishlist');
     });
     return () => { hidup = false; };
     // Jalankan sekali untuk produk yang dibawa dari proses masuk.

@@ -6,7 +6,6 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { kirimUlasan } from '@/actions/katalog';
 import { unggahGambar } from '@/actions/upload';
-import { ulasanSchema } from '@/lib/validations/katalog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -19,21 +18,26 @@ export default function ReviewForm({ items }: { items: Item[] }) {
   const [uploadStatus, setUploadStatus] = useState('');
   const router = useRouter();
   const form = useRef<HTMLFormElement>(null);
+  const sending = useRef(false);
   if (!items.length) return null;
 
   function kirim(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (pending || sending.current) return;
     const data = new FormData(e.currentTarget);
-    const hasil = ulasanSchema.safeParse({ orderItemId: data.get('orderItemId'), rating: data.get('rating'), content: data.get('content') });
-    const invalid: Record<string, string> = {};
-    if (!hasil.success) for (const issue of hasil.error.issues) invalid[String(issue.path[0])] ??= issue.message;
-    const foto = data.getAll('foto').filter((f): f is File => f instanceof File && f.size > 0);
-    if (foto.length > 3) invalid.foto = 'Maksimal 3 foto.';
-    if (foto.some((f) => f.size > 2 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/webp'].includes(f.type))) invalid.foto = 'Gunakan foto JPG, PNG, atau WebP dengan ukuran maksimal 2 MB.';
-    setFields(invalid); setError('');
-    if (Object.keys(invalid).length) return;
+    sending.current = true;
+    setFields({}); setError('');
     startTransition(async () => {
       try {
+        const { ulasanSchema } = await import('@/lib/validations/katalog');
+        const hasilValidasi = ulasanSchema.safeParse({ orderItemId: data.get('orderItemId'), rating: data.get('rating'), content: data.get('content') });
+        const invalid: Record<string, string> = {};
+        if (!hasilValidasi.success) for (const issue of hasilValidasi.error.issues) invalid[String(issue.path[0])] ??= issue.message;
+        const foto = data.getAll('foto').filter((f): f is File => f instanceof File && f.size > 0);
+        if (foto.length > 3) invalid.foto = 'Maksimal 3 foto.';
+        if (foto.some((f) => f.size > 2 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/webp'].includes(f.type))) invalid.foto = 'Gunakan foto JPG, PNG, atau WebP dengan ukuran maksimal 2 MB.';
+        setFields(invalid);
+        if (Object.keys(invalid).length) return;
         const tokens: string[] = [];
         data.delete('foto');
         for (const [index, file] of foto.entries()) {
@@ -49,7 +53,7 @@ export default function ReviewForm({ items }: { items: Item[] }) {
         if (hasil.success) { toast.success(hasil.message); form.current?.reset(); router.refresh(); }
         else setError(hasil.message);
       } catch { setError('Ulasan belum terkirim. Periksa koneksi lalu coba kembali.'); }
-      finally { setUploadStatus(''); }
+      finally { sending.current = false; setUploadStatus(''); }
     });
   }
   return (

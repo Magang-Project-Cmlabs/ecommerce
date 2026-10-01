@@ -56,9 +56,10 @@ export async function ambilProdukKatalog(filter: FilterKatalog) {
     : filter.urut === 'termahal' ? [{ price: 'desc' }, { id: 'asc' }]
     : filter.urut === 'terbaru' ? [{ createdAt: 'desc' }, { id: 'desc' }]
     : [{ soldCount: 'desc' }, { id: 'asc' }];
-  const total = await prisma.product.count({ where });
+  const bacaHalaman = (halaman: number) => prisma.product.findMany({ where, select: kartuSelect, orderBy, skip: (halaman - 1) * 24, take: 24 });
+  const [total, requested] = await Promise.all([prisma.product.count({ where }), bacaHalaman(filter.hal)]);
   const halaman = Math.min(filter.hal, Math.max(1, Math.ceil(total / 24)));
-  const produk = await prisma.product.findMany({ where, select: kartuSelect, orderBy, skip: (halaman - 1) * 24, take: 24 });
+  const produk = halaman === filter.hal ? requested : await bacaHalaman(halaman);
   return { produk: produk.map(kartu), total, halaman, halamanTotal: Math.ceil(total / 24) };
 }
 
@@ -78,16 +79,20 @@ async function bacaPilihanBeranda() {
 export const ambilPilihanBeranda = unstable_cache(bacaPilihanBeranda, ['tokokita-beranda-v1', sumberCache], cachePublik);
 
 export const ambilDetailProduk = cache(async (slug: string): Promise<ProdukDetail | null> => {
-  const p = await prisma.product.findFirst({
-    where: { slug, isActive: true },
-    select: { ...kartuSelect, description: true, specs: true, variantLabel: true,
-      images: { orderBy: { sortOrder: 'asc' }, select: { url: true } },
+  const where = { slug, isActive: true };
+  // The slug is already known, so relation reads need not wait for the scalar
+  // query. All data stays fresh; this uses ordinary Prisma queries supported
+  // by MySQL and MariaDB without changing transaction load strategies.
+  const [scalar, images, variants, reviews] = await Promise.all([
+    prisma.product.findFirst({ where, select: { ...kartuSelect, images: false, description: true, specs: true, variantLabel: true,
       category: { select: { id: true, name: true, slug: true, image: true, parentId: true } },
-      variants: { orderBy: { sortOrder: 'asc' }, select: { id: true, name: true, price: true, stock: true } },
-      reviews: { orderBy: { createdAt: 'desc' }, take: 100, select: { id: true, rating: true, content: true, images: true, createdAt: true, user: { select: { name: true } } } },
-    },
-  });
-  if (!p) return null;
+    } }),
+    prisma.productImage.findMany({ where: { product: where }, orderBy: { sortOrder: 'asc' }, select: { url: true } }),
+    prisma.productVariant.findMany({ where: { product: where }, orderBy: { sortOrder: 'asc' }, select: { id: true, name: true, price: true, stock: true } }),
+    prisma.review.findMany({ where: { product: where }, orderBy: { createdAt: 'desc' }, take: 100, select: { id: true, rating: true, content: true, images: true, createdAt: true, user: { select: { name: true } } } }),
+  ]);
+  if (!scalar) return null;
+  const p = { ...scalar, images, variants, reviews };
   return { ...kartu(p), description: p.description, specs: p.specs && typeof p.specs === 'object' && !Array.isArray(p.specs) ? Object.fromEntries(Object.entries(p.specs).map(([key, value]) => [key, String(value)])) : {},
     category: p.category, variantLabel: p.variantLabel, images: p.images.map((im) => im.url), variants: p.variants,
     reviews: p.reviews.map(({ user, createdAt, images, ...review }) => ({ ...review, name: user.name, createdAt: createdAt.toISOString(), images: Array.isArray(images) ? images.filter((im): im is string => typeof im === 'string') : [] })),
