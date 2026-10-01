@@ -5,5 +5,5 @@ import { ProductAdminForm } from '@/components/admin/forms';
 export default async function TambahProdukAdmin() {
   await requireAdmin('/admin/produk/baru');
   const categories = await kategoriAdmin();
-  return <><AdminHeading title="Tambah produk" description="Isi informasi produk dan unggah gambar untuk mulai menjual." /><ProductAdminForm categories={categories.map(({ id, name, parentId }) => ({ id, name, parentId }))} /></>;
+  return <><AdminHeading back={{ href: '/admin/produk', label: 'Kembali ke produk' }} title="Tambah produk" description="Isi informasi produk dan unggah gambar untuk mulai menjual." /><ProductAdminForm categories={categories.map(({ id, name, parentId }) => ({ id, name, parentId }))} /></>;
 }

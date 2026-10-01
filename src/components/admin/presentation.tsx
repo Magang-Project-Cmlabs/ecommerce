@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import { ChevronLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { LABEL_STATUS_PESANAN, type OrderStatus } from '@/lib/pesanan/status';
-export function AdminHeading({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
-  return <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><h1 className="text-2xl font-bold">{title}</h1><p className="mt-2 text-sm text-muted-foreground">{description}</p></div>{action}</div>;
+export function AdminHeading({ title, description, action, back }: { title: string; description: string; action?: ReactNode; back?: { href: string; label: string } }) {
+  return <div className="mb-7">{back && <Link href={back.href} className="mb-3 inline-flex min-h-9 items-center gap-1 rounded-md text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ChevronLeft aria-hidden className="size-4" />{back.label}</Link>}<div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div className="min-w-0"><h1 className="text-2xl font-bold tracking-tight">{title}</h1><p className="mt-1.5 text-sm text-muted-foreground">{description}</p></div>{action}</div></div>;
 }
 export function StatusBadge({ status }: { status: OrderStatus }) {
   const styles: Record<OrderStatus, string> = { pending: 'bg-amber-50 text-amber-800', confirmed: 'bg-blue-50 text-blue-700', packed: 'bg-violet-50 text-violet-700', shipped: 'bg-cyan-50 text-cyan-800', delivered: 'bg-green-50 text-green-700', cancelled: 'bg-red-50 text-red-700' };
@@ -17,3 +18,6 @@ export function PaginationAdmin({ page, count, pathname, query }: { page: number
 }
 export function safePage(value: string | string[] | undefined) { return Math.min(100_000, Math.max(1, Number.parseInt(Array.isArray(value) ? value[0] ?? '' : value ?? '1', 10) || 1)); }
 export function safeQuery(value: string | string[] | undefined) { return (typeof value === 'string' ? value : '').slice(0, 200); }
+export function StokBadge({ stok }: { stok: number }) {
+  return <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums ${stok === 0 ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-800'}`}>{stok === 0 ? 'Habis' : `Sisa ${stok}`}</span>;
+}

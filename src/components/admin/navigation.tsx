@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { LayoutDashboard, ShoppingBag, Package, Tags, TicketPercent, ImageIcon, Menu, ArrowUpRight } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Package, Tags, TicketPercent, ImageIcon, Menu, ArrowUpRight, Store } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 
@@ -11,12 +11,42 @@ const links = [
   { href: '/admin/produk', label: 'Produk', icon: Package }, { href: '/admin/kategori', label: 'Kategori', icon: Tags },
   { href: '/admin/promo', label: 'Kode promo', icon: TicketPercent }, { href: '/admin/banner', label: 'Banner', icon: ImageIcon },
 ];
-export function AdminNavigation() {
+
+function Merek() {
+  return <Link href="/admin" aria-label="TokoKita, ringkasan admin" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
+    <Store aria-hidden className="size-7 text-orange-500" /><span>Toko<span className="text-orange-400">Kita</span></span>
+    <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-200">Admin</span>
+  </Link>;
+}
+
+function DaftarMenu({ onPilih }: { onPilih?: () => void }) {
   const pathname = usePathname();
+  return <nav aria-label="Navigasi admin" className="flex flex-1 flex-col gap-1 px-3">
+    <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Menu</p>
+    {links.map(({ href, label, icon: Icon }) => {
+      const active = href === '/admin' ? pathname === href : pathname.startsWith(href);
+      return <Link key={href} href={href} onClick={onPilih} aria-current={active ? 'page' : undefined} className={`flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${active ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}><Icon aria-hidden className="size-[18px]" />{label}</Link>;
+    })}
+    <Link href="/" onClick={onPilih} className="mt-auto mb-4 flex min-h-11 items-center gap-3 rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-white/5 hover:text-white"><ArrowUpRight aria-hidden className="size-[18px]" />Lihat toko</Link>
+  </nav>;
+}
+
+/** Sidebar desktop: menempel penuh setinggi layar di tepi kiri. */
+export function AdminSidebar() {
+  return <div className="hidden w-60 shrink-0 bg-slate-900 lg:block"><aside className="sticky top-0 flex h-dvh flex-col text-white">
+    <div className="flex h-16 shrink-0 items-center px-6"><Merek /></div>
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-4"><DaftarMenu /></div>
+  </aside></div>;
+}
+
+/** Tombol menu untuk layar kecil; membuka sidebar yang sama sebagai Sheet. */
+export function AdminMenuMobile() {
   const [open, setOpen] = useState(false);
-  const nav = <nav aria-label="Navigasi admin" className="space-y-2 p-4">{links.map(({ href, label, icon: Icon }) => {
-    const active = href === '/admin' ? pathname === href : pathname.startsWith(href);
-    return <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={active ? 'page' : undefined} className={`flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-colors ${active ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-700' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}><Icon className="size-5" />{label}</Link>;
-  })}<Link href="/" className="mt-6 flex min-h-11 items-center gap-3 rounded-xl border border-slate-700 px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white"><ArrowUpRight className="size-5" />Lihat toko</Link></nav>;
-  return <><aside className="hidden w-56 shrink-0 border-r border-slate-800 bg-slate-900 text-white lg:block"><div className="sticky top-[4rem] max-h-[calc(100dvh-4rem)] overflow-y-auto pb-6"><div className="px-7 pt-7 text-lg font-bold">Panel admin</div><p className="px-7 pb-3 pt-1 text-xs text-slate-300">Kelola toko dalam satu tempat</p>{nav}</div></aside><div className="border-b p-3 lg:hidden"><Sheet open={open} onOpenChange={setOpen}><SheetTrigger asChild><Button variant="outline" className="h-11"><Menu />Menu admin</Button></SheetTrigger><SheetContent side="left" className="border-slate-800 bg-slate-900 text-white"><SheetHeader><SheetTitle className="text-white">Panel admin</SheetTitle><SheetDescription className="text-slate-300">Navigasi pengelolaan TokoKita.</SheetDescription></SheetHeader>{nav}</SheetContent></Sheet></div></>;
+  return <Sheet open={open} onOpenChange={setOpen}>
+    <SheetTrigger asChild><Button variant="outline" size="icon" className="size-11 lg:hidden" aria-label="Menu admin"><Menu /></Button></SheetTrigger>
+    <SheetContent side="left" className="flex w-72 flex-col border-slate-800 bg-slate-900 p-0 text-white">
+      <SheetHeader className="h-16 justify-center px-6"><SheetTitle className="sr-only">Menu admin</SheetTitle><Merek /><SheetDescription className="sr-only">Navigasi pengelolaan TokoKita.</SheetDescription></SheetHeader>
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-2"><DaftarMenu onPilih={() => setOpen(false)} /></div>
+    </SheetContent>
+  </Sheet>;
 }
