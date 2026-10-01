@@ -58,6 +58,12 @@ async function jalankan(perintah: string | undefined, email: string | undefined,
       await db.product.deleteMany({ where: { id: fixture.productId, slug: { startsWith: 'admin-e2e-' } } });
       return true;
     }
+    if (perintah === 'admin-lewat-batas') {
+      // Latihan demo: pesanan menunggu bayar milik akun ini dianggap lewat batas 24 jam.
+      const hasil = await db.order.updateMany({ where: { orderNumber: arg, user: { email }, status: 'pending' }, data: { paymentDueAt: new Date(Date.now() - 60_000) } });
+      if (hasil.count !== 1) throw new Error('Pesanan menunggu bayar tidak ditemukan.');
+      return true;
+    }
     if (perintah === 'admin-clean-product') {
       if (!arg?.startsWith('admin-e2e-')) throw new Error('Slug produk fixture admin wajib diisi.');
       const product = await db.product.findFirst({ where: { slug: arg, AND: { slug: { startsWith: 'admin-e2e-' } } } });

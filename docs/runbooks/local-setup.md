@@ -126,3 +126,10 @@ harus menampilkan `.githooks`.
 | `P3014` shadow database saat migrate | User DB tidak boleh membuat database | Pakai user `root` lokal |
 | Port 3000 terpakai | Server lain menyala | `npm run dev -- -p 3001`, sesuaikan `APP_URL` |
 | `npm.ps1 cannot be loaded` | Kebijakan skrip PowerShell | Pakai `npm.cmd` atau Git Bash |
+
+## Catatan data uji E2E
+
+Tes `commerce` dan `katalog` membeli ukuran M Kaos Polos Premium di DB uji
+(`ecommerce_verifikasi_*`). Setelah beberapa putaran stok M habis dan tes gagal di
+`getByRole('radio', { name: 'M' })`. Isi ulang stok M di DB uji (jangan XL: tes katalog
+membutuhkan XL tetap 0), atau seed ulang DB uji. Bukan bug aplikasi.

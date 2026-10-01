@@ -38,4 +38,17 @@ describe('token unggahan dibatasi pengguna dan tujuan', () => {
     expect(await verifikasiTokenGambar([token], 7, 'banner', 1)).toEqual([url]);
     await expect(buatTokenGambar(`https://cdn.example.evil/tokokita${image}`, 7, 'banner')).rejects.toThrow();
   });
+  it('menerima URL Vercel Blob publik milik proyek, menolak host atau path lain', async () => {
+    const bagus = `https://abc123.public.blob.vercel-storage.com${image}`;
+    const token = await buatTokenGambar(bagus, 7, 'product');
+    expect(await verifikasiTokenGambar([token], 7, 'product', 1)).toEqual([bagus]);
+    for (const buruk of [
+      `https://abc123.public.blob.vercel-storage.com.evil.example${image}`,
+      `http://abc123.public.blob.vercel-storage.com${image}`,
+      `https://evil.example/public.blob.vercel-storage.com${image}`,
+      'https://abc123.public.blob.vercel-storage.com/lain/12345678-1234-4234-8234-123456789012.webp',
+      'https://abc123.public.blob.vercel-storage.com/uploads/../rahasia.webp',
+      'https://abc123.private.blob.vercel-storage.com' + image,
+    ]) await expect(buatTokenGambar(buruk, 7, 'product')).rejects.toThrow();
+  });
 });

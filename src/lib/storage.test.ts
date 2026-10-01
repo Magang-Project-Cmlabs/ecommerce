@@ -55,4 +55,29 @@ describe('unggah gambar aman', () => {
     expect(request).toHaveBeenCalledWith(expect.any(URL), expect.objectContaining({ method: 'PUT', body: expect.any(Uint8Array), headers: expect.objectContaining({ Authorization: expect.stringMatching(/^AWS4-HMAC-SHA256 Credential=test-access\//), 'Content-Type': 'image/webp' }) }));
     expect(JSON.stringify(request.mock.calls)).not.toContain('test-secret');
   });
+  it('menolak Vercel Blob tanpa token sebelum mengirim request', async () => {
+    vi.stubEnv('STORAGE_DRIVER', 'blob'); vi.stubEnv('BLOB_READ_WRITE_TOKEN', '');
+    const request = vi.fn(); vi.stubGlobal('fetch', request);
+    await expect(simpanGambar(await picture('png'))).rejects.toThrow('belum dikonfigurasi');
+    expect(request).not.toHaveBeenCalled();
+  });
+  it('Vercel Blob PUT publik memakai nama acak dan tidak membocorkan token', async () => {
+    vi.stubEnv('STORAGE_DRIVER', 'blob'); vi.stubEnv('BLOB_READ_WRITE_TOKEN', 'token-rahasia-uji');
+    const request = vi.fn().mockResolvedValue(new Response(JSON.stringify({ url: 'https://abc.public.blob.vercel-storage.com/uploads/x.webp' }), { status: 200 })); vi.stubGlobal('fetch', request);
+    const url = await simpanGambar(await picture('png'));
+    expect(url).toBe('https://abc.public.blob.vercel-storage.com/uploads/x.webp');
+    const [alamat, init] = request.mock.calls[0]!;
+    const dipanggil = new URL(String(alamat));
+    expect(dipanggil.origin + dipanggil.pathname).toBe('https://vercel.com/api/blob/');
+    expect(dipanggil.searchParams.get('pathname')).toMatch(/^uploads\/[0-9a-f-]{36}\.webp$/);
+    expect(init).toMatchObject({ method: 'PUT', headers: expect.objectContaining({ authorization: 'Bearer token-rahasia-uji', 'x-vercel-blob-access': 'public', 'x-content-type': 'image/webp', 'x-add-random-suffix': '0' }) });
+    expect(url).not.toContain('token-rahasia-uji');
+  });
+  it('menolak balasan Blob yang bukan HTTPS atau gagal', async () => {
+    vi.stubEnv('STORAGE_DRIVER', 'blob'); vi.stubEnv('BLOB_READ_WRITE_TOKEN', 'token-rahasia-uji');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}', { status: 500 })));
+    await expect(simpanGambar(await picture('png'))).rejects.toThrow('Gagal menyimpan gambar');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ url: 'http://evil.example/x.webp' }), { status: 200 })));
+    await expect(simpanGambar(await picture('png'))).rejects.toThrow('Gagal menyimpan gambar');
+  });
 });
