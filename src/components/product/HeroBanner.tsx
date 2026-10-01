@@ -13,7 +13,7 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
   const href = slide.href?.startsWith('/') && !slide.href.startsWith('//') ? slide.href : '/produk';
   return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative h-[300px] overflow-hidden rounded-2xl bg-zinc-900 md:h-[400px]">
     <Image src={slide.image} alt="" fill loading="eager" fetchPriority="high" quality={50} sizes="(max-width: 1279px) 100vw, 1280px" className="object-cover" />
-    <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/10" />
+    <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
     <div className="relative flex h-full max-w-2xl flex-col justify-center px-12 pb-8 sm:px-16 md:px-20">
       <h1 className="text-2xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">{slide.title}</h1>
       {slide.subtitle && <p className="mt-3 text-sm leading-relaxed text-white md:text-xl">{slide.subtitle}</p>}
