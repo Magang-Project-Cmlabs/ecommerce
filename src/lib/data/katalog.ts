@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/generated/prisma/client';
-import { bagiTanpaDuplikat } from '@/lib/beranda';
+import { bagiTanpaDuplikat, pilihUlasanBeranda } from '@/lib/beranda';
 import type { FilterKatalog, ProdukKartu, ProdukDetail } from '@/lib/katalog-types';
 
 const kartuSelect = {
@@ -82,6 +82,15 @@ async function bacaPilihanBeranda() {
   ]);
   return { populer: b.populer!.map(kartu), unggulan: b.unggulan!.map(kartu), diskon: b.diskon!.map(kartu), terbaru: b.terbaru!.map(kartu) };
 }
+async function bacaUlasanBeranda() {
+  const baris = await prisma.review.findMany({
+    where: { rating: { gte: 4 }, product: { isActive: true } },
+    select: { id: true, productId: true, rating: true, content: true, user: { select: { name: true } }, product: { select: { name: true, slug: true } } },
+    orderBy: { createdAt: 'desc' }, take: 40,
+  });
+  return pilihUlasanBeranda(baris.map((r) => ({ id: r.id, productId: r.productId, rating: r.rating, content: r.content, userName: r.user.name, productName: r.product.name, productSlug: r.product.slug })), 3);
+}
+export const ambilUlasanBeranda = unstable_cache(bacaUlasanBeranda, ['tokokita-ulasan-beranda-v1', sumberCache], cachePublik);
 export const ambilPilihanBeranda = unstable_cache(bacaPilihanBeranda, ['tokokita-beranda-v2', sumberCache], cachePublik);
 
 export const ambilDetailProduk = cache(async (slug: string): Promise<ProdukDetail | null> => {
