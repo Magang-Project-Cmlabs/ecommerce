@@ -14,7 +14,11 @@ const PORT = Number(process.env.E2E_PORT || 3000);
 const BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${PORT}`;
 const pakaiServerSendiri = !process.env.E2E_BASE_URL;
 const lintasBrowser = process.env.E2E_CROSS_BROWSER === '1';
-const abaikanSandbox = process.env.E2E_MIDTRANS_SANDBOX === '1' ? [] : [/payment-sandbox\.spec\.ts/];
+const abaikanSandbox = [
+  ...(process.env.E2E_MIDTRANS_SANDBOX === '1' ? [] : [/payment-sandbox\.spec\.ts/]),
+  // Latihan demo PPT: lambat dan menulis data; hanya saat diminta.
+  ...(process.env.E2E_DEMO === '1' ? [] : [/demo-ppt\.spec\.ts/]),
+];
 
 export default defineConfig({
   testDir: path.join(__dirname, 'specs'),
