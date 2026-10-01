@@ -57,3 +57,5 @@ Thumbs.db
 .claude/settings.local.json
 
 /src/generated/prisma
+
+.vercel
