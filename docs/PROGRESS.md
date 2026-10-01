@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-01 — Kevin Ilham / Claude Code — Rilis Vercel, Midtrans sandbox online, polesan UI dan latihan demo
+- Branch / PR: `feat/penyelesaian-tokokita` / #23 dan #25 di-merge ke `develop` (tanpa 2 reviewer, atas instruksi pemilik; mohon ditinjau ketua tim).
+- Perubahan: Preview Vercel diperbaiki (env DB per lingkungan, DB uji `tokokita_preview`); produksi publik dari `develop`; kunci Midtrans sandbox + Notification URL; cron harian Vercel; akun admin/pembeli online dengan kata sandi acak. UI: tema tombol orange-700 putih, ikon kategori, judul tab, admin (bilah atas sendiri, sidebar penuh, ringkasan, kategori berjenjang, pemilih gambar Indonesia, tombol detail/kembali), login admin langsung ke panel, beranda tanpa produk berulang, tab bergaris bawah. Foto produk CC0 sesuai produk (docs/KREDIT_FOTO.md). Seed: akun demo tidak lagi memakai HEMAT10. Latihan demo otomatis `demo-ppt.spec.ts`.
+- Verifikasi: typecheck PASS · lint PASS · test PASS (409) · e2e subset Chrome/Android PASS · latihan demo 5 adegan PASS · CI PASS (#23, #25) · produksi online PASS (HTTP, guard admin, webhook 401) · Lighthouse online FAIL (LCP seluler 2,9–3,7 s) · bayar sandbox online sampai lunas NOT_RUN (butuh pembeli login) · R2/SMTP NOT_RUN (akun belum ada).
+- Catatan: QRIS sandbox tetap FAIL (simulator 2603). Merge tanpa review dan push cermin `develop` memakai `IZINKAN_PUSH_LANGSUNG=1` hanya untuk isi yang sudah di-merge.
+
 ### 2026-10-01 — Kevin Ilham / Codex — Penghentian sementara dan serah terima ke Claude Code
 - Pemilik meminta berhenti untuk menghemat token Codex. Goal dipause dan runner browser/server QA dihentikan; demo lokal 3000 tetap tersedia.
 - Branch / PR: `feat/penyelesaian-tokokita` / #23 draft. Commit terakhir pushed `984d01f`; perubahan terbaru tersimpan lokal, belum commit/push.
