@@ -32,11 +32,14 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
    PASS (run 36852310169, commit 2fcc207, perubahan lokal sudah di-commit dan di-push).
    Periksa CI setiap commit lanjutan sebelum penggabungan. Server demo lokal berjalan
    di http://localhost:3000 dengan DB toko lokal `ecommerce` (bukan DB uji).
-2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
-   Proyek fork yang terlihat sebelumnya: `ecommerce` di `tes-2254s-projects`.
-   Integrasi Git repo pribadi sudah menjalankan preview commit 1acd7c2, tetapi
-   deployment FAIL: [log Vercel](https://vercel.com/tes-2254s-projects/ecommerce/9g2dyzipY6uL8Q46t1iAhoH1yXxD).
-   Penyebab belum diketahui; CLI belum login untuk membaca log atau konfigurasi.
+2. Vercel: CLI sudah login (akun `kevinilhamka-2254`), proyek `ecommerce` di
+   `tes-2254s-projects`. Preview gagal sebelumnya karena `DATABASE_URL` dan
+   `DATABASE_CA_CERT` hanya ada untuk Production. Sekarang Preview memakai DB
+   uji terpisah `tokokita_preview` di server Aiven yang sama (tiga migration
+   terpasang, kosong, bukan DB toko). Build Preview PASS; `/`, `/produk`, `/masuk`,
+   `/daftar` dan `/api/search` HTTP 200 (PASS, via `vercel curl`). Login, checkout,
+   upload, email dan Midtrans di Preview masih NOT_RUN. Mengganti env rahasia:
+   hapus lalu tambah ulang, lalu `vercel redeploy` (env terikat saat deployment dibuat).
 3. Isi environment Production/Preview, SMTP dan S3/R2 mengikuti
    [runbook deployment](runbooks/deployment.md). Preview sebaiknya memakai DB
    uji terpisah agar tes tidak mengubah toko.
