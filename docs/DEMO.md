@@ -29,3 +29,20 @@ Sumber: Presentasi slide 19, kartu *A5 · Hari 6 · Siapkan dan latih demo 7 men
 
 Jangan memperbaiki kode di depan penonton. Pindah ke adegan berikutnya dan
 jelaskan singkat. Siapkan rekaman layar cadangan dari latihan terakhir.
+
+## Status kesiapan (1 Okt 2026)
+
+| Adegan | Status | Bukti / catatan |
+|---|---|---|
+| 1. Cari & pilih varian | Siap | E2E katalog PASS; pilih varian mengubah stok, varian habis terkunci (dicek di browser) |
+| 2. Checkout + `HEMAT10` | Siap setelah seed diperbaiki | Seed lama memakai HEMAT10 untuk akun demo (batas 1/pengguna) sehingga adegan gagal; kini pesanan lama itu memakai ONGKIRFREE. DB online `tokokita_preview` sudah di-seed ulang. Lokal: perlu `db:reset` (minta persetujuan) |
+| 3. Admin konfirmasi bayar + resi | Siap | E2E admin "konfirmasi bayar, kemas, kirim dengan resi" PASS. Online tanpa kunci Midtrans: tombol bayar gateway menampilkan pesan gagal, konfirmasi manual admin tetap jalan |
+| 4. Pembeli terima + ulasan | Siap | E2E commerce PASS |
+| 5. Batal otomatis 24 jam | Siap di lokal | Seed punya 1 pesanan lewat batas; picu `node scripts/run-orders-cron.mjs` (butuh `APP_URL`, `CRON_SECRET`). Online belum ada penjadwal |
+
+Selisih dengan PPT yang perlu dijelaskan saat presentasi:
+- PPT: "belum memakai payment gateway". Aplikasi sudah punya Midtrans Snap **sandbox**
+  (BCA/Mandiri PASS, QRIS FAIL di simulator); untuk demo aman pakai konfirmasi manual admin.
+- PPT: VPS + Nginx + PM2. Implementasi: Vercel + Aiven MySQL (lihat runbook deployment);
+  backup harian/mingguan belum dijadwalkan.
+- Email pesanan butuh SMTP; online belum diisi.

@@ -383,7 +383,7 @@ async function main() {
 
   // --- Rencana pesanan: akun demo (semua status, PRD §20) -----------------------
   const rencana: RencanaPesanan[] = [
-    { userId: demo.id, alamat: alamatRumah, items: [item("Kaos Polos Premium", 2, "M"), item("Celana Chino Slim", 1, "31")], metode: "bank_bca", kurir: "jne_reg", promo: "HEMAT10", dibuat: lalu(60), akhir: "delivered", ulasan: new Map([[0, 5]]) },
+    { userId: demo.id, alamat: alamatRumah, items: [item("Kaos Polos Premium", 2, "M"), item("Celana Chino Slim", 1, "31")], metode: "bank_bca", kurir: "jne_reg", promo: "ONGKIRFREE", dibuat: lalu(60), akhir: "delivered", ulasan: new Map([[0, 5]]) },
     { userId: demo.id, alamat: alamatRumah, items: [item("Serum Wajah Niacinamide 30 ml"), item("Sabun Cuci Muka Gentle 100 ml")], metode: "qris", kurir: "gosend_instant", promo: null, dibuat: lalu(45), akhir: "delivered" },
     { userId: demo.id, alamat: alamatKantor, items: [item("Botol Minum Stainless 750 ml", 1, "Biru")], metode: "cod", kurir: "sicepat_reg", promo: null, dibuat: lalu(38), akhir: "delivered" },
     { userId: demo.id, alamat: alamatRumah, items: [item("Earbuds Nirkabel TWS Pro", 1, "Hitam")], metode: "bank_mandiri", kurir: "jne_reg", promo: null, dibuat: lalu(12), akhir: "shipped", catatan: "Tolong dibungkus bubble wrap tebal." },
