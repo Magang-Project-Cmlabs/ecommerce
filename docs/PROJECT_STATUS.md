@@ -48,7 +48,7 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Settlement sandbox BCA/Mandiri | PASS | Snap dan simulator resmi, API settlement Rp 114.000, tombol Cek Pembayaran menyimpan paid/confirmed di DB; webhook ulang idempoten dan signature salah HTTP 401 |
 | Settlement sandbox QRIS | FAIL | QR muncul pada Snap; simulator resmi mengembalikan error 2603 saat memproses QR. Penyelidikan kanal masih berlangsung |
 | Firefox/WebKit: regresi akun/katalog/unggahan | PASS | 24/24 setelah memperbaiki input sebelum hydration, refresh wishlist berlebih, fixture ulasan unik dan pengukuran multipart/cookie lintas engine |
-| Suite lintas browser penuh versi akhir | NOT_RUN | Runner 310 kasus dihentikan atas permintaan pemilik untuk beralih ke Claude Code; kasus 1–89 lulus sebelum dihentikan. Regresi Firefox/WebKit 24/24 PASS; suite awal 150/155 tetap bukti FAIL historis |
+| Suite lintas browser penuh (310 kasus: Chrome/Android, Edge, Firefox, WebKit, mobile WebKit) | PASS | Putaran 1 Okt: 299 lulus, 11 gagal karena stok varian M Kaos Polos di DB uji habis dipakai tes (bukan bug). Stok diisi ulang, 28 kasus commerce+katalog diulang di semua browser: 28/28 lulus. Suite penuh tidak diulang utuh dalam satu putaran |
 | SMTP eksternal | NOT_RUN | Dua tes SMTP loopback lulus; kredensial production belum tersedia |
 | Bucket S3/R2 nyata | NOT_RUN | Validasi gambar/token/SigV4 diuji; kredensial bucket belum tersedia |
 | Preview Vercel terbaru | PASS | Penyebab FAIL lama: `DATABASE_URL`/`DATABASE_CA_CERT` hanya ada di Production. Preview kini memakai `tokokita_preview`; halaman, pencarian dan login berjalan |
