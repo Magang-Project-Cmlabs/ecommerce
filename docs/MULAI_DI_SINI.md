@@ -1,61 +1,53 @@
 # Mulai di Sini — TokoKita
 
-> Ringkasan satu halaman untuk anggota tim dan AI agent sebelum mulai kerja.
-> Terakhir diperbarui: **27 September 2026**
+Terakhir diperbarui: **1 Oktober 2026**.
 
-## 1. Keadaan repo hari ini
+## Keadaan repo
 
-| Komponen | Fakta |
-|---|---|
-| Kode aplikasi | **Scaffold selesai** (Next.js 16.3.6, Prisma 7.10.0, Tailwind 4, shadcn Radix/Nova). Skema 15 tabel dan data demo sudah ada; halaman TokoKita belum. Modul payment gateway Midtrans sandbox ada di `src/lib/payment/`. |
-| Git | `github.com/Magang-Project-Cmlabs/ecommerce` (private), branch `main` dan `develop`. |
-| Isi repo | Dokumen perencanaan (`docs/`), instruksi AI (`CLAUDE.md`, `AGENTS.md`, `.claude/`, `.agents/`), template (`.env.example`, `.gitignore`, template PR), kerangka tes E2E (`tests/e2e/`). |
-| Stack | Next.js App Router + TypeScript, Prisma, MySQL, Tailwind, shadcn/ui (PRD §5). |
-| Lingkungan lokal | Laragon: Node 24, MySQL 8 di `C:\laragon\bin\mysql`. |
-| Jadwal | 1 minggu, Hari 0–6 (lihat `trello-board-plan.md`). |
+Aplikasi memakai Next.js 16.3.6, Prisma 7.10.0, MySQL, Tailwind 4 dan shadcn.
+Katalog, wishlist, ulasan, keranjang, checkout 4 langkah, pesanan, akun,
+dan admin lengkap sudah memakai database. Tidak ada fallback pesanan palsu
+ketika database gagal. Desain mengikuti PPT halaman beranda/detail/checkout/admin.
 
-## 2. Urutan Hari 1 (Blocker)
+Branch integrasi: `feat/penyelesaian-tokokita`, dari `develop`, menggabungkan
+pekerjaan A3 di branch `feature` dan penyelesaian seluruh fitur atas instruksi
+pemilik proyek. Lihat [status aktual](PROJECT_STATUS.md) dan [serah terima](SERAH_TERIMA.md).
 
-Tiga kartu ini harus selesai duluan karena anggota lain bergantung padanya:
+## Menyalakan lokal
 
-1. ~~**A1 · Siapkan proyek awal**~~ — selesai 27 Sep 2026 (branch
-   `chore/scaffold-nextjs`). Anggota tinggal mengikuti
-   [`runbooks/local-setup.md`](runbooks/local-setup.md) bagian B.
-2. ~~**A1 · Buat database dan isi data contoh**~~ — selesai 27 Sep 2026 (Kevin
-   Ilham): 15 tabel, migration `init`, seed PRD §20. Jalankan `npm run db:reset`
-   untuk mengisi database lokal.
-3. **A4 · Aturan cek isian form** — skema Zod bersama di `src/lib/validations/`.
+1. Baca [CLAUDE.md](../CLAUDE.md), `.env.example` dan [setup lokal](runbooks/local-setup.md).
+2. Jalankan MySQL Laragon, `npm ci`, lalu `npm run db:deploy`.
+3. Jika database baru dan kosong membutuhkan contoh, jalankan seed dengan
+   sadar bahwa seed menghapus seluruh data. Jangan reset database yang berisi
+   pekerjaan atau pesanan tanpa instruksi pemilik.
+4. `npm run dev` → `http://localhost:3000`.
 
-Sambil menunggu, A2 dan A3 bisa mengerjakan tampilan yang belum butuh data.
+Database memiliki 15 tabel bisnis dan 1 tabel infrastruktur `auth_rate_limits`.
+Migration lama tetap utuh. Gambar demo lokal tersedia di `public/demo`.
 
-## 3. Aturan keras (ringkas)
+## Aturan yang perlu dijaga
 
-Lengkapnya di [`../CLAUDE.md`](../CLAUDE.md#aturan-keras).
+- Harga, stok, berat, ongkir dan promo dihitung ulang di server.
+- Checkout, stok dan log status berada dalam transaksi; pembatalan idempoten.
+- Setiap action memeriksa login, kepemilikan dan role; JWT memeriksa versi password.
+- Form edit produk memakai versi `updatedAt` agar stok baru tidak tertimpa.
+- Varian yang sudah tercatat dalam pesanan tidak boleh dihapus.
+- Gambar diunggah satu file/request ≤2 MB; final form memakai token unggah,
+  bukan URL pengguna. Production memakai S3/R2.
+- Next.js 16: baca panduan lokal `node_modules/next/dist/docs/` sebelum perubahan.
+- Rahasia, dump DB, foto unggahan dan artifact tes tidak masuk Git.
 
-- Harga, stok, ongkir, dan diskon **selalu dihitung di server** dari database.
-- Uang = INT rupiah, berat = INT gram.
-- Stok dikurangi **di dalam transaksi, bersyarat** — tidak boleh overselling.
-- Database hanya diakses di `src/lib/data/` dan server actions.
-- Setiap aksi mengecek login, pemilik data, dan role admin di server.
-- Skema hanya berubah lewat migration Prisma.
-- `.env` tidak pernah di-commit.
+## Verifikasi dan rilis
 
-## 4. Jebakan yang sudah diketahui
+`npm run typecheck` → `npm run lint` → `npm run test` →
+`npm run test:integration` → `npm run build` → `npm run e2e`.
 
-- **Next.js 16 dan Prisma 7 berbeda dari tutorial lama.** Middleware kini
-  `src/proxy.ts`; tipe `LayoutProps`/`PageProps` dibuat `next typegen`; Prisma
-  memakai `prisma7.config.ts`, client dari `@/generated/prisma/client`, dan
-  adapter MariaDB. Baca `node_modules/next/dist/docs/` dan runbook
-  `database-operations.md` sebelum menyalin contoh dari internet.
-- **Seed tidak jalan otomatis** setelah `migrate reset`/`migrate dev` di Prisma 7;
-  pakai `npm run db:reset` (sudah merangkai reset → generate → seed).
-- **Varian vs produk:** produk dengan varian memakai `product_variants.stock`;
-  `products.stock` hanya total untuk tampilan (PRD §10.1).
-- **Keranjang ada di localStorage**, jadi isinya bisa basi. Checkout wajib
-  memvalidasi ulang harga dan stok (PRD §7.5).
+Integrasi menggunakan database uji terpisah dengan nama mengandung
+`verifikasi` atau berakhiran `_test`; tidak memakai/reset database toko.
+Playwright memakai akun nyata dari `tests/e2e/.env.e2e` dan browser Chrome.
+Jangan menjalankan beberapa runner ke folder artifact yang sama.
 
-## 5. Setelah selesai mengerjakan kartu
-
-1. Jalankan pemeriksaan di [`UJI_MANDIRI.md`](UJI_MANDIRI.md).
-2. Buka PR sesuai [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
-3. Catat di [`PROGRESS.md`](PROGRESS.md) dan perbarui [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
+Rilis mengikuti [Vercel + Aiven](runbooks/deployment.md), menggantikan VPS
+atas keputusan pemilik pada 1 Oktober 2026. Baca [keputusan](OPEN_DECISIONS.md)
+untuk rate limit bersama, sesi dan cron. Perbarui `PROJECT_STATUS`,
+`PROGRESS` dan `SERAH_TERIMA` dengan hasil `PASS`/`FAIL`/`NOT_RUN`.

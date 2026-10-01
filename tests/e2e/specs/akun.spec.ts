@@ -15,6 +15,9 @@ async function isiMasuk(page: Page, email: string, password: string) {
 }
 
 test.describe('Akun', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setExtraHTTPHeaders({ 'x-real-ip': `10.212.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
+  });
   test('daftar akun baru, langsung masuk, lalu keluar', async ({ page, context }) => {
     const errors = tangkapError(page);
     const email = `e2e-${Date.now()}@example.com`;

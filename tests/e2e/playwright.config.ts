@@ -16,7 +16,9 @@ const pakaiServerSendiri = !process.env.E2E_BASE_URL;
 
 export default defineConfig({
   testDir: path.join(__dirname, 'specs'),
-  outputDir: path.join(__dirname, '.artifacts'),
+  // Playwright membersihkan outputDir; bukti manual dan log MySQL di folder
+  // induk harus tetap tersedia, terutama karena Windows mengunci log aktif.
+  outputDir: path.join(__dirname, '.artifacts', 'playwright'),
   // Dev server Next.js mengompilasi halaman saat pertama dibuka, jadi longgar.
   timeout: 60 * 1000,
   expect: { timeout: 10 * 1000 },

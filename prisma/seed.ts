@@ -10,6 +10,8 @@
 // berstatus delivered (§10.7), sehingga seed juga membuat 12 pembeli contoh.
 
 import "dotenv/config";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import bcrypt from "bcryptjs";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../src/generated/prisma/client";
@@ -61,7 +63,10 @@ const slugify = (teks: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const gambar = (kunci: string, i: number) => `https://picsum.photos/seed/tokokita-${kunci}-${i}/800/800`;
+const gambar = (kunci: string, i: number) => {
+  const local = `/demo/tokokita-${kunci}-${i}.webp`;
+  return existsSync(path.join(process.cwd(), 'public', local)) ? local : `https://picsum.photos/seed/tokokita-${kunci}-${i}/800/800`;
+};
 
 // ---------------------------------------------------------------------------
 // Aturan bisnis yang dipakai seed (PRD §10.3-10.4). Modul resmi di src/lib/

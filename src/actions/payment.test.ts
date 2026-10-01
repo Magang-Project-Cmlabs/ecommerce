@@ -1,0 +1,22 @@
+﻿import { beforeEach, describe, expect, it, vi } from 'vitest';
+vi.mock('server-only', () => ({}));
+vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }));
+vi.mock('@/lib/auth/akses', () => ({ requireUser: vi.fn().mockResolvedValue({ id: 2 }) }));
+const mocks = vi.hoisted(() => ({ order: vi.fn(), create: vi.fn(), status: vi.fn(), transition: vi.fn(), update: vi.fn() }));
+vi.mock('@/lib/data/pesanan', () => ({ cariPesananPembeli: mocks.order }));
+vi.mock('@/lib/pesanan/transisi', () => ({ ubahStatus: mocks.transition }));
+vi.mock('@/lib/db', () => ({ prisma: { $transaction: vi.fn(async work => work({ $queryRaw: vi.fn(), order: { findFirst: mocks.order, update: mocks.update } })) } }));
+vi.mock('@/lib/payment', async importOriginal => ({ ...await importOriginal<typeof import('@/lib/payment')>(), bacaKonfigMidtrans: vi.fn().mockReturnValue({}), buatKlienMidtrans: vi.fn().mockReturnValue({ buatSesi: mocks.create, ambilStatus: mocks.status }) }));
+import { mulaiPembayaran, cekPembayaran } from './payment';
+const number = 'INV-202610-0001';
+const base = { id: 1, orderNumber: number, userId: 2, status: 'pending', paymentMethod: 'bank_bca', paymentStatus: 'unpaid', paymentDueAt: new Date(Date.now() + 86400000), paymentTransactionId: number, paymentUrl: 'https://app.sandbox.midtrans.com/snap/v2/voucher', paymentAttempt: 1, grandTotal: 180000, subtotal: 150000, shippingCost: 30000, discount: 0, createdAt: new Date(), items: [{ productId: 1, variantId: null, name: 'Produk', variantName: null, price: 150000, quantity: 1 }], user: { name: 'Pembeli', email: 'pembeli@example.com', phone: null, deletedAt: null } };
+beforeEach(() => { vi.clearAllMocks(); mocks.order.mockResolvedValue(base); mocks.status.mockResolvedValue({ idTransaksi: number, transactionStatus: 'pending', statusCode: '201', jumlah: 180000 }); mocks.create.mockResolvedValue({ idTransaksi: `${number}~2`, urlBayar: 'https://app.sandbox.midtrans.com/snap/v2/new-session' }); });
+describe('pembayaran nyata', () => {
+  it('pesanan orang lain tidak dapat membuka payment URL', async () => { mocks.order.mockResolvedValue(null); expect((await mulaiPembayaran(number)).ok).toBe(false); expect(mocks.create).not.toHaveBeenCalled(); });
+  it('COD tidak dibayar melalui gateway', async () => { mocks.order.mockResolvedValue({ ...base, paymentMethod: 'cod' }); expect((await mulaiPembayaran(number)).ok).toBe(false); expect(mocks.create).not.toHaveBeenCalled(); });
+  it('sesi valid dipakai ulang tanpa transaksi gateway baru', async () => { expect(await mulaiPembayaran(number)).toEqual({ ok: true, url: base.paymentUrl }); expect(mocks.create).not.toHaveBeenCalled(); });
+  it('percobaan pembayaran gagal dapat dibuka ulang, snapshot uang dari DB', async () => { mocks.status.mockResolvedValue({ transactionStatus: 'deny' }); expect((await mulaiPembayaran(number)).ok).toBe(true); expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ percobaan: 2, grandTotal: 180000, ongkir: 30000, diskon: 0 })); });
+  it('jumlah status gateway berbeda ditolak tanpa transisi', async () => { mocks.status.mockResolvedValue({ idTransaksi: number, transactionStatus: 'settlement', statusCode: '200', jumlah: 1 }); expect((await cekPembayaran(number)).ok).toBe(false); expect(mocks.transition).not.toHaveBeenCalled(); });
+  it('pembayaran terverifikasi melalui mesin status tunggal', async () => { mocks.status.mockResolvedValue({ idTransaksi: number, transactionStatus: 'settlement', statusCode: '200', jumlah: 180000, paymentType: 'bank_transfer' }); expect((await cekPembayaran(number)).ok).toBe(true); expect(mocks.transition).toHaveBeenCalledWith(1, 'confirmed', 'sistem', expect.objectContaining({ gatewayVerified: true, paymentTransactionId: number })); });
+  it('redirect gateway selain host Midtrans ditolak', async () => { mocks.order.mockResolvedValue({ ...base, paymentUrl: null }); mocks.create.mockResolvedValue({ idTransaksi: number, urlBayar: 'https://evil.example/payment' }); expect((await mulaiPembayaran(number)).ok).toBe(false); expect(mocks.update).not.toHaveBeenCalled(); });
+});

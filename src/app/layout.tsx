@@ -1,44 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
-import { StatusAkun } from "@/components/layout/status-akun";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import { Toaster } from '@/components/ui/sonner';
+import { WishlistProvider } from '@/components/product/WishlistProvider';
+import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
+import { ambilIdWishlist } from '@/lib/data/katalog';
+import { urlAplikasi } from '@/lib/url-aplikasi';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Font Inter, token warna, header, dan footer dikerjakan di kartu A2
-// (lihat DESIGN.md). Scaffold hanya menyetel bahasa dan judul.
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
 export const metadata: Metadata = {
-  title: "TokoKita",
-  description: "Toko online TokoKita",
+  metadataBase: new URL(urlAplikasi(process.env)),
+  title: { default: 'TokoKita — Belanja Nyaman untuk Kebutuhan Harian', template: '%s — TokoKita' },
+  description: 'Temukan produk fashion, elektronik, rumah tangga, kecantikan, dan olahraga pilihan di TokoKita. Harga transparan dan pembayaran aman.',
+  openGraph: { locale: 'id_ID', type: 'website', siteName: 'TokoKita' },
 };
-
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {/* Bar akun sementara; dipindah ke header oleh A2 (kartu Header & footer). */}
-        <div className="border-b">
-          <div className="mx-auto flex h-11 max-w-7xl items-center justify-between px-4">
-            <Link href="/" className="text-sm font-semibold">
-              TokoKita
-            </Link>
-            <StatusAkun />
-          </div>
-        </div>
-        {children}
-      </body>
-    </html>
-  );
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const pengguna = await ambilPenggunaSaatIni();
+  const ids = pengguna ? await ambilIdWishlist(pengguna.id) : [];
+  return <html lang="id" className={`${inter.variable} min-h-full antialiased`}><body className="flex min-h-screen flex-col font-sans"><WishlistProvider key={`${pengguna?.id ?? 'tamu'}`} ids={ids} login={!!pengguna}><Navbar /><div id="konten-utama" className="flex flex-1 flex-col">{children}</div><Footer /><Toaster position="top-center" richColors closeButton /></WishlistProvider></body></html>;
 }

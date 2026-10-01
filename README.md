@@ -7,9 +7,10 @@ panel admin. Proyek magang kelompok (5 anggota, ± 1 minggu).
 **Stack:** Next.js (App Router, TypeScript) · Prisma · MySQL · Tailwind CSS ·
 shadcn/ui
 
-> Status: **fondasi proyek dan database sudah siap** (Next.js 16, Prisma 7,
-> Tailwind 4, shadcn; 15 tabel + data demo). Halaman TokoKita belum dibangun. Cara menyalakan di
-> laptop: [`docs/runbooks/local-setup.md`](docs/runbooks/local-setup.md) bagian B.
+> Katalog, checkout, akun dan admin sudah terhubung ke MySQL. Target rilis:
+> **Vercel + Aiven**. Bukti verifikasi dan konfigurasi yang masih diperlukan
+> ada di [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) dan
+> [`deployment.md`](docs/runbooks/deployment.md).
 
 ## Mulai dari mana
 

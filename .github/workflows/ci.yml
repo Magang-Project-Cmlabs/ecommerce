@@ -17,6 +17,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  transaksi_mysql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-test-only
+          MYSQL_DATABASE: tokokita_test
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci-test-only"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+    env:
+      DATABASE_URL: mysql://root:ci-test-only@127.0.0.1:3306/tokokita_test
+      AUTH_SECRET: rahasia-khusus-ci-transaksi-bukan-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+      - run: npm run test:integration
   verifikasi:
     runs-on: ubuntu-latest
     timeout-minutes: 15

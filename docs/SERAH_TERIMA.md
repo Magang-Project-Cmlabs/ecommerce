@@ -1,63 +1,49 @@
 # Serah Terima — TokoKita
 
-Diisi di **akhir sesi** oleh anggota atau AI agent yang berhenti, untuk orang
-berikutnya yang melanjutkan. Timpa isinya setiap kali; riwayat ada di
-[`PROGRESS.md`](PROGRESS.md).
+**Tanggal:** 1 Oktober 2026
+**Branch:** `feat/penyelesaian-tokokita`
+**Sesi:** Penyelesaian PPT/PRD dan perubahan target Vercel + Aiven
 
-Urutan baca awal sesi: [`MULAI_DI_SINI.md`](MULAI_DI_SINI.md) →
-[`PROJECT_STATUS.md`](PROJECT_STATUS.md) → berkas ini.
+## Keadaan aplikasi
 
----
+Branch mengintegrasikan `develop` (`1fb10162`) dan `feature` (`2d01e28`),
+ditambah katalog/admin lengkap dan perbaikan checkout, akun, pesanan,
+pembayaran dan keamanan. Bukti serta layanan yang belum diuji ada di
+[PROJECT_STATUS](PROJECT_STATUS.md).
 
-**Tanggal:** 27 September 2026
-**Oleh:** persiapan konfigurasi kerja + modul payment gateway
+Database lokal `ecommerce` dan Aiven `tokokita` mempertahankan data lama.
+Migration tambahan `20261001080000_auth_rate_limits` terpasang di keduanya.
+Tes mutasi memakai `ecommerce_verifikasi_20261001` yang terpisah.
+Jangan menjalankan seed/reset pada toko untuk melanjutkan.
 
-## Keadaan saat berhenti
-
-| Hal | Kondisi |
-|---|---|
-| Repositori | `https://github.com/Magang-Project-Cmlabs/ecommerce` (private). Repo sementara `kvnlhm/ecommerce` tidak dipakai lagi. |
-| Branch | `main` dan `develop` berisi commit yang sama (konfigurasi kerja + modul pembayaran) |
-| Perubahan belum di-commit | Tidak ada |
-| Server lokal | Tidak dijalankan |
-| Database | `ecommerce` di MySQL Laragon 8.0.30, terisi data demo |
-
-## Yang sedang dikerjakan
-
-Kartu database selesai di branch `feat/skema-database` (Kevin Ilham): 15 tabel,
-migration `init`, seed data demo, `src/lib/db.ts`. Setelah menarik `develop`:
-`npm install`, pastikan MySQL Laragon menyala, lalu `npm run db:reset`.
-
-Modul payment gateway Midtrans selesai dan teruji, **belum tersambung** ke aplikasi
-(menunggu scaffold, tabel `orders`, dan `ubahStatus()`). Langkahnya di
-`runbooks/payment-midtrans.md` bagian 4.
+Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
+`.env`, `.env.aiven` dan `tests/e2e/.env.e2e` hanya lokal, diabaikan Git.
 
 ## Langkah berikutnya
 
-1. Admin organisasi (`azridalimunthe7`): jadikan `develop` default branch.
-   Proteksi branch tidak dipakai (paket Free, D10); aturan review dijaga
-   disiplin tim + hook `pre-push` + CI dan pendeteksi aturan review (GitHub
-   Actions aktif; cek ✓ di PR sebelum merge karena CI tidak bisa jadi syarat
-   merge di paket Free), lihat
-   [`../CONTRIBUTING.md`](../CONTRIBUTING.md) bagian 3.
-   **Undang juga `rizkikusnadi03` (A3) dan `fikarnugraha18` (A5) dengan izin
-   Write** — per 27 Sep 2026 keduanya belum punya akses ke repo private ini.
-2. Setiap anggota menjalankan `npm install` setelah clone agar hook `pre-push`
-   terpasang.
-3. Jawab keputusan D9 (payment gateway) di [`OPEN_DECISIONS.md`](OPEN_DECISIONS.md).
-4. Auth A1 lengkap (daftar/masuk/keluar, batasi halaman, lupa password +
-   rate limit). Halaman baru di rute terlindungi wajib memanggil
-   `requireUser`/`requireAdmin` (test akan merah bila lupa). Email dikirim lewat
-   `kirimEmail()` di `src/lib/email/` — tanpa SMTP, isinya tercetak di konsol
-   `npm run dev`. Kartu A1 berikutnya: *Cek dan gabungkan pekerjaan anggota*.
-   Keputusan D4/D6 sudah diterapkan sesuai rekomendasi dan D11 (cabut sesi
-   setelah reset) menunggu konfirmasi ketua tim.
-5. A2–A5 kini bisa membaca data sungguhan lewat `src/lib/data/` +
-   `src/lib/db.ts`. Gambar demo memakai `picsum.photos` (sudah diizinkan di
-   `next.config.ts`).
+1. Simpan branch/PR dan pastikan CI hijau sebelum penggabungan.
+2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
+   Proyek fork yang terlihat sebelumnya: `ecommerce` di `tes-2254s-projects`.
+   Akses GitHub tidak memberikan akses konfigurasi Vercel; CLI belum login.
+3. Isi environment Production/Preview, SMTP dan S3/R2 mengikuti
+   [runbook deployment](runbooks/deployment.md). Preview sebaiknya memakai DB
+   uji terpisah agar tes tidak mengubah toko.
+4. Deploy commit integrasi. Uji HTTPS, login, upload, checkout, email dan
+   Midtrans sandbox; deployment lama belum memuat fitur ini.
+5. Aktifkan cron 15 menit melalui Vercel Pro atau penjadwal eksternal.
+   Workflow GitHub tersedia tetapi environment target belum diaktifkan.
+6. Ukur Lighthouse beranda/katalog/detail dan tutup target ≥90/LCP <2,5 detik.
+   Restore manual Aiven ke DB terpisah sudah PASS (26/14/79/188, tiga migration); penjadwalan dan retensi backup masih perlu dikonfigurasi.
 
-## Peringatan untuk yang melanjutkan
+## Verifikasi ulang
 
-- `npm run db:reset` menghapus seluruh isi database lokal; AI agent wajib
-  meminta persetujuan dulu.
-- `src/generated/` dibuat otomatis (`postinstall`), jangan diedit atau di-commit.
+`npm run typecheck`, `npm run lint`, `npm run test`, `npx prisma validate`,
+`npm run build`, `npm run test:integration`, `npm run e2e`.
+
+Konfigurasi E2E lokal diabaikan Git. Output Playwright kini berada di
+`tests/e2e/.artifacts/playwright/`, sehingga tidak menghapus log MySQL
+atau bukti manual pada folder induk. Tes integrasi menolak nama DB toko.
+
+`npm run db:deploy` menyediakan CA sementara bagi engine migrasi Aiven.
+`npm run demo:images` hanya memperbarui foto seed. `db:reset`/`db:seed`
+menghapus data; keduanya tidak diperlukan untuk deployment ini.

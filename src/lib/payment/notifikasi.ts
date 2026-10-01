@@ -47,7 +47,7 @@ export type DepsNotifikasi = {
    */
   konfirmasiBayar(nomorPesanan: string, info: { idTransaksi: string; paymentType?: string }): Promise<boolean>;
   /** Wajib lewat ubahStatus(): pending -> cancelled bersyarat, stok & kuota promo kembali. true bila terjadi sekarang. */
-  batalkanOtomatis(nomorPesanan: string, alasan: string): Promise<boolean>;
+  batalkanOtomatis(nomorPesanan: string, alasan: string, idTransaksi: string): Promise<boolean>;
   catat(level: 'info' | 'warn' | 'error', pesan: string, data: Record<string, unknown>): void;
 };
 
@@ -158,7 +158,7 @@ export async function tanganiNotifikasiMidtrans(body: unknown, deps: DepsNotifik
         deps.catat('info', 'Percobaan bayar lama kedaluwarsa, diabaikan', { nomor, idTransaksi });
         return { httpStatus: 200, hasil: 'diabaikan' };
       }
-      const terjadi = await deps.batalkanOtomatis(nomor, aksi.alasan);
+      const terjadi = await deps.batalkanOtomatis(nomor, aksi.alasan, idTransaksi);
       return { httpStatus: 200, hasil: terjadi ? 'dibatalkan' : 'sudah-diproses' };
     }
 

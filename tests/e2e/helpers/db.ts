@@ -17,6 +17,12 @@ async function panggil<T>(...args: string[]): Promise<T> {
   const { stdout } = await jalan(process.execPath, ['--import', 'tsx', CLI, ...args], { cwd: ROOT });
   return JSON.parse(stdout) as T;
 }
+export type AdminOrderFixture = { orderId: number; productId: number; orderNumber: string };
+export const buatPesananAdminUji = (email: string) => panggil<AdminOrderFixture>('admin-order-fixture', email);
+export const bacaPesananAdminUji = (email: string, orderId: number) => panggil<{ status: string; paymentStatus: string; trackingNumber: string | null; logs: number; stock: number }>('admin-order-state', email, String(orderId));
+export const hapusPesananAdminUji = (email: string, fixture: AdminOrderFixture) => panggil<boolean>('admin-clean-fixture', email, JSON.stringify(fixture));
+export const hapusProdukAdminUji = (email: string, slug: string) => panggil<boolean>('admin-clean-product', email, slug);
+export const hapusKontenAdminUji = (email: string, stamp: string) => panggil<boolean>('admin-clean-content', email, stamp);
 
 /** Jumlah token reset milik akun dengan email ini. */
 export function jumlahTokenReset(email: string): Promise<number> {

@@ -198,7 +198,7 @@ describe('tanganiNotifikasiMidtrans', () => {
     const hasil = await tanganiNotifikasiMidtrans(notifikasi({ transaction_status: 'expire', status_code: '407' }), deps);
 
     expect(hasil).toEqual({ httpStatus: 200, hasil: 'dibatalkan' });
-    expect(deps.batalkanOtomatis).toHaveBeenCalledWith('INV-202609-0001', 'Batas waktu pembayaran habis');
+    expect(deps.batalkanOtomatis).toHaveBeenCalledWith('INV-202609-0001', 'Batas waktu pembayaran habis', 'INV-202609-0001');
   });
 
   it('kedaluwarsanya percobaan lama tidak membatalkan pesanan yang sedang dibayar ulang', async () => {
