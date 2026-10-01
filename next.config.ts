@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       // Gambar placeholder data demo (prisma/seed.ts). Gambar unggahan admin
       // (lokal / S3) ditambahkan saat kartu upload dikerjakan.
       { protocol: "https", hostname: "picsum.photos" },
+      // Unggahan admin/ulasan di Vercel Blob (store publik proyek ini).
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com", pathname: "/uploads/**" },
       ...(process.env.S3_PUBLIC_URL ? [new URL(`${process.env.S3_PUBLIC_URL.replace(/\/$/, '')}/**`)] : []),
     ],
   },

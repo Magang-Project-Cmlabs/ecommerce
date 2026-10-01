@@ -9,8 +9,12 @@ const AUDIENCE = 'tokokita-image-save';
 const key = () => kunciDariRahasia(process.env.AUTH_SECRET);
 const pesan = 'Unggahan tidak valid atau kedaluwarsa. Pilih dan unggah gambar kembali.';
 
+// Store Vercel Blob publik: https://<id-store>.public.blob.vercel-storage.com/uploads/<uuid>.webp
+const URL_BLOB = /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/uploads\/[0-9a-f-]{36}\.webp$/;
+
 function urlUploadSah(url: string) {
   if (/^\/uploads\/[0-9a-f-]{36}\.webp$/.test(url)) return true;
+  if (URL_BLOB.test(url)) return true;
   const prefix = process.env.S3_PUBLIC_URL?.replace(/\/$/, '');
   return !!prefix && url.startsWith(`${prefix}/uploads/`) && /^[0-9a-f-]{36}\.webp$/.test(url.slice(`${prefix}/uploads/`.length));
 }

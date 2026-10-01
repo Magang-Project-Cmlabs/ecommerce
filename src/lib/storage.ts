@@ -64,12 +64,33 @@ async function simpanS3(key: string, buffer: Buffer) {
   return `${publicUrl.replace(/\/$/, '')}/${key}`;
 }
 
+/**
+ * Vercel Blob (store publik) lewat API HTTP, tanpa SDK: PUT ke vercel.com/api/blob.
+ * Token BLOB_READ_WRITE_TOKEN dipasang Vercel sendiri saat store dihubungkan ke proyek.
+ */
+async function simpanBlob(key: string, buffer: Buffer) {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) throw new Error('Penyimpanan gambar belum dikonfigurasi. Hubungi administrator.');
+  const response = await fetch(`https://vercel.com/api/blob/?${new URLSearchParams({ pathname: key })}`, {
+    method: 'PUT', body: new Uint8Array(buffer), signal: AbortSignal.timeout(30_000),
+    headers: {
+      authorization: `Bearer ${token}`, 'x-api-version': '12', 'x-vercel-blob-access': 'public',
+      'x-content-type': 'image/webp', 'x-add-random-suffix': '0', 'x-allow-overwrite': '0',
+    },
+  });
+  const hasil = response.ok ? await response.json().catch(() => null) as { url?: unknown } | null : null;
+  const alamat = typeof hasil?.url === 'string' ? hasil.url : '';
+  if (!alamat.startsWith('https://')) throw new Error('Gagal menyimpan gambar. Silakan coba lagi.');
+  return alamat;
+}
+
 export async function simpanGambar(file: File, options: { minDimension?: number } = {}) {
   const driver = process.env.STORAGE_DRIVER || (process.env.NODE_ENV === 'production' ? 's3' : 'local');
-  if (process.env.NODE_ENV === 'production' && driver !== 's3') throw new Error('Unggahan production memerlukan penyimpanan S3. Hubungi administrator untuk mengaktifkannya.');
+  if (process.env.NODE_ENV === 'production' && driver !== 's3' && driver !== 'blob') throw new Error('Unggahan production memerlukan penyimpanan S3 atau Vercel Blob. Hubungi administrator untuk mengaktifkannya.');
   const buffer = await validasiGambar(file, options.minDimension ?? 800);
   const filename = `${randomUUID()}.webp`;
   if (driver === 's3') return simpanS3(`uploads/${filename}`, buffer);
+  if (driver === 'blob') return simpanBlob(`uploads/${filename}`, buffer);
   if (driver !== 'local') throw new Error('Driver penyimpanan gambar tidak didukung.');
   const directory = path.join(process.cwd(), 'public', 'uploads');
   await mkdir(directory, { recursive: true });

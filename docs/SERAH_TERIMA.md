@@ -36,7 +36,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 
 ## Menunggu pemilik
 
-1. **Cloudflare R2**: buat bucket + token, simpan di `.env.r2`; lalu minta skrip
+1. ~~Cloudflare R2~~ (diganti Vercel Blob, lihat OPEN_DECISIONS D15; selesai setelah deploy): buat bucket + token, simpan di `.env.r2`; lalu minta skrip
    pemasang env (`STORAGE_DRIVER=s3`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`,
    `S3_SECRET_KEY`, `S3_PUBLIC_URL`). Tanpa ini unggah gambar online ditolak.
 2. **SMTP**: akun pengirim (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`,

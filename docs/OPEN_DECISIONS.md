@@ -67,6 +67,7 @@ Terakhir diperbarui: **1 Oktober 2026**
 
 | Tanggal | Keputusan | Sumber |
 |---|---|---|
+| 1 Okt 2026 | **D15 — Unggahan gambar produksi memakai Vercel Blob (store publik `tokokita-gambar`, wilayah sin1)** sebagai alternatif S3/R2 yang butuh kartu. Tanpa library baru: `PUT https://vercel.com/api/blob/?pathname=uploads/<uuid>.webp` dengan `BLOB_READ_WRITE_TOKEN` (dipasang Vercel). Aktif lewat `STORAGE_DRIVER=blob`; driver `s3` tetap didukung. `upload-token` hanya menerima `https://<id>.public.blob.vercel-storage.com/uploads/<uuid>.webp`. Batas paket Hobby berlaku (cek kuota Blob di dasbor Vercel). | Permintaan pemilik; `src/lib/storage.ts` |
 | 1 Okt 2026 | **D14 — Vercel + Aiven menjadi target rilis**, menggantikan VPS. PRD §16 dan runbook direvisi. State rate limit memakai MySQL, unggahan S3/R2 satu file per request; cron 15 menit memerlukan Pro atau penjadwal eksternal. | Instruksi langsung pemilik proyek |
 | 1 Okt 2026 | **D4 — rate limit MySQL bersama pada production/Vercel.** Tambahan tabel infrastruktur `auth_rate_limits` (tabel 16), HMAC IP, transaksi atomik 5 percobaan/15 menit untuk masuk, daftar, lupa dan reset password; Map hanya lokal. Missing trusted IP/DB gagal aman. | Target serverless pemilik; 8 integrasi MySQL |
 | 1 Okt 2026 | **D11 — JWT terikat versi password.** Claim `pv` berupa HMAC dari bcrypt hash, dibandingkan constant time dengan versi hash sekarang. Reset/ganti password mencabut sesi lama tanpa kolom sesi tambahan; token lama tanpa `pv` perlu login ulang. | Implementasi dan 4 integrasi MySQL auth |
