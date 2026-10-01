@@ -127,7 +127,8 @@ export async function masuk(_: StateFormAkun, formData: FormData): Promise<State
     return { message: BATAS_TIDAK_TERSEDIA, values };
   }
   await simpanSesi({ userId: akun.id, role: akun.role, passwordVersion: versiPassword(akun.passwordHash) });
-  redirect(amanNext(teks(formData, 'next')) ?? '/');
+  // Admin masuk ke panelnya; pembeli ke beranda. Tujuan `next` yang aman tetap didahulukan.
+  redirect(amanNext(teks(formData, 'next')) ?? (akun.role === 'admin' ? '/admin' : '/'));
 }
 
 export async function keluar(): Promise<void> {

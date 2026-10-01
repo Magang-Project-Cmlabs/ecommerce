@@ -10,6 +10,7 @@ vi.mock('@/lib/data/reset-password', () => ({ cariAkunUntukReset: vi.fn(), pakai
 vi.mock('@/lib/auth/password', () => ({ cocokkanPassword: vi.fn(async () => true), cocokkanPasswordPalsu: vi.fn(), hashPassword: vi.fn(async () => 'hash') }));
 vi.mock('@/lib/email', () => ({ kirimEmail: vi.fn() }));
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { catatBatasAuth, hapusBatasAuth } from '@/lib/auth/pembatas-auth';
 import { simpanSesi } from '@/lib/auth/sesi';
@@ -61,6 +62,13 @@ describe('auth rate limit fail closed', () => {
     await masuk(undefined, form());
     expect(hapusBatasAuth).toHaveBeenCalledWith('masuk:203.0.113.8'); expect(simpanSesi).toHaveBeenCalledOnce();
     expect(vi.mocked(hapusBatasAuth).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(simpanSesi).mock.invocationCallOrder[0]!);
+  });
+  it.each([['admin', undefined, '/admin'], ['customer', undefined, '/'], ['admin', '/checkout', '/checkout']] as const)('login %s dengan next=%s diarahkan ke %s', async (role, next, tujuan) => {
+    vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockResolvedValueOnce();
+    vi.mocked(cariAkunUntukMasuk).mockResolvedValueOnce({ id: 1, passwordHash: 'hash', role, deletedAt: null });
+    const data = form(); if (next) data.set('next', next);
+    await masuk(undefined, data);
+    expect(redirect).toHaveBeenCalledWith(tujuan);
   });
   it('cleanup gagal setelah password cocok: tidak menerbitkan sesi dan tidak membocorkan error', async () => {
     vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockRejectedValueOnce(new Error('private'));
