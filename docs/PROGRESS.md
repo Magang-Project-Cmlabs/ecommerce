@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-01 — Kevin Ilham / Codex — Pemeriksaan akhir CI dan preview Vercel
+- Branch / PR: `feat/penyelesaian-tokokita` / [#23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23), draft.
+- CI PASS: run 36839552818 pada commit 8d8696a, kedua job berhasil. Working tree bersih sebelum pembaruan status ini.
+- Preview Vercel FAIL: integrasi Git repo pribadi membangun commit 1acd7c2, deployment `dpl_9g2dyzipY6uL8Q46t1iAhoH1yXxD` gagal. GitHub tidak menampilkan penyebab; pembacaan log CLI memerlukan login Vercel yang belum tersedia.
+- Production terbaru NOT_RUN; layanan eksternal/performa tetap mengikuti batas pada PROJECT_STATUS. Tidak mengubah production atau menjalankan tes mutasi pada Aiven.
+
 ### 2026-10-01 — Kevin Ilham / Codex — Integrasi TokoKita sesuai PPT dan Vercel + Aiven
 - Branch / PR: `feat/penyelesaian-tokokita`, integrasi `develop@1fb10162` dan `feature@2d01e28`; [PR #23](https://github.com/Magang-Project-Cmlabs/ecommerce/pull/23) ke `develop`.
 - Temuan awal: pekerjaan A3 sudah berlanjut pada `feature`. Implementasi itu diteruskan, termasuk akun, alamat dan komponen checkout; tidak mengubah kepemilikan kartu tim.

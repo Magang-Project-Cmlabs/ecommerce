@@ -23,12 +23,14 @@ Foto seed tersedia di `public/demo/`; production upload wajib S3/R2.
 
 ## Langkah berikutnya
 
-1. CI implementasi PR #23 sudah PASS (run 36839184299, commit 1acd7c2).
-   Periksa juga CI commit dokumentasi terbaru sebelum penggabungan. Server demo lokal berjalan
+1. CI PR #23 sudah PASS (run 36839552818, commit 8d8696a).
+   Periksa CI setiap commit lanjutan sebelum penggabungan. Server demo lokal berjalan
    di http://localhost:3000 dengan DB toko lokal `ecommerce` (bukan DB uji).
 2. Login `npx vercel login` dan tautkan proyek yang dikonfirmasi pemilik.
    Proyek fork yang terlihat sebelumnya: `ecommerce` di `tes-2254s-projects`.
-   Akses GitHub tidak memberikan akses konfigurasi Vercel; CLI belum login.
+   Integrasi Git repo pribadi sudah menjalankan preview commit 1acd7c2, tetapi
+   deployment FAIL: [log Vercel](https://vercel.com/tes-2254s-projects/ecommerce/9g2dyzipY6uL8Q46t1iAhoH1yXxD).
+   Penyebab belum diketahui; CLI belum login untuk membaca log atau konfigurasi.
 3. Isi environment Production/Preview, SMTP dan S3/R2 mengikuti
    [runbook deployment](runbooks/deployment.md). Preview sebaiknya memakai DB
    uji terpisah agar tes tidak mengubah toko.

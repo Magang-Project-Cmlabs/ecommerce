@@ -12,8 +12,8 @@ menggabungkan `develop` (`1fb10162`) dan pekerjaan anggota pada `feature`
 (`2d01e28`); kepemilikan kartu anggota tetap berlaku.
 
 Target pemilik berubah menjadi **Vercel + Aiven**. TLS dan tiga migration
-Aiven sudah diverifikasi tanpa reset. Aplikasi terbaru belum dipublikasikan
-ke Vercel; toko online belum dinyatakan 100% siap.
+Aiven sudah diverifikasi tanpa reset. Preview melalui integrasi Git Vercel
+sudah dicoba tetapi deployment FAIL; toko online belum dinyatakan 100% siap.
 
 ## 2. Kemajuan per tahap
 
@@ -46,12 +46,13 @@ ke Vercel; toko online belum dinyatakan 100% siap.
 | Settlement sandbox sesi baru | NOT_RUN | Memerlukan simulator; settlement 27 Sep adalah bukti historis |
 | SMTP eksternal | NOT_RUN | Dua tes SMTP loopback lulus; kredensial production belum tersedia |
 | Bucket S3/R2 nyata | NOT_RUN | Validasi gambar/token/SigV4 diuji; kredensial bucket belum tersedia |
-| Deployment Vercel terbaru | NOT_RUN | CLI belum login/proyek belum ditautkan; production lama masih versi fondasi |
+| Preview Vercel terbaru | FAIL | Integrasi Git repo pribadi, commit 1acd7c2; deployment dpl_9g2dyzipY6uL8Q46t1iAhoH1yXxD gagal. Penyebab belum diketahui: CLI belum login untuk membaca log |
+| Rilis production terbaru | NOT_RUN | Belum dipromosikan; production lama masih versi fondasi |
 | Cron pada domain resmi | NOT_RUN | Endpoint diuji; penjadwal/environment target belum diaktifkan |
 | Backup/restore manual Aiven | PASS | Dump TLS 155.148 bytes, restore DB terpisah: 26 produk/14 pengguna/79 pesanan/188 ulasan/3 migration |
 | Lighthouse DevTools mobile, 4G + CPU 4x | PASS | Beranda 93/LCP 2,344 s; katalog 93/2,351 s; detail 96/2,246 s; CLS <0,001. Build production dengan Aiven, cache hangat |
 | Lighthouse simulasi bawaan | FAIL | Beranda 80, katalog 85, detail 85; LCP sekitar 4,3–4,4 s. Hasil kedua metode dipertahankan; domain Vercel belum diuji |
-| CI implementasi | PASS | [Run 36839184299](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36839184299), commit 1acd7c2: verifikasi dan transaksi_mysql lulus; build memakai fixture APP_URL HTTPS |
+| CI implementasi dan dokumentasi | PASS | [Run 36839552818](https://github.com/Magang-Project-Cmlabs/ecommerce/actions/runs/36839552818), commit 8d8696a: verifikasi dan transaksi_mysql lulus; build memakai fixture APP_URL HTTPS |
 
 ## 4. Kriteria sukses PRD §22
 
