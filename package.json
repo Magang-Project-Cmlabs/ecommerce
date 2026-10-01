@@ -23,6 +23,7 @@
     "e2e": "playwright test -c tests/e2e/playwright.config.ts",
     "e2e:report": "playwright show-report tests/e2e/.report",
     "demo:images": "tsx scripts/cache-demo-images.ts",
+    "demo:ilustrasi": "tsx scripts/buat-ilustrasi-demo.ts",
     "release:prepare": "node scripts/prepare-standalone.mjs",
     "db:deploy": "node scripts/migrate-deploy.mjs"
   },
