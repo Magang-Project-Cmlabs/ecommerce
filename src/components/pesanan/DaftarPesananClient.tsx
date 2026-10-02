@@ -14,7 +14,7 @@ import {
   CreditCard,
   XCircle,
   CheckCircle2,
-  ExternalLink,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatRupiah, formatTanggalWIB } from "@/lib/format";
@@ -259,13 +259,12 @@ export default function DaftarPesananClient({ orders }: Props) {
                     {/* Tombol Detail Pesanan */}
                     <Button
                       asChild
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
-                      className="h-8 rounded-full text-xs font-semibold"
                     >
                       <Link href={`/akun/pesanan/${order.orderNumber}`}>
                         Detail Pesanan
-                        <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                        <ChevronRight aria-hidden />
                       </Link>
                     </Button>
 
@@ -273,12 +272,11 @@ export default function DaftarPesananClient({ orders }: Props) {
                     {isPending && (
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                         size="sm"
                         onClick={() => setBatalOrderNumber(order.orderNumber)}
-                        className="h-8 gap-1.5 rounded-full border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 hover:text-red-700"
                       >
-                        <XCircle className="h-3.5 w-3.5" />
+                        <XCircle aria-hidden />
                         Batalkan
                       </Button>
                     )}

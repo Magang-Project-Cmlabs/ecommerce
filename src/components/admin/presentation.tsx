@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChevronLeft, Pencil, Plus } from 'lucide-react';
+import { ChevronLeft, Eye, Pencil, Plus } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { LABEL_STATUS_PESANAN, type OrderStatus } from '@/lib/pesanan/status';
@@ -23,7 +23,7 @@ export function StokBadge({ stok }: { stok: number }) {
 }
 
 /** Aksi umum sebagai tombol ikon: nama tetap ada untuk pembaca layar dan tooltip bawaan (title). */
-export function AksiIkon({ href, label, jenis }: { href: string; label: string; jenis: 'edit' | 'tambah' }) {
-  const Ikon = jenis === 'edit' ? Pencil : Plus;
-  return <Button asChild variant={jenis === 'edit' ? 'ghost' : 'secondary'} size="icon-sm" className="pointer-coarse:size-11"><Link href={href} aria-label={label} title={label}><Ikon aria-hidden /></Link></Button>;
+export function AksiIkon({ href, label, jenis }: { href: string; label: string; jenis: 'edit' | 'tambah' | 'detail' }) {
+  const Ikon = jenis === 'edit' ? Pencil : jenis === 'detail' ? Eye : Plus;
+  return <Button asChild variant={jenis === 'tambah' ? 'secondary' : 'ghost'} size="icon-sm" className="pointer-coarse:size-11"><Link href={href} aria-label={label} title={label}><Ikon aria-hidden /></Link></Button>;
 }
