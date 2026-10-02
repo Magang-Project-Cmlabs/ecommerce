@@ -18,9 +18,9 @@ export default async function HalamanPesananBerhasil({ params }: { params: Promi
   if (!order) notFound();
   const address = order.shippingAddress;
   return <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
-    <div className="mb-8 text-center"><CheckCircle2 className="mx-auto mb-4 size-14 text-green-700" /><h1 className="text-2xl font-bold">Pesanan Berhasil Dibuat!</h1><p className="mt-2 text-muted-foreground">Terima kasih telah berbelanja di TokoKita.</p></div>
+    <div className="mb-8 text-center"><CheckCircle2 className="mx-auto mb-4 size-14 text-green-700 dark:text-green-300" /><h1 className="text-4xl font-medium leading-none md:text-5xl">Pesanan Berhasil Dibuat!</h1><p className="mt-2 text-muted-foreground">Terima kasih telah berbelanja di TokoKita.</p></div>
     <section className="rounded-xl border bg-card p-6 shadow-sm" aria-label="Ringkasan pesanan">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4"><div><p className="text-sm text-muted-foreground">Nomor Pesanan</p><p className="break-all font-semibold">{order.orderNumber}</p><SalinTeksButton textToCopy={order.orderNumber} label="Salin Nomor" /></div><p className="text-2xl font-bold text-orange-700">{formatRupiah(order.grandTotal)}</p></div>
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4"><div><p className="text-sm text-muted-foreground">Nomor Pesanan</p><p className="break-all font-semibold">{order.orderNumber}</p><SalinTeksButton textToCopy={order.orderNumber} label="Salin Nomor" /></div><p className="text-2xl font-bold text-foreground">{formatRupiah(order.grandTotal)}</p></div>
       <p className="mt-4 font-medium">{LABEL_STATUS_PESANAN[order.status]} · {LABEL_STATUS_PEMBAYARAN[order.paymentStatus]}</p>
       {order.status === 'pending' && <div className="mt-4"><CountdownTimer paymentDueAt={order.paymentDueAt} isPaid={order.paymentStatus === 'paid'} /></div>}
       {order.paymentMethod === 'cod' ? <p className="mt-4">Bayar kepada kurir saat pesanan diterima.</p> : <p className="mt-4">Buka detail pesanan untuk membayar atau melihat instruksi pembayaran. Pembayaran manual diverifikasi oleh admin.</p>}

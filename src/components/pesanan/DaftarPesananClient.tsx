@@ -69,35 +69,35 @@ export default function DaftarPesananClient({ orders }: Props) {
   const getStatusBadgeClass = (status: OrderStatus) => {
     switch (status) {
       case "pending":
-        return "bg-amber-100 text-amber-800 border-amber-200";
+        return "bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/30";
       case "confirmed":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-500/30";
       case "packed":
         return "bg-purple-100 text-purple-800 border-purple-200";
       case "shipped":
         return "bg-indigo-100 text-indigo-800 border-indigo-200";
       case "delivered":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 dark:bg-green-500/15 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
       case "cancelled":
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return "bg-muted text-foreground/80 border-border";
     }
   };
 
   const getPaymentBadgeClass = (paymentStatus: string) => {
     switch (paymentStatus) {
       case "paid":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
+        return "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30";
       case "refunded":
-        return "bg-red-50 text-red-700 border-red-200";
+        return "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300 border-red-200 dark:border-red-500/30";
       default:
-        return "bg-amber-50 text-amber-700 border-amber-200";
+        return "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30";
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Tab Filter Status Pesanan */}
-      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto border-b border-gray-200 pb-2">
+      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto border-b border-border pb-2">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           const count = getTabCount(tab.id);
@@ -109,8 +109,8 @@ export default function DaftarPesananClient({ orders }: Props) {
               onClick={() => setActiveTab(tab.id)}
               className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all ${
                 isActive
-                  ? "bg-orange-700 text-white shadow-xs"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-foreground text-background shadow-xs"
+                  : "bg-muted text-muted-foreground hover:bg-muted"
               }`}
             >
               <span>{tab.label}</span>
@@ -118,8 +118,8 @@ export default function DaftarPesananClient({ orders }: Props) {
                 <span
                   className={`rounded-full px-1.5 py-0.2 text-[10px] ${
                     isActive
-                      ? "bg-white/30 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      ? "bg-background/25 text-background"
+                      : "bg-muted text-foreground/80"
                   }`}
                 >
                   {count}
@@ -132,12 +132,12 @@ export default function DaftarPesananClient({ orders }: Props) {
 
       {/* Konten Daftar Pesanan */}
       {filteredOrders.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center bg-white">
-          <ShoppingBag className="mx-auto h-12 w-12 text-gray-300 stroke-1" />
-          <h3 className="mt-4 text-base font-bold text-gray-900">
+        <div className="rounded-2xl border border-dashed border-border p-12 text-center bg-background">
+          <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground/70 stroke-1" />
+          <h3 className="mt-4 text-base font-bold text-foreground">
             Tidak Ada Pesanan
           </h3>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             {activeTab === "semua"
               ? "Anda belum pernah melakukan pemesanan di TokoKita."
               : `Tidak ada pesanan dengan status "${TABS.find((t) => t.id === activeTab)?.label}".`}
@@ -162,16 +162,16 @@ export default function DaftarPesananClient({ orders }: Props) {
             return (
               <div
                 key={order.id}
-                className="overflow-hidden rounded-3xl bg-tile transition-hover hover:border-gray-300"
+                className="overflow-hidden rounded-3xl bg-tile transition-hover hover:border-border"
               >
                 {/* Header Kartu Pesanan */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.06] px-5 py-3 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3 text-xs">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="font-extrabold text-gray-900 font-mono tracking-tight">
+                    <span className="font-extrabold text-foreground font-mono tracking-tight">
                       {order.orderNumber}
                     </span>
-                    <span className="text-gray-400">•</span>
-                    <span className="text-gray-500">
+                    <span className="text-muted-foreground/70">•</span>
+                    <span className="text-muted-foreground">
                       {formatTanggalWIB(order.createdAt)}
                     </span>
                   </div>
@@ -196,13 +196,13 @@ export default function DaftarPesananClient({ orders }: Props) {
                 </div>
 
                 {/* Daftar Produk di Pesanan */}
-                <div className="divide-y divide-gray-100 px-5 py-3">
+                <div className="divide-y divide-border px-5 py-3">
                   {order.items.map((item) => (
                     <div
                       key={item.id}
                       className="flex items-center gap-4 py-2.5 text-xs"
                     >
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white">
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-background">
                         {item.image ? (
                           <Image
                             src={item.image}
@@ -212,28 +212,28 @@ export default function DaftarPesananClient({ orders }: Props) {
                             className="object-cover"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-gray-400">
+                          <div className="flex h-full w-full items-center justify-center text-muted-foreground/70">
                             <Package className="h-6 w-6 stroke-1" />
                           </div>
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1 space-y-0.5">
-                        <p className="truncate font-bold text-gray-900">
+                        <p className="truncate font-bold text-foreground">
                           {item.name}
                         </p>
                         {item.variantName && (
-                          <p className="text-[11px] text-gray-500">
+                          <p className="text-[11px] text-muted-foreground">
                             Varian: {item.variantName}
                           </p>
                         )}
-                        <p className="text-gray-500">
+                        <p className="text-muted-foreground">
                           {item.quantity} × {formatRupiah(item.price)}
                         </p>
                       </div>
 
                       <div className="text-right">
-                        <span className="font-bold text-gray-900">
+                        <span className="font-bold text-foreground">
                           {formatRupiah(item.price * item.quantity)}
                         </span>
                       </div>
@@ -242,15 +242,15 @@ export default function DaftarPesananClient({ orders }: Props) {
                 </div>
 
                 {/* Footer Kartu Pesanan: Total & Tombol Aksi */}
-                <div className="flex flex-col gap-3 border-t border-black/[0.06] px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 border-t border-border px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-xs">
-                    <span className="text-gray-500">Total Pembayaran: </span>
-                    <span className="text-sm font-extrabold text-orange-700">
+                    <span className="text-muted-foreground">Total Pembayaran: </span>
+                    <span className="text-sm font-extrabold text-foreground">
                       {formatRupiah(order.grandTotal)}
                     </span>
                     {order.trackingNumber && (
-                      <p className="mt-0.5 text-[11px] text-gray-500 font-mono">
-                        No. Resi: <strong className="text-gray-800">{order.trackingNumber}</strong>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground font-mono">
+                        No. Resi: <strong className="text-foreground">{order.trackingNumber}</strong>
                       </p>
                     )}
                   </div>

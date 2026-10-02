@@ -1,8 +1,9 @@
 // Membuat ilustrasi produk, banner, dan kategori untuk data demo (public/demo).
 // Pengganti foto acak Picsum yang tidak cocok dengan nama produk. Nama berkas
 // tetap `tokokita-<slug>-<n>.webp`, sehingga tidak ada URL di database yang berubah.
-// Jalankan: npx tsx scripts/buat-ilustrasi-demo.ts   (banner + kategori; hanya membaca DB, menulis public/demo)
-// Tambahkan --produk untuk juga menimpa gambar produk dengan ilustrasi (JANGAN jika sudah memakai foto asli).
+// Sejak 3 Okt 2026 banner dan kategori memakai foto CC0 (docs/KREDIT_FOTO.md), jadi skrip ini tidak
+// menimpa apa pun tanpa bendera: --banner (banner), --kategori (ubin kategori), --produk (gambar produk).
+// Contoh: npx tsx scripts/buat-ilustrasi-demo.ts --kategori   (hanya membaca DB, menulis public/demo)
 import 'dotenv/config';
 import path from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -139,8 +140,8 @@ async function main() {
     await tulis(g.url, ilustrasiProduk(Math.min(n, 3), { nama: p.name, merek: p.brand, kategori: p.category.name, ikon: IKON_PRODUK[p.slug] ?? 'Package', kelompok: KELOMPOK[p.category.slug] ?? 'fashion' }));
     jumlah++;
   }
-  for (const b of banner) { await tulis(b.image, await ilustrasiBanner(/banner-([a-z]+)-/.exec(b.image)?.[1] ?? 'diskon')); jumlah++; }
-  for (const k of kategori) { await tulis(k.image!, ilustrasiKategori(k.slug, k.name)); jumlah++; }
+  for (const b of process.argv.includes('--banner') ? banner : []) { await tulis(b.image, await ilustrasiBanner(/banner-([a-z]+)-/.exec(b.image)?.[1] ?? 'diskon')); jumlah++; }
+  for (const k of process.argv.includes('--kategori') ? kategori : []) { await tulis(k.image!, ilustrasiKategori(k.slug, k.name)); jumlah++; }
   console.log(`Ilustrasi dibuat: ${jumlah} berkas di public/demo`);
   await db.$disconnect();
 }

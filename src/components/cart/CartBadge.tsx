@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCartStore, selectTotalItem, selectTerbuka } from "@/stores/cart-store";
 
@@ -25,14 +25,14 @@ export default function CartBadge() {
         type="button"
         onClick={bukaKeranjang}
         aria-label={label}
-        className="relative flex size-11 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
+        className="relative flex size-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-foreground/[0.06] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         title={label}
       >
-        <ShoppingCart className="h-8 w-8" strokeWidth={1.5} />
+        <ShoppingBag aria-hidden className="size-[21px]" strokeWidth={1.6} />
         {count > 0 && (
           <span
             aria-live="polite"
-            className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-sm"
+            className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-semibold tabular-nums text-background"
           >
             {count > 99 ? "99+" : count}
           </span>

@@ -49,7 +49,7 @@ function useAdminForm(action: Action, purpose?: TujuanUpload) {
   return { state, formAction, pending, progress };
 }
 function Feedback({ state }: { state: AdminActionState }) {
-  return state.message ? <p role={state.success ? 'status' : 'alert'} className={`rounded-xl border p-3 text-sm ${state.success ? 'border-green-200 bg-green-50 text-green-700' : 'border-destructive/30 bg-destructive/5 text-destructive'}`}>{state.message}</p> : null;
+  return state.message ? <p role={state.success ? 'status' : 'alert'} className={`rounded-xl border p-3 text-sm ${state.success ? 'border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-300' : 'border-destructive/30 bg-destructive/5 text-destructive'}`}>{state.message}</p> : null;
 }
 function Field({ name, label, state, children }: { name: string; label: string; state: AdminActionState; children: ReactNode }) {
   return <div className="min-w-0 space-y-1.5"><Label htmlFor={name}>{label}</Label>{children}{state.errors?.[name]?.map((message) => <p id={`${name}-error`} key={message} className="text-sm text-destructive">{message}</p>)}</div>;

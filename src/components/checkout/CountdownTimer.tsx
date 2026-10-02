@@ -72,11 +72,11 @@ export default function CountdownTimer({
 
   if (isPaid) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4 text-xs text-green-900">
+      <div className="flex items-center gap-3 rounded-xl border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 p-4 text-xs text-green-900 dark:text-green-300">
         <CheckCircle className="h-5 w-5 shrink-0 text-green-600" />
         <div>
           <p className="font-bold">Pembayaran Telah Selesai</p>
-          <p className="text-green-700">
+          <p className="text-green-700 dark:text-green-300">
             Terima kasih! Pesanan Anda sedang dipersiapkan oleh toko untuk segera dikirim.
           </p>
         </div>
@@ -86,11 +86,11 @@ export default function CountdownTimer({
 
   if (isCod) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-blue-900">
+      <div className="flex items-center gap-3 rounded-xl border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 p-4 text-xs text-blue-900 dark:text-blue-300">
         <Banknote className="h-5 w-5 shrink-0 text-blue-600" />
         <div>
           <p className="font-bold">Metode Bayar di Tempat (COD)</p>
-          <p className="text-blue-700">
+          <p className="text-blue-700 dark:text-blue-300">
             Harap siapkan uang tunai pas saat kurir mengantarkan paket ke alamat Anda.
           </p>
         </div>
@@ -100,11 +100,11 @@ export default function CountdownTimer({
 
   if (timeLeft.isExpired) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-900">
+      <div className="flex items-center gap-3 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4 text-xs text-red-900 dark:text-red-300">
         <AlertTriangle className="h-5 w-5 shrink-0 text-red-600" />
         <div>
           <p className="font-bold">Batas Waktu Pembayaran Telah Habis</p>
-          <p className="text-red-700">
+          <p className="text-red-700 dark:text-red-300">
             Waktu pembayaran telah berakhir. Pesanan akan dibatalkan otomatis oleh sistem.
           </p>
         </div>
@@ -119,14 +119,14 @@ export default function CountdownTimer({
     <div
       className={`rounded-xl border p-4 text-center transition-colors ${
         isUrgent
-          ? "border-red-300 bg-red-50/70"
-          : "border-orange-200 bg-orange-50/40"
+          ? "border-red-300 bg-red-50/70 dark:bg-red-500/10"
+          : "border-border bg-muted"
       }`}
     >
-      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-700">
+      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-foreground/80">
         <Clock
           className={`h-4 w-4 ${
-            isUrgent ? "animate-pulse text-red-600" : "text-orange-700"
+            isUrgent ? "animate-pulse text-red-600" : "text-foreground"
           }`}
         />
         <span>Selesaikan pembayaran dalam waktu:</span>
@@ -139,17 +139,17 @@ export default function CountdownTimer({
             className={`flex h-12 w-12 items-center justify-center rounded-lg text-lg font-extrabold shadow-xs ${
               isUrgent
                 ? "bg-red-600 text-white animate-pulse"
-                : "bg-gray-900 text-white"
+                : "bg-foreground text-background"
             }`}
           >
             {String(timeLeft.hours).padStart(2, "0")}
           </div>
-          <span className="mt-1 text-[10px] font-semibold text-gray-500 uppercase">
+          <span className="mt-1 text-[10px] font-semibold text-muted-foreground uppercase">
             Jam
           </span>
         </div>
 
-        <span className="text-xl font-bold text-gray-400 pb-4">:</span>
+        <span className="text-xl font-bold text-muted-foreground/70 pb-4">:</span>
 
         {/* Kotak Menit */}
         <div className="flex flex-col items-center">
@@ -157,17 +157,17 @@ export default function CountdownTimer({
             className={`flex h-12 w-12 items-center justify-center rounded-lg text-lg font-extrabold shadow-xs ${
               isUrgent
                 ? "bg-red-600 text-white animate-pulse"
-                : "bg-gray-900 text-white"
+                : "bg-foreground text-background"
             }`}
           >
             {String(timeLeft.minutes).padStart(2, "0")}
           </div>
-          <span className="mt-1 text-[10px] font-semibold text-gray-500 uppercase">
+          <span className="mt-1 text-[10px] font-semibold text-muted-foreground uppercase">
             Menit
           </span>
         </div>
 
-        <span className="text-xl font-bold text-gray-400 pb-4">:</span>
+        <span className="text-xl font-bold text-muted-foreground/70 pb-4">:</span>
 
         {/* Kotak Detik */}
         <div className="flex flex-col items-center">
@@ -175,12 +175,12 @@ export default function CountdownTimer({
             className={`flex h-12 w-12 items-center justify-center rounded-lg text-lg font-extrabold shadow-xs ${
               isUrgent
                 ? "bg-red-600 text-white animate-pulse"
-                : "bg-gray-900 text-white"
+                : "bg-foreground text-background"
             }`}
           >
             {String(timeLeft.seconds).padStart(2, "0")}
           </div>
-          <span className="mt-1 text-[10px] font-semibold text-gray-500 uppercase">
+          <span className="mt-1 text-[10px] font-semibold text-muted-foreground uppercase">
             Detik
           </span>
         </div>

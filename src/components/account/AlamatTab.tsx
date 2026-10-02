@@ -84,8 +84,8 @@ export default function AlamatTab({ initialAddresses }: Props) {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-base font-bold text-gray-900">Buku Alamat Pengiriman</h2>
-          <p className="mt-1 text-xs text-gray-500">
+          <h2 className="text-base font-bold text-foreground">Buku Alamat Pengiriman</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
             Kelola daftar alamat pengiriman untuk mempercepat proses transaksi belanja Anda.
           </p>
         </div>
@@ -106,8 +106,8 @@ export default function AlamatTab({ initialAddresses }: Props) {
         <div
           className={`flex items-center gap-2 rounded-xl p-3 text-xs ${
             feedback.type === "success"
-              ? "border border-green-200 bg-green-50 text-green-800"
-              : "border border-red-200 bg-red-50 text-red-800"
+              ? "border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 text-green-800 dark:text-green-300"
+              : "border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-300"
           }`}
         >
           {feedback.type === "success" ? (
@@ -121,7 +121,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
 
       {/* Form Tambah Alamat Baru */}
       {showAddForm && (
-        <div className="rounded-3xl bg-tile ring-1 ring-orange-300 p-5">
+        <div className="rounded-3xl bg-tile ring-1 ring-foreground/20 p-5">
           <AlamatForm
             onSuccess={handleAddressAdded}
             onCancel={() => setShowAddForm(false)}
@@ -131,12 +131,12 @@ export default function AlamatTab({ initialAddresses }: Props) {
 
       {/* Daftar Alamat */}
       {addresses.length === 0 && !showAddForm ? (
-        <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center">
-          <Home className="mx-auto h-10 w-10 text-gray-400 stroke-1" />
-          <h3 className="mt-3 text-sm font-bold text-gray-900">
+        <div className="rounded-xl border border-dashed border-border p-8 text-center">
+          <Home className="mx-auto h-10 w-10 text-muted-foreground/70 stroke-1" />
+          <h3 className="mt-3 text-sm font-bold text-foreground">
             Belum Ada Alamat Tersimpan
           </h3>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             Tambahkan alamat rumah atau kantor Anda untuk mulai berbelanja.
           </p>
           <Button
@@ -155,29 +155,29 @@ export default function AlamatTab({ initialAddresses }: Props) {
               key={alamat.id}
               className={`relative rounded-xl border p-5 transition-all ${
                 alamat.isDefault
-                  ? "border-orange-300 bg-orange-50/20 shadow-xs"
-                  : "border-gray-200 bg-white hover:border-gray-300"
+                  ? "border-border bg-muted shadow-xs"
+                  : "border-border bg-background hover:border-border"
               }`}
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-extrabold text-gray-900">
+                    <span className="text-sm font-extrabold text-foreground">
                       {alamat.name}
                     </span>
-                    <span className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-600">
+                    <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
                       {alamat.label}
                     </span>
                     {alamat.isDefault && (
-                      <span className="rounded-md bg-green-100 px-2 py-0.5 text-[11px] font-bold text-green-700">
+                      <span className="rounded-md bg-green-100 dark:bg-green-500/15 px-2 py-0.5 text-[11px] font-bold text-green-700 dark:text-green-300">
                         Alamat Utama
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-xs text-gray-600 font-mono">
+                  <p className="mt-1 text-xs text-muted-foreground font-mono">
                     {alamat.phone}
                   </p>
-                  <p className="mt-1 text-xs text-gray-600">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {alamat.street}, {alamat.district}, {alamat.city},{" "}
                     {alamat.province} {alamat.postalCode}
                   </p>
@@ -191,7 +191,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
                       size="sm"
                       disabled={isPending}
                       onClick={() => handleSetDefault(alamat.id)}
-                      className="h-8 rounded-full text-[11px] font-semibold text-gray-700 hover:text-gray-900"
+                      className="h-8 rounded-full text-[11px] font-semibold text-foreground/80 hover:text-foreground"
                     >
                       Jadikan Utama
                     </Button>
@@ -229,7 +229,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
                       variant="ghost"
                       size="sm"
                       onClick={() => setConfirmDeleteId(alamat.id)}
-                      className="h-8 w-8 rounded-full p-0 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                      className="h-8 w-8 rounded-full p-0 text-muted-foreground/70 hover:bg-red-50 dark:bg-red-500/10 hover:text-red-600"
                       title="Hapus alamat"
                       aria-label={`Hapus alamat ${alamat.label}`}
                     >

@@ -1,145 +1,124 @@
 # DESIGN.md — Sistem Desain TokoKita
 
-Maksud desain ada di PRD §17-19. Berkas ini mengikat maksud itu ke token
-shadcn/ui dan memperbaiki kombinasi warna yang gagal WCAG 2.1 AA (target
-PRD §14). Kalau berkas ini berbeda dari kode di `src/app/globals.css`, **kode
-yang menang** — perbarui berkas ini.
+Maksud desain ada di PRD §17-19; palet PRD §17 diganti keputusan **D16**
+(`docs/OPEN_DECISIONS.md`). Kalau berkas ini berbeda dari kode di
+`src/app/globals.css`, **kode yang menang** — perbarui berkas ini.
 
-**Arah visual (diperbarui 2 Oktober 2026):** bersih dan tenang, terinspirasi
-Apple Store dan prinsip skill `apple-design`: kurangi sebelum menambah, foto
-produk sebagai bintang, ubin abu muda alih-alih kartu bergaris, tipografi
-tegas dan rapat, oranye hanya untuk aksi. Tidak ada gradien dekoratif,
-bayangan tebal, atau ikon hiasan. Mockup awal di PPT slide 10–13 sudah
-diganti tangkapan layar aplikasi yang berjalan.
+**Arah visual (diperbarui 3 Oktober 2026):** modern dan elegan seperti template
+Framer yang dipilih pemilik (ecom, sabina, sneako, horven, furnexa). Ciri
+utamanya: foto lifestyle besar, judul display besar dengan jarak huruf rapat,
+palet monokrom, kartu produk tanpa bingkai, aksi berupa pil kecil, pita teks
+berjalan, footer hitam dengan merek besar. Tersedia **mode terang dan gelap**.
+Tidak ada gradien dekoratif, bayangan tebal, atau ikon hiasan.
 
 ## 1. Warna
 
-Token semantik shadcn di `globals.css` (`:root`). Komponen memakai token
-(`bg-primary`, `bg-tile`, `text-muted-foreground`), bukan warna mentah, kecuali
-yang disebut di tabel "Dipakai langsung".
+Token di `globals.css` (`:root` untuk terang, `.dark` untuk gelap). Komponen
+memakai token, bukan warna mentah, supaya kedua mode otomatis benar.
 
-| Token | Nilai | Peran |
-|---|---|---|
-| `--primary` | orange-700 (`#c2410c`) | Aksi utama (satu per area), badge keranjang, tautan penting |
-| `--primary-foreground` | white | Teks di atas `bg-primary`, kontras 5.18 (AA) |
-| `--tile` | `#f5f5f7` | Ubin: latar kartu, kategori, ulasan, hero, kartu checkout/akun |
-| `--secondary` | blue-600 | Terbatas: tautan tertentu (bantuan, saran cari) |
-| `--destructive` | red-600 | Hapus, batal, galat (tombol: bidang merah muda) |
-| `--background` / `--foreground` | white / zinc-900 | |
-| `--muted-foreground` | zinc-600 | Teks sekunder, merek |
-| `--border` / `--input` | zinc-200 | |
-| `--ring` | blue-600 | Cincin fokus keyboard |
+| Token | Terang | Gelap | Peran |
+|---|---|---|---|
+| `--background` / `--foreground` | `#ffffff` / `#0a0a0a` | `#0b0b0b` / `#f2f2f2` | Latar dan teks |
+| `--primary` | `#0a0a0a` | `#f2f2f2` | Aksi utama (satu per area) |
+| `--tile` | `#f3f3f3` | `#171717` | Ubin: latar foto produk, ulasan, ikon jaminan |
+| `--muted` / `--muted-foreground` | `#f4f4f4` / `#5c5c5c` | `#1a1a1a` / `#a3a3a3` | Bidang lembut, teks sekunder |
+| `--border` / `--input` | `#e6e6e6` / `#e2e2e2` | `#262626` / `#2e2e2e` | Garis tipis |
+| `--ring` | `#0a0a0a` | `#d4d4d4` | Cincin fokus keyboard |
+| `--sale` | `#dc2626` | `#dc2626` | **Satu-satunya warna**: label diskon, titik merek, hati wishlist |
 
-**Dipakai langsung (sudah dicek kontrasnya):**
+**Tetap gelap di kedua mode:** pita pengumuman, footer, sidebar admin
+(`#0a0a0a`, teks putih). **Selalu putih di atas foto:** judul hero, label ubin
+kategori (di atas gradasi gelap).
 
-| Kegunaan | Kelas | Catatan |
-|---|---|---|
-| Harga | `font-semibold tracking-[-0.01em]`, warna teks biasa | Netral, bukan oranye; oranye hanya aksi |
-| Harga coret | `text-xs text-muted-foreground line-through` | |
-| Label diskon | `rounded-full bg-zinc-900/85 text-white` | Terbaca di foto apa pun |
-| Label "Hemat" (detail) | `rounded-full bg-zinc-900 text-white` | |
-| Sukses (teks) | `text-green-700` | 5.02 |
-| Tautan teks beroranye | `text-orange-700 underline-offset-4` | 5.18 |
-
-Satu-satunya oranye di kode adalah `orange-600/700/800` dan token `--primary`.
-Warna kustom `#FF6B00` sudah dihapus (kontras 2.8, gagal AA).
+Warna status pesanan (amber, hijau, merah, biru) memakai pasangan
+`dark:bg-<warna>-500/10 dark:text-<warna>-300`. Jangan memakai `zinc-*`,
+`gray-*`, `orange-*`, `bg-white`, atau `text-black` di halaman toko.
 
 ## 2. Tipografi
 
-Font Inter lewat `next/font/google`. Jarak huruf menyesuaikan ukuran
-(prinsip optical sizing): `h1` −0,025em, `h2` −0,02em, `h3` −0,01em, teks
-isi normal.
+Dua font lewat `next/font/google`: **Albert Sans** (judul `h1–h3`, merek;
+variabel `--font-albert` → `font-heading`) dan **Inter** (isi). Judul memakai
+berat 500, jarak huruf rapat: `h1` −0,035em, `h2` −0,03em, `h3` −0,015em.
 
 | Peran | Kelas |
 |---|---|
-| Hero (`<h1>`) | `text-[2.5rem] md:text-6xl lg:text-[4.25rem] font-semibold leading-[1.04] tracking-[-0.035em]` |
-| Judul bagian beranda | `text-[1.75rem] md:text-4xl font-semibold tracking-[-0.03em]` |
-| Judul halaman dalam | `text-2xl font-bold` |
+| Judul hero | `text-[2.75rem] md:text-7xl lg:text-[5.5rem] font-medium leading-[0.98] tracking-[-0.045em]` |
+| Judul bagian beranda | `text-4xl md:text-6xl font-medium leading-none` |
+| Judul halaman dalam | `text-4xl md:text-5xl font-medium leading-none` (detail produk: `text-3xl md:text-[2.75rem]`) |
+| Judul form masuk/daftar | `text-3xl font-medium` |
 | Nama produk di kartu | `text-[15px] font-medium leading-snug` (maks. 2 baris) |
-| Teks sekunder | `text-xs/sm text-muted-foreground` |
-| Angka (harga, jumlah, total) | tambah `tabular-nums` |
+| Harga | `text-[15px] font-semibold tabular-nums`, warna teks biasa |
+| Teks sekunder | `text-[13px]/sm text-muted-foreground` |
 
 ## 3. Layout
 
-- Container: `max-w-7xl mx-auto px-4`.
-- Ubin: `rounded-3xl bg-tile`, tanpa garis dan bayangan. Latar halaman putih.
-- Grid produk: `grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-9`.
-- Kartu produk: foto 1:1 di ubin `rounded-3xl`, teks di bawah tanpa bingkai;
-  harga + satu tombol kecil sejajar (di HP tombol selebar kartu). Label diskon
-  kiri atas, wishlist kanan atas.
-- Hero: dua kolom (teks kiri, foto produk kanan) di panel `bg-tile`, `rounded-[28px]`,
-  dapat digeser (scroll-snap).
-- Header: satu baris di layar lebar (logo, katalog, pencarian, ikon, akun),
-  translusen (`backdrop-blur-xl`); jadi solid bila sistem memilih
-  `prefers-reduced-transparency` atau `prefers-contrast: more`.
-- Admin: sidebar hitam hangat penuh tinggi di kiri + bilah atas sendiri;
-  header dan footer toko disembunyikan di `/admin`; di HP sidebar jadi `Sheet`.
-  Aksen admin = aksen toko (oranye).
-- Lebar minimum yang didukung: 360 px, tanpa gulir mendatar.
-- Target sentuh minimal 44×44 px (tombol bawaan 44 px; ikon admin membesar di layar sentuh).
+- Container: `max-w-[1400px] mx-auto px-4 md:px-6` (header, beranda, halaman dalam).
+- Header: pita pengumuman berjalan (judul banner aktif + info harga) → baris
+  logo kiri, menu tengah (Semua Produk, Kategori, Promo), kanan pencarian pil,
+  tombol mode gelap, wishlist, keranjang, akun, Masuk/Daftar. Di bawah `lg`:
+  logo + ikon + tombol menu (`Sheet`), pencarian di baris kedua, navigasi bawah
+  di HP. Translusen; solid bila `prefers-reduced-transparency`/`prefers-contrast: more`.
+- Beranda: hero foto penuh (`rounded-[28px]`, tinggi `min(78svh,720px)`) →
+  "Belanja per kategori" (bento 4×2 foto) → bagian produk (Terlaris, Pilihan
+  kami, Sedang diskon, Baru datang) → ulasan nyata (satu kutipan besar + dua
+  ubin) → pita teks besar → empat jaminan → footer.
+- Kartu produk: foto 4:5 di ubin `rounded-2xl`, label diskon merah kiri atas,
+  wishlist kanan atas, tombol bulat (Tambah ke Keranjang / Pilih Varian) kanan
+  bawah foto — muncul saat disorot/fokus di desktop, selalu terlihat di layar
+  sentuh. Nama + rating, merek, harga + harga coret di bawah tanpa bingkai.
+- Admin: sidebar hitam + bilah atas berisi tombol mode gelap; header/footer toko
+  disembunyikan di `/admin`; di HP sidebar jadi `Sheet`.
+- Lebar minimum 360 px tanpa gulir mendatar; target sentuh minimal 44×44 px.
 
 ## 4. Tombol dan komponen
 
-Pakai shadcn/ui (`npx shadcn@latest add <nama>`) sebelum membuat sendiri.
-**Jangan menimpa warna/ukuran tombol dengan kelas sendiri**; pilih varian.
+Pakai shadcn/ui sebelum membuat sendiri. **Jangan menimpa warna tombol**; pilih varian.
 
 | Varian | Dipakai untuk |
 |---|---|
-| `default` | Aksi utama, satu per area (oranye tua, teks putih) |
-| `secondary` | Pendamping di atas latar putih (abu muda) |
-| `outline` | Aksi lain, termasuk di atas ubin (garis tipis, putih) |
-| `ghost` | Aksi ringan tanpa bidang |
-| `destructive` | Hapus/batal/arsip (merah muda, teks merah) |
+| `default` | Aksi utama (hitam di terang, putih di gelap) |
+| `secondary` | Pendamping di atas ubin abu |
+| `outline` | Aksi lain (garis tipis); juga "Lihat semua" di beranda |
+| `ghost` | Aksi ringan tanpa bidang (ikon header, Masuk) |
+| `destructive` | Hapus/batal/arsip (bidang merah lembut) |
 | `link` | Tindakan berupa teks |
 
 Ukuran: `default` 44 px, `sm` 36 px, `lg` 48 px, `icon` 44 px. Bentuk pil.
-Keadaan: sorot (menggelap), tekan (mengecil 3 %, langsung), fokus (cincin
-berjarak), nonaktif (pudar). Aksi admin (Edit, Hapus, Arsipkan, Detail, Tambah)
-berupa **ikon + tulisan**.
+Tombol di atas foto (CTA hero, panah carousel) memakai putih / kaca
+(`bg-white/15 backdrop-blur-md`). Aksi admin berupa **ikon + tulisan**.
 
 | Kebutuhan | Komponen |
 |---|---|
-| Drawer keranjang (dari kanan) | `Sheet side="right"` |
-| Toast | `Sonner` |
+| Drawer keranjang, menu HP | `Sheet side="right"` |
+| Toast | `Sonner` (ikut mode lewat `useTemaGelap`) |
 | Mega-menu kategori | `NavigationMenu` |
-| Saran pencarian | `Command` / `Popover` |
-| Tab deskripsi/spesifikasi/ulasan | `Tabs variant="line"` (garis bawah oranye) |
+| Saran pencarian | `Popover` (id unik per instans, `useId`) |
+| Mode gelap | `TemaToggle` (`src/components/layout/TemaToggle.tsx`) |
 | Pilihan varian | `ToggleGroup` |
-| Form | `Form` + React Hook Form + Zod |
-| Loading | `Skeleton` berbentuk konten yang akan datang |
-| Tabel admin | `Table` |
-| Konfirmasi hapus/batal | `AlertDialog` |
-
-Ikon: `lucide-react`. Galeri zoom: Yet Another React Lightbox. Gambar:
-`next/image` dengan `sizes` yang benar.
+| Tabel admin / konfirmasi | `Table` / `AlertDialog` |
 
 ## 5. Interaksi
 
-Gerak dibuat dengan CSS murni (tanpa library animasi) agar LCP tidak
-memburuk, dan **semuanya mati** bila `prefers-reduced-motion: reduce`:
+Gerak dengan CSS murni; **semuanya mati** bila `prefers-reduced-motion: reduce`:
 
-- teks hero masuk bertahap (`hero-masuk`), foto hero bergeser pelan saat halaman
-  digulir (`paralaks`, scroll-driven animation);
-- kartu produk bergeser naik saat masuk layar (`geser-naik`, hanya transformasi,
-  tanpa memudar agar kontras tetap terukur);
-- gambar produk membesar halus saat disorot; tombol mengecil saat ditekan;
-- carousel hero: scroll-snap bawaan browser (mengikuti jari 1:1, momentum,
-  bisa dibalik kapan saja).
+- teks hero masuk bertahap (`hero-masuk`), foto hero bergeser pelan saat digulir (`paralaks`);
+- kartu produk bergeser naik saat masuk layar (`geser-naik`, tanpa memudar);
+- pita pengumuman dan pita teks besar berjalan (`pita-jalan`, `teks-jalan`), berhenti saat disorot;
+- foto membesar halus saat disorot, panah ubin kategori berputar 45°, tombol mengecil saat ditekan;
+- carousel hero: scroll-snap bawaan browser.
 
-Animasi memudar (`opacity`) pada teks dihindari karena membuat pemeriksa
-kontras membaca warna di tengah transisi.
+Mode gelap dipasang sebelum halaman tampil (skrip `SKRIP_TEMA` di `<head>`),
+jadi tidak ada kilatan putih; tanpa pilihan tersimpan, mengikuti sistem.
 
 ## 6. Teks antarmuka
 
-Bahasa Indonesia, kalimat pendek, kata kerja di tombol ("Masukkan Keranjang",
-"Buat Pesanan"). Empty state dan toast memakai teks persis PRD §18. Label status
-dari `docs/GLOSSARY.md`. Bagian "Kata pembeli" di beranda hanya berisi ulasan
-terverifikasi nyata (nama disamarkan "Dewi L."), tidak pernah testimoni karangan.
+Bahasa Indonesia, kalimat pendek, kata kerja di tombol. Klaim di pita dan
+jaminan hanya yang benar di aplikasi (QRIS/BCA/Mandiri/COD, PPN 11 %, resi di
+Pesanan Saya). Ulasan beranda hanya ulasan terverifikasi nyata (nama disamarkan).
 
 ## 7. Gambar demo
 
-Foto produk di `public/demo/` adalah foto CC0/domain publik yang dipilih sesuai
-produk (lihat `docs/KREDIT_FOTO.md`). Banner dan gambar kategori berupa
-ilustrasi/foto yang dibuat `npm run demo:ilustrasi` (jangan menambah `--produk`
-bila foto produk asli sudah terpasang). Foto produk toko sungguhan diunggah
-lewat admin (penyimpanan Vercel Blob, OPEN_DECISIONS D15).
+Foto produk, banner, dan ubin kategori di `public/demo/` adalah foto CC0/domain
+publik (`docs/KREDIT_FOTO.md`). Foto toko sungguhan diunggah lewat admin
+(Vercel Blob, D15). `npm run demo:ilustrasi` hanya menimpa bila diberi
+`--banner`, `--kategori`, atau `--produk`.

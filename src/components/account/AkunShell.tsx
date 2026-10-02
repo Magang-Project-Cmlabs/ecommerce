@@ -46,15 +46,15 @@ export default function AkunShell({ user, initialAddresses }: Props) {
       <aside className="lg:col-span-4">
         <div className="rounded-3xl bg-tile p-5">
           {/* Info Singkat Profil Pengguna */}
-          <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">
+          <div className="flex items-center gap-3 border-b border-border pb-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-lg font-black text-foreground">
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-gray-900">
+              <p className="truncate text-sm font-bold text-foreground">
                 {user.name}
               </p>
-              <p className="truncate text-xs text-gray-500">{user.email}</p>
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
             </div>
           </div>
 
@@ -62,16 +62,16 @@ export default function AkunShell({ user, initialAddresses }: Props) {
           <nav className="mt-4 flex flex-col gap-1.5" aria-label="Menu Akun">
             <Link
               href="/akun/pesanan"
-              className="flex w-full items-center justify-between rounded-xl bg-orange-50/60 px-4 py-3 text-xs font-bold text-orange-700 transition-all hover:bg-orange-100/70"
+              className="flex w-full items-center justify-between rounded-xl bg-muted px-4 py-3 text-xs font-bold text-foreground transition-all hover:bg-muted"
             >
               <div className="flex items-center gap-3">
-                <ShoppingBag className="h-4 w-4 shrink-0 text-orange-700" />
+                <ShoppingBag className="h-4 w-4 shrink-0 text-foreground" />
                 <span>Riwayat Pesanan Saya</span>
               </div>
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
 
-            <div className="my-1.5 border-t border-gray-100" />
+            <div className="my-1.5 border-t border-border" />
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -84,11 +84,11 @@ export default function AkunShell({ user, initialAddresses }: Props) {
                   className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all text-left ${
                     isActive
                       ? tab.danger
-                        ? "bg-red-50 text-red-600 ring-1 ring-red-200"
-                        : "bg-orange-50 text-orange-700 ring-1 ring-orange-200"
+                        ? "bg-red-50 dark:bg-red-500/10 text-red-600 ring-1 ring-red-200"
+                        : "bg-muted text-foreground ring-1 ring-foreground/15"
                       : tab.danger
-                      ? "text-gray-500 hover:bg-red-50/50 hover:text-red-600"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      ? "text-muted-foreground hover:bg-red-50/50 dark:bg-red-500/10 hover:text-red-600"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                   }`}
                 >
                   <Icon
@@ -96,8 +96,8 @@ export default function AkunShell({ user, initialAddresses }: Props) {
                       isActive
                         ? tab.danger
                           ? "text-red-600"
-                          : "text-orange-700"
-                        : "text-gray-400"
+                          : "text-foreground"
+                        : "text-muted-foreground/70"
                     }`}
                   />
                   <span>{tab.label}</span>

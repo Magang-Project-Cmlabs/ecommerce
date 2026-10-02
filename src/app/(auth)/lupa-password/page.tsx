@@ -17,7 +17,7 @@ export default async function HalamanLupaPassword() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-xl font-semibold">Lupa password</h1>
+            <h1 className="text-3xl font-medium leading-tight">Lupa password</h1>
           </CardTitle>
           <CardDescription>Masukkan email akunmu. Kami kirim link untuk membuat password baru.</CardDescription>
         </CardHeader>

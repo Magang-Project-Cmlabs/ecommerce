@@ -22,7 +22,7 @@ export default async function HalamanResetPassword({ searchParams }: PageProps<'
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-xl font-semibold">{berlaku ? 'Buat password baru' : 'Link tidak berlaku'}</h1>
+            <h1 className="text-3xl font-medium leading-tight">{berlaku ? 'Buat password baru' : 'Link tidak berlaku'}</h1>
           </CardTitle>
           <CardDescription>
             {berlaku

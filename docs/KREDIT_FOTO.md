@@ -7,7 +7,18 @@ Foto dipotong persegi 800×800 dan dikompres WebP; beberapa foto ketiga adalah p
 dari foto yang sama. Foto bermerek dagang pihak lain sengaja dihindari.
 
 Ini foto contoh untuk demo. Foto produk asli toko diunggah lewat panel admin.
-Banner dan gambar kategori adalah ilustrasi (`npm run demo:ilustrasi`).
+Sejak 3 Okt 2026 banner dan ubin kategori juga foto, bukan ilustrasi:
+
+| Berkas | Isi | Pembuat | Lisensi | Sumber |
+|---|---|---|---|---|
+| tokokita-banner-diskon-1 | Fashion Woman (dipotong 16:9) | The Lazy Artist Gallery | CC0 | [tautan](https://stocksnap.io/photo/fashion-woman-1CXI0CSPE5) |
+| tokokita-banner-ongkir-1 | Woman Shop (dipotong 16:9) | Burst | CC0 | [tautan](https://stocksnap.io/photo/woman-shop-E1KVAKFMUK) |
+| tokokita-banner-olahraga-1 | Man Running (dipotong 16:9) | The Lazy Artist Gallery | CC0 | [tautan](https://stocksnap.io/photo/man-running-APW0W8GBMM) |
+| tokokita-kategori-* | Salinan foto produk di kategori itu (kaos-polos-premium-2, blouse-katun-lengan-balon-2, earbuds-nirkabel-tws-pro-2, lilin-aromaterapi-kayu-manis-1, serum-wajah-niacinamide-30-ml-1, sepatu-lari-ringan-1) | lihat tabel produk | CC0/PDM | lihat tabel produk |
+
+Foto banner berasal dari pratinjau 960 px StockSnap (unduhan resolusi penuh tidak bisa diambil
+otomatis) dan diperbesar ke 1600×900; ganti dengan foto kampanye asli sebelum dipakai pelanggan nyata.
+`npm run demo:ilustrasi` tidak menimpa banner/kategori kecuali diberi `--banner`/`--kategori`.
 
 | Produk | Foto | Judul asli | Pembuat | Lisensi | Sumber |
 |---|---|---|---|---|---|

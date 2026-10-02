@@ -64,21 +64,21 @@ export default function PasswordTab() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-bold text-gray-900">Ganti Password</h2>
-        <p className="mt-1 text-xs text-gray-500">
+        <h2 className="text-base font-bold text-foreground">Ganti Password</h2>
+        <p className="mt-1 text-xs text-muted-foreground">
           Gunakan password yang kuat dengan minimal 8 karakter yang memuat kombinasi huruf dan angka.
         </p>
       </div>
 
       {successMessage && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-green-200 bg-green-50 p-3.5 text-xs text-green-800">
+        <div className="flex items-center gap-2.5 rounded-xl border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 p-3.5 text-xs text-green-800 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
           <span>{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800">
+        <div className="flex items-center gap-2.5 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-3.5 text-xs text-red-800 dark:text-red-300">
           <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
           <span>{errorMessage}</span>
         </div>
@@ -87,11 +87,11 @@ export default function PasswordTab() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Password Saat Ini */}
         <div>
-          <Label htmlFor="current-password" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="current-password" className="text-xs font-semibold text-foreground/80">
             Password Saat Ini *
           </Label>
           <div className="relative mt-1">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="current-password"
               type={showCurrent ? "text" : "password"}
@@ -104,7 +104,7 @@ export default function PasswordTab() {
             <button
               type="button"
               onClick={() => setShowCurrent(!showCurrent)}
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-muted-foreground/70 hover:text-muted-foreground"
               aria-label={showCurrent ? "Sembunyikan password" : "Tampilkan password"}
             >
               {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -117,11 +117,11 @@ export default function PasswordTab() {
 
         {/* Password Baru */}
         <div>
-          <Label htmlFor="new-password" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="new-password" className="text-xs font-semibold text-foreground/80">
             Password Baru *
           </Label>
           <div className="relative mt-1">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="new-password"
               type={showNew ? "text" : "password"}
@@ -134,7 +134,7 @@ export default function PasswordTab() {
             <button
               type="button"
               onClick={() => setShowNew(!showNew)}
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-muted-foreground/70 hover:text-muted-foreground"
               aria-label={showNew ? "Sembunyikan password" : "Tampilkan password"}
             >
               {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -147,11 +147,11 @@ export default function PasswordTab() {
 
         {/* Konfirmasi Password Baru */}
         <div>
-          <Label htmlFor="confirm-password" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="confirm-password" className="text-xs font-semibold text-foreground/80">
             Konfirmasi Password Baru *
           </Label>
           <div className="relative mt-1">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="confirm-password"
               type={showConfirm ? "text" : "password"}
@@ -164,7 +164,7 @@ export default function PasswordTab() {
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-muted-foreground/70 hover:text-muted-foreground"
               aria-label={showConfirm ? "Sembunyikan password" : "Tampilkan password"}
             >
               {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

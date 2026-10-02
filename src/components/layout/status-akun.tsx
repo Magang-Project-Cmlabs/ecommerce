@@ -1,6 +1,4 @@
-// Status akun + tombol Keluar. Sementara ditaruh sebagai bar tipis di
-// layout; A2 (azridalimunthe7) memindahkannya ke header saat kartu
-// "Header dan footer website" dikerjakan.
+// Status akun di header (desktop) dan di menu layar kecil: Masuk/Daftar atau Panel Admin + Keluar.
 
 import Link from 'next/link';
 import { keluar } from '@/actions/auth';
@@ -12,16 +10,13 @@ export async function StatusAkun() {
 
   if (!pengguna) {
     return (
-      <nav aria-label="Akun" className="flex items-center gap-2 text-sm">
-        <Link href="/masuk" className="font-medium underline-offset-4 hover:underline">
-          Masuk
-        </Link>
-        <span aria-hidden className="text-muted-foreground">
-          ·
-        </span>
-        <Link href="/daftar" className="font-medium underline-offset-4 hover:underline">
-          Daftar
-        </Link>
+      <nav aria-label="Akun" className="flex items-center gap-1.5 text-sm">
+        <Button asChild variant="ghost" size="sm" className="pointer-coarse:h-11 pointer-coarse:px-4">
+          <Link href="/masuk">Masuk</Link>
+        </Button>
+        <Button asChild size="sm" className="pointer-coarse:h-11 pointer-coarse:px-4">
+          <Link href="/daftar">Daftar</Link>
+        </Button>
       </nav>
     );
   }

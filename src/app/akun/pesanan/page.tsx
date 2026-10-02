@@ -28,7 +28,7 @@ export default async function HalamanDaftarPesanan() {
                 asChild
                 variant="ghost"
                 size="sm"
-                className="h-8 -ml-2 text-xs text-gray-500 hover:text-gray-900"
+                className="h-8 -ml-2 text-xs text-muted-foreground hover:text-foreground"
               >
                 <Link href="/akun">
                   <ArrowLeft className="mr-1 h-3.5 w-3.5" />
@@ -36,10 +36,10 @@ export default async function HalamanDaftarPesanan() {
                 </Link>
               </Button>
             </div>
-            <h1 className="mt-1 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+            <h1 className="mt-1 text-4xl font-medium leading-none md:text-5xl text-foreground">
               Riwayat Pesanan
             </h1>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               Pantau status pengiriman, lakukan pembayaran, atau kelola pesanan belanjaan Anda.
             </p>
           </div>

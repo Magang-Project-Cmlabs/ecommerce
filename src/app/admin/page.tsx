@@ -31,9 +31,9 @@ export default async function HalamanAdmin() {
     <AdminHeading title="Ringkasan toko" description={`Selamat datang, ${admin.name}. Pantau aktivitas dan kelola toko Anda.`} />
     <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
       {stats.map(({ label, value, icon: Icon, href, sorot }) => {
-        const isi = <Card className={`h-full transition-colors ${sorot ? 'border-amber-300 bg-amber-50/70' : ''} ${href ? 'group-hover:ring-orange-300' : ''}`}><CardContent className="space-y-3 pt-1">
-          <div className="flex items-start justify-between gap-2"><span className="text-xs text-muted-foreground sm:text-sm">{label}</span><span className={`flex size-9 items-center justify-center rounded-lg ${sorot ? 'bg-amber-100 text-amber-800' : 'bg-zinc-100 text-zinc-700'}`}><Icon aria-hidden className="size-[18px]" /></span></div>
-          <p className={`break-words text-lg font-bold tabular-nums sm:text-2xl ${sorot ? 'text-amber-900' : ''}`}>{value}</p>
+        const isi = <Card className={`h-full transition-colors ${sorot ? 'border-amber-300 bg-amber-50/70 dark:bg-amber-500/10' : ''} ${href ? 'group-hover:ring-foreground/20' : ''}`}><CardContent className="space-y-3 pt-1">
+          <div className="flex items-start justify-between gap-2"><span className="text-xs text-muted-foreground sm:text-sm">{label}</span><span className={`flex size-9 items-center justify-center rounded-lg ${sorot ? 'bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300' : 'bg-muted text-foreground/80'}`}><Icon aria-hidden className="size-[18px]" /></span></div>
+          <p className={`break-words text-lg font-bold tabular-nums sm:text-2xl ${sorot ? 'text-amber-900 dark:text-amber-300' : ''}`}>{value}</p>
         </CardContent></Card>;
         return href ? <Link key={label} href={href} className="group rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{isi}</Link> : <div key={label}>{isi}</div>;
       })}

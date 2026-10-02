@@ -60,21 +60,21 @@ export default function ProfilTab({ user }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-bold text-gray-900">Ubah Profil Pengguna</h2>
-        <p className="mt-1 text-xs text-gray-500">
+        <h2 className="text-base font-bold text-foreground">Ubah Profil Pengguna</h2>
+        <p className="mt-1 text-xs text-muted-foreground">
           Perbarui nama dan kontak Anda untuk kelancaran pengiriman barang dan komunikasi toko.
         </p>
       </div>
 
       {successMessage && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-green-200 bg-green-50 p-3.5 text-xs text-green-800">
+        <div className="flex items-center gap-2.5 rounded-xl border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 p-3.5 text-xs text-green-800 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
           <span>{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800">
+        <div className="flex items-center gap-2.5 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-3.5 text-xs text-red-800 dark:text-red-300">
           <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
           <span>{errorMessage}</span>
         </div>
@@ -83,12 +83,12 @@ export default function ProfilTab({ user }: Props) {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Role Akun (Read-only Badge) */}
         <div className="flex items-center gap-2">
-          <Label htmlFor="akun-role" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="akun-role" className="text-xs font-semibold text-foreground/80">
             Peran Akun:
           </Label>
           <span
             id="akun-role"
-            className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-bold text-orange-800"
+            className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-bold text-foreground"
           >
             <Shield className="h-3 w-3" />
             {user.role === "admin" ? "Administrator" : "Pelanggan Terdaftar"}
@@ -97,11 +97,11 @@ export default function ProfilTab({ user }: Props) {
 
         {/* Nama Lengkap */}
         <div>
-          <Label htmlFor="profil-name" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="profil-name" className="text-xs font-semibold text-foreground/80">
             Nama Lengkap *
           </Label>
           <div className="relative mt-1">
-            <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="profil-name"
               type="text"
@@ -119,31 +119,31 @@ export default function ProfilTab({ user }: Props) {
 
         {/* Alamat Email (Read-only) */}
         <div>
-          <Label htmlFor="profil-email" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="profil-email" className="text-xs font-semibold text-foreground/80">
             Alamat Email
           </Label>
           <div className="relative mt-1">
-            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="profil-email"
               type="email"
               value={user.email}
               disabled
-              className="bg-gray-100 pl-9 text-xs text-gray-600 cursor-not-allowed"
+              className="bg-muted pl-9 text-xs text-muted-foreground cursor-not-allowed"
             />
           </div>
-          <p className="mt-1 text-[11px] text-gray-500">
+          <p className="mt-1 text-[11px] text-muted-foreground">
             Alamat email terdaftar dan terikat secara permanen dengan akun Anda.
           </p>
         </div>
 
         {/* Nomor Telepon */}
         <div>
-          <Label htmlFor="profil-phone" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="profil-phone" className="text-xs font-semibold text-foreground/80">
             Nomor Telepon (WhatsApp)
           </Label>
           <div className="relative mt-1">
-            <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="profil-phone"
               type="tel"
@@ -157,7 +157,7 @@ export default function ProfilTab({ user }: Props) {
           {errors.phone && (
             <p className="mt-1 text-[11px] text-red-600">{errors.phone[0]}</p>
           )}
-          <p className="mt-1 text-[11px] text-gray-500">
+          <p className="mt-1 text-[11px] text-muted-foreground">
             Format Indonesia (diawali 08, 62, atau +62). Digunakan kurir untuk konfirmasi pengiriman paket.
           </p>
         </div>

@@ -118,17 +118,17 @@ export default function KonfirmasiPesanan({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-base font-bold text-gray-900">
+        <h3 className="text-base font-bold text-foreground">
           Tinjau & Konfirmasi Pesanan
         </h3>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-muted-foreground">
           Silakan periksa kembali rincian alamat pengiriman, kurir, dan metode pembayaran Anda sebelum membuat pesanan.
         </p>
       </div>
 
       {/* Pesan Error Jika Ada */}
       {errorMessage && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-800">
+        <div className="flex items-start gap-3 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4 text-xs text-red-800 dark:text-red-300">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
           <div className="flex-1">
             <span className="font-bold">Gagal Membuat Pesanan: </span>
@@ -141,25 +141,25 @@ export default function KonfirmasiPesanan({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* 1. Alamat Pengiriman */}
         <div className="relative rounded-3xl bg-tile p-4">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <MapPin className="h-3.5 w-3.5 text-orange-700" />
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <MapPin className="h-3.5 w-3.5 text-foreground" />
               <span>Alamat Pengiriman</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(1)}
-              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
+              className="text-xs font-semibold text-foreground underline-offset-4 hover:underline"
             >
               Ubah
             </button>
           </div>
-          <div className="mt-2.5 space-y-1 text-xs text-gray-600">
-            <p className="font-bold text-gray-900">
+          <div className="mt-2.5 space-y-1 text-xs text-muted-foreground">
+            <p className="font-bold text-foreground">
               {address.name}{" "}
-              <span className="font-normal text-gray-500">({address.label})</span>
+              <span className="font-normal text-muted-foreground">({address.label})</span>
             </p>
-            <p className="text-gray-500">{address.phone}</p>
+            <p className="text-muted-foreground">{address.phone}</p>
             <p className="line-clamp-2">
               {address.street}, {address.district}, {address.city},{" "}
               {address.province} {address.postalCode}
@@ -169,27 +169,27 @@ export default function KonfirmasiPesanan({
 
         {/* 2. Pengiriman & Kurir */}
         <div className="relative rounded-3xl bg-tile p-4">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <Truck className="h-3.5 w-3.5 text-orange-700" />
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <Truck className="h-3.5 w-3.5 text-foreground" />
               <span>Pengiriman</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(2)}
-              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
+              className="text-xs font-semibold text-foreground underline-offset-4 hover:underline"
             >
               Ubah
             </button>
           </div>
-          <div className="mt-2.5 space-y-1 text-xs text-gray-600">
-            <p className="font-bold text-gray-900">
+          <div className="mt-2.5 space-y-1 text-xs text-muted-foreground">
+            <p className="font-bold text-foreground">
               {kurirInfo?.label ?? selectedShippingMethod}
             </p>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Estimasi tiba: {kurirInfo?.estimate ?? "-"}
             </p>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Berat total: {totalWeight.toLocaleString("id-ID")} gram
             </p>
           </div>
@@ -197,27 +197,27 @@ export default function KonfirmasiPesanan({
 
         {/* 3. Metode Pembayaran */}
         <div className="relative rounded-3xl bg-tile p-4">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <PaymentIcon className="h-3.5 w-3.5 text-orange-700" />
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <PaymentIcon className="h-3.5 w-3.5 text-foreground" />
               <span>Pembayaran</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(3)}
-              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
+              className="text-xs font-semibold text-foreground underline-offset-4 hover:underline"
             >
               Ubah
             </button>
           </div>
-          <div className="mt-2.5 space-y-1 text-xs text-gray-600">
-            <p className="font-bold text-gray-900">{paymentInfo.label}</p>
+          <div className="mt-2.5 space-y-1 text-xs text-muted-foreground">
+            <p className="font-bold text-foreground">{paymentInfo.label}</p>
             {selectedPaymentMethod === "cod" ? (
-              <p className="text-[11px] font-medium text-amber-700">
+              <p className="text-[11px] font-medium text-amber-700 dark:text-amber-300">
                 Bayar tunai kepada kurir saat pesanan sampai
               </p>
             ) : (
-              <p className="text-[11px] text-gray-500">
+              <p className="text-[11px] text-muted-foreground">
                 Batas waktu pembayaran 24 jam setelah pesanan dibuat
               </p>
             )}
@@ -227,20 +227,20 @@ export default function KonfirmasiPesanan({
 
       {/* 4. Daftar Barang yang Dipesan */}
       <div className="rounded-3xl bg-tile p-4">
-        <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
-          <Package className="h-4 w-4 text-orange-700" />
-          <h4 className="text-xs font-bold text-gray-900">
+        <div className="flex items-center gap-2 border-b border-border pb-3">
+          <Package className="h-4 w-4 text-foreground" />
+          <h4 className="text-xs font-bold text-foreground">
             Daftar Produk ({items.reduce((acc, i) => acc + i.quantity, 0)} barang)
           </h4>
         </div>
 
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-border">
           {mergedItems.map((item, idx) => (
             <div
               key={`${item.productId}-${item.variantId ?? idx}`}
               className="flex items-center gap-4 py-3 text-xs"
             >
-              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-muted">
                 {item.image ? (
                   <Image
                     src={item.image}
@@ -250,28 +250,28 @@ export default function KonfirmasiPesanan({
                     className="object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-gray-400">
+                  <div className="flex h-full w-full items-center justify-center text-muted-foreground/70">
                     <Package className="h-6 w-6 stroke-1" />
                   </div>
                 )}
               </div>
 
               <div className="flex-1 space-y-0.5">
-                <p className="font-bold text-gray-900 line-clamp-1">
+                <p className="font-bold text-foreground line-clamp-1">
                   {item.name}
                 </p>
                 {item.variantName && (
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Varian: {item.variantName}
                   </p>
                 )}
-                <p className="text-gray-500">
+                <p className="text-muted-foreground">
                   {item.quantity} × {formatRupiah(item.price)}
                 </p>
               </div>
 
               <div className="text-right">
-                <span className="font-bold text-gray-900">
+                <span className="font-bold text-foreground">
                   {formatRupiah(item.subtotal)}
                 </span>
               </div>
@@ -285,12 +285,12 @@ export default function KonfirmasiPesanan({
         <div className="flex items-center justify-between">
           <label
             htmlFor="order-notes"
-            className="flex items-center gap-2 text-xs font-bold text-gray-900"
+            className="flex items-center gap-2 text-xs font-bold text-foreground"
           >
-            <FileText className="h-3.5 w-3.5 text-orange-700" />
+            <FileText className="h-3.5 w-3.5 text-foreground" />
             <span>Catatan untuk Penjual (Opsional)</span>
           </label>
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[11px] text-muted-foreground/70">
             {notes.length}/500
           </span>
         </div>
@@ -301,26 +301,26 @@ export default function KonfirmasiPesanan({
           onChange={(e) => onChangeNotes(e.target.value)}
           placeholder="Contoh: Tolong bungkus ekstra bubble wrap, warna hitam jika ada"
           rows={3}
-          className="mt-2.5 w-full rounded-lg border border-gray-200 p-3 text-xs placeholder:text-gray-400 focus:border-orange-700 focus:ring-1 focus:ring-orange-700 focus:outline-none"
+          className="mt-2.5 w-full rounded-lg border border-border p-3 text-xs placeholder:text-muted-foreground/70 focus:border-foreground focus:ring-1 focus:ring-ring focus:outline-none"
         />
       </div>
 
       {/* 6. Rincian Biaya */}
       <div className="rounded-3xl bg-tile p-4">
-        <h4 className="border-b border-gray-100 pb-2 text-xs font-bold text-gray-900">
+        <h4 className="border-b border-border pb-2 text-xs font-bold text-foreground">
           Rincian Pembayaran
         </h4>
         <div className="mt-3 space-y-2 text-xs">
-          <div className="flex justify-between text-gray-600">
+          <div className="flex justify-between text-muted-foreground">
             <span>Subtotal Produk</span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-foreground">
               {formatRupiah(subtotal)}
             </span>
           </div>
 
-          <div className="flex justify-between text-gray-600">
+          <div className="flex justify-between text-muted-foreground">
             <span>Biaya Pengiriman ({kurirInfo?.label ?? selectedShippingMethod})</span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-foreground">
               {formatRupiah(shippingCost)}
             </span>
           </div>
@@ -332,9 +332,9 @@ export default function KonfirmasiPesanan({
             </div>
           )}
 
-          <div className="flex justify-between border-t border-gray-100 pt-3 text-sm">
-            <span className="font-bold text-gray-900">Total Tagihan</span>
-            <span className="text-base font-extrabold text-orange-700">
+          <div className="flex justify-between border-t border-border pt-3 text-sm">
+            <span className="font-bold text-foreground">Total Tagihan</span>
+            <span className="text-base font-extrabold text-foreground">
               {formatRupiah(grandTotal)}
             </span>
           </div>

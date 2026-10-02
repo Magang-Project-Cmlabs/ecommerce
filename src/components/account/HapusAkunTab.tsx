@@ -63,18 +63,18 @@ export default function HapusAkunTab() {
           <ShieldAlert className="h-5 w-5" />
           <span>Hapus Akun Pengguna</span>
         </h2>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-muted-foreground">
           Tindakan ini akan menonaktifkan akun Anda secara permanen dan menghapus seluruh data pribadi.
         </p>
       </div>
 
       {/* Peringatan Hukum & Kepatuhan UU PDP */}
-      <div className="rounded-xl border border-red-200 bg-red-50/70 p-4 text-xs text-red-900 space-y-2">
-        <div className="flex items-center gap-2 font-bold text-red-800">
+      <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50/70 dark:bg-red-500/10 p-4 text-xs text-red-900 dark:text-red-300 space-y-2">
+        <div className="flex items-center gap-2 font-bold text-red-800 dark:text-red-300">
           <AlertTriangle className="h-4 w-4 text-red-600" />
           <span>Pemberitahuan Pelindungan Data Pribadi (UU PDP):</span>
         </div>
-        <ul className="list-disc list-inside space-y-1 text-red-700 leading-relaxed pl-1">
+        <ul className="list-disc list-inside space-y-1 text-red-700 dark:text-red-300 leading-relaxed pl-1">
           <li>Nama, nomor telepon, dan alamat tersimpan Anda akan dihapus secara permanen dari server TokoKita.</li>
           <li>Alamat email Anda akan diacak/dianonimkan sehingga tidak lagi dapat diidentifikasi.</li>
           <li>Sesi login Anda akan dicabut seketika dan Anda tidak dapat masuk kembali menggunakan akun ini.</li>
@@ -83,7 +83,7 @@ export default function HapusAkunTab() {
       </div>
 
       {errorMessage && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+        <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-3 text-xs text-red-800 dark:text-red-300">
           {errorMessage}
         </div>
       )}
@@ -91,11 +91,11 @@ export default function HapusAkunTab() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Konfirmasi Password */}
         <div>
-          <Label htmlFor="hapus-password" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="hapus-password" className="text-xs font-semibold text-foreground/80">
             Masukkan Password Anda untuk Konfirmasi *
           </Label>
           <div className="relative mt-1">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
             <Input
               id="hapus-password"
               type={showPassword ? "text" : "password"}
@@ -108,7 +108,7 @@ export default function HapusAkunTab() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-muted-foreground/70 hover:text-muted-foreground"
               aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -130,7 +130,7 @@ export default function HapusAkunTab() {
           />
           <Label
             htmlFor="hapus-konfirmasi"
-            className="cursor-pointer text-xs leading-relaxed text-gray-700"
+            className="cursor-pointer text-xs leading-relaxed text-foreground/80"
           >
             Saya mengerti dan menyetujui bahwa akun saya akan dinonaktifkan secara permanen serta seluruh data pribadi saya akan dihapus tanpa dapat dipulihkan kembali.
           </Label>
