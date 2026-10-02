@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { performLogin, hasCredentials } from '../helpers/auth';
+import { pilihOpsi } from '../helpers/pilihan';
 
 test('pencarian 2 huruf memberi saran nyata dan keyboard membuka detail', async ({ page, request }) => {
   const api = await request.get('/api/search?q=ka');
@@ -16,7 +17,7 @@ test('filter URL, list, pagination dan hasil kosong', async ({ page }) => {
   await page.goto('/produk'); await expect(page.getByRole('navigation', { name: 'Halaman produk' })).toBeVisible();
   await page.getByRole('navigation', { name: 'Halaman produk' }).getByRole('link', { name: '2', exact: true }).click();
   await expect(page).toHaveURL(/hal=2/);
-  await page.getByLabel('Urutkan produk').selectOption('termurah'); await expect(page).toHaveURL(/urut=termurah/);
+  await pilihOpsi(page, 'Urutkan produk', 'Termurah'); await expect(page).toHaveURL(/urut=termurah/);
   await page.getByRole('radio', { name: 'Tampilan list' }).click(); await expect(page).toHaveURL(/tampilan=list/);
   await page.goto('/produk?q=zzzproduk-tidak-ada'); await expect(page.getByText('Produk tidak ditemukan. Coba kata kunci lain.', { exact: true })).toBeVisible();
 });

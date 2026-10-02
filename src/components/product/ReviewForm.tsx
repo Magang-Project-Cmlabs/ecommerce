@@ -9,6 +9,7 @@ import { unggahGambar } from '@/actions/upload';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Pilihan } from '@/components/ui/pilihan';
 
 type Item = { id: number; variantName: string | null; order: { orderNumber: string } };
 export default function ReviewForm({ items }: { items: Item[] }) {
@@ -62,17 +63,14 @@ export default function ReviewForm({ items }: { items: Item[] }) {
       <p className="text-sm text-muted-foreground">Bagikan pengalaman Anda sebagai pembeli terverifikasi.</p>
       <div>
         <Label htmlFor="pesanan-ulasan">Produk dari pesanan</Label>
-        <select id="pesanan-ulasan" name="orderItemId" disabled={pending} aria-invalid={!!fields.orderItemId} aria-describedby={fields.orderItemId ? 'error-pesanan-ulasan' : undefined} className="mt-2 h-11 w-full rounded-lg border bg-background px-3 text-sm">
-          {items.map((it) => <option key={it.id} value={it.id}>{it.order.orderNumber}{it.variantName ? ` — ${it.variantName}` : ''}</option>)}
-        </select>
+        <Pilihan id="pesanan-ulasan" name="orderItemId" disabled={pending} invalid={!!fields.orderItemId} describedBy={fields.orderItemId ? 'error-pesanan-ulasan' : undefined} className="mt-2" defaultValue={items[0] ? String(items[0].id) : ''}
+          options={items.map((it) => ({ value: String(it.id), label: `${it.order.orderNumber}${it.variantName ? ` — ${it.variantName}` : ''}` }))} />
         {fields.orderItemId && <p id="error-pesanan-ulasan" className="mt-1 text-sm text-destructive">{fields.orderItemId}</p>}
       </div>
       <div>
         <Label htmlFor="rating-ulasan">Rating</Label>
-        <select id="rating-ulasan" name="rating" required disabled={pending} defaultValue="" aria-invalid={!!fields.rating} aria-describedby={fields.rating ? 'error-rating-ulasan' : undefined} className="mt-2 h-11 w-full rounded-lg border bg-background px-3 text-sm">
-          <option value="" disabled>Pilih rating</option>
-          {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} bintang</option>)}
-        </select>
+        <Pilihan id="rating-ulasan" name="rating" disabled={pending} placeholder="Pilih rating" invalid={!!fields.rating} describedBy={fields.rating ? 'error-rating-ulasan' : undefined} className="mt-2"
+          options={[5, 4, 3, 2, 1].map((r) => ({ value: String(r), label: `${r} bintang` }))} />
         {fields.rating && <p id="error-rating-ulasan" className="mt-1 text-sm text-destructive">{fields.rating}</p>}
       </div>
       <div>

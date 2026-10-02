@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { performLogin } from '../helpers/auth';
+import { OPSI_TINDAKAN, pilihOpsi } from '../helpers/pilihan';
 
 async function checkoutBaru(page: Page) {
   await page.setExtraHTTPHeaders({ 'x-real-ip': `10.221.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
@@ -48,11 +49,11 @@ test('belanja nyata: alamat → checkout → admin konfirmasi/kirim → pembeli 
     await admin.goto(`/admin/pesanan?q=${number}`);
     await admin.getByRole('link', { name: number, exact: true }).click();
     for (const target of ['confirmed', 'packed', 'shipped']) {
-      await admin.getByLabel('Tindakan').selectOption(target);
+      await pilihOpsi(admin, 'Tindakan', OPSI_TINDAKAN[target]!);
       if (target === 'shipped') await admin.getByLabel('Nomor resi').fill('JNE-E2E-123456');
       await admin.getByRole('button', { name: 'Perbarui status' }).click();
       if (target === 'shipped') await expect(admin.getByText(/Pesanan diselesaikan oleh pembeli/)).toBeVisible();
-      else await expect(admin.getByLabel('Tindakan')).toHaveValue(target === 'confirmed' ? 'packed' : 'shipped');
+      else await expect(admin.getByLabel('Tindakan')).toHaveText(OPSI_TINDAKAN[target === 'confirmed' ? 'packed' : 'shipped']!);
     }
     await page.goto(`/akun/pesanan/${number}`);
     await expect(page.getByText('JNE-E2E-123456', { exact: true })).toBeVisible();
@@ -61,7 +62,7 @@ test('belanja nyata: alamat → checkout → admin konfirmasi/kirim → pembeli 
     await expect(page.getByRole('link', { name: 'Beri Ulasan' })).toBeVisible();
     await page.getByRole('link', { name: 'Beri Ulasan' }).click();
     await expect(page.getByRole('heading', { name: 'Tulis Ulasan' })).toBeVisible();
-    await page.getByLabel('Rating', { exact: true }).selectOption('5');
+    await pilihOpsi(page, 'Rating', '5 bintang');
     const review = `Barang diterima sesuai pesanan, kualitas bagus. ${number}`;
     await page.getByLabel('Ulasan Anda').fill(review);
     await page.getByRole('button', { name: 'Kirim Ulasan' }).click();
