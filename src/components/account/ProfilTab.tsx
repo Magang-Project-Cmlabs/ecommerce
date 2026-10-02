@@ -166,7 +166,7 @@ export default function ProfilTab({ user }: Props) {
           <Button
             type="submit"
             disabled={isPending}
-            className="h-10 gap-2 rounded-full bg-[#FF6B00] px-6 text-xs font-bold text-white hover:bg-[#e85f00] disabled:opacity-50"
+            
           >
             {isPending ? (
               <>

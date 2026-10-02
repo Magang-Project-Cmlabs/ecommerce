@@ -43,7 +43,7 @@ export default function DaftarAlamat({
             type="button"
             variant="outline"
             onClick={() => setIsFormOpen(true)}
-            className="h-8 gap-1.5 border-[#FF6B00] text-xs font-semibold text-[#FF6B00] hover:bg-orange-50 hover:text-[#e85f00]"
+            size="sm"
           >
             <Plus className="h-3.5 w-3.5" />
             Tambah Alamat
@@ -62,7 +62,7 @@ export default function DaftarAlamat({
       {/* Daftar Alamat Tersimpan */}
       {addresses.length === 0 && !isFormOpen ? (
         <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-[#FF6B00]">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-orange-700">
             <MapPin className="h-6 w-6" />
           </div>
           <h3 className="mt-3 text-sm font-semibold text-gray-900">
@@ -74,7 +74,7 @@ export default function DaftarAlamat({
           <Button
             type="button"
             onClick={() => setIsFormOpen(true)}
-            className="mt-4 h-9 gap-1.5 bg-[#FF6B00] px-4 text-xs font-semibold text-white hover:bg-[#e85f00]"
+            className="mt-4"
           >
             <Plus className="h-3.5 w-3.5" />
             Tambah Alamat Baru
@@ -91,13 +91,13 @@ export default function DaftarAlamat({
                 onClick={() => onSelectAddress(alamat.id)}
                 className={`relative flex w-full cursor-pointer items-start gap-3 rounded-xl border p-4 text-left transition-all ${
                   isSelected
-                    ? "border-[#FF6B00] bg-orange-50/30 shadow-xs"
+                    ? "border-orange-700 bg-orange-50/30 shadow-xs"
                     : "border-gray-200 bg-white hover:border-gray-300"
                 }`}
               >
-                <div className="pt-0.5 text-[#FF6B00]">
+                <div className="pt-0.5 text-orange-700">
                   {isSelected ? (
-                    <CheckCircle2 className="h-5 w-5 fill-[#FF6B00] text-white" />
+                    <CheckCircle2 className="h-5 w-5 fill-orange-700 text-white" />
                   ) : (
                     <Circle className="h-5 w-5 text-gray-300" />
                   )}

@@ -117,7 +117,7 @@ export default function RingkasanPesanan({
 
         <div className="flex justify-between border-t border-gray-200/80 pt-2.5 text-sm font-extrabold text-gray-900">
           <span>Total Belanja</span>
-          <span className="text-base text-[#FF6B00]">
+          <span className="text-base text-orange-700">
             {formatRupiah(grandTotal)}
           </span>
         </div>

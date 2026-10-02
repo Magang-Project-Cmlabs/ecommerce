@@ -94,7 +94,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
           <Button
             type="button"
             onClick={() => setShowAddForm(true)}
-            className="h-9 gap-1.5 rounded-full bg-[#FF6B00] px-4 text-xs font-bold text-white hover:bg-[#e85f00]"
+            size="sm"
           >
             <Plus className="h-4 w-4" />
             Tambah Alamat
@@ -142,7 +142,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
           <Button
             type="button"
             onClick={() => setShowAddForm(true)}
-            className="mt-4 h-9 gap-1.5 rounded-full bg-[#FF6B00] px-5 text-xs font-bold text-white hover:bg-[#e85f00]"
+            className="mt-4"
           >
             <Plus className="h-4 w-4" />
             Tambah Alamat Pertama

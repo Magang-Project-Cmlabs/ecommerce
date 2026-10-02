@@ -47,7 +47,7 @@ export default function AkunShell({ user, initialAddresses }: Props) {
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
           {/* Info Singkat Profil Pengguna */}
           <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-[#FF6B00]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
@@ -62,10 +62,10 @@ export default function AkunShell({ user, initialAddresses }: Props) {
           <nav className="mt-4 flex flex-col gap-1.5" aria-label="Menu Akun">
             <Link
               href="/akun/pesanan"
-              className="flex w-full items-center justify-between rounded-xl bg-orange-50/60 px-4 py-3 text-xs font-bold text-[#FF6B00] transition-all hover:bg-orange-100/70"
+              className="flex w-full items-center justify-between rounded-xl bg-orange-50/60 px-4 py-3 text-xs font-bold text-orange-700 transition-all hover:bg-orange-100/70"
             >
               <div className="flex items-center gap-3">
-                <ShoppingBag className="h-4 w-4 shrink-0 text-[#FF6B00]" />
+                <ShoppingBag className="h-4 w-4 shrink-0 text-orange-700" />
                 <span>Riwayat Pesanan Saya</span>
               </div>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -85,7 +85,7 @@ export default function AkunShell({ user, initialAddresses }: Props) {
                     isActive
                       ? tab.danger
                         ? "bg-red-50 text-red-600 ring-1 ring-red-200"
-                        : "bg-orange-50 text-[#FF6B00] ring-1 ring-orange-200"
+                        : "bg-orange-50 text-orange-700 ring-1 ring-orange-200"
                       : tab.danger
                       ? "text-gray-500 hover:bg-red-50/50 hover:text-red-600"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -96,7 +96,7 @@ export default function AkunShell({ user, initialAddresses }: Props) {
                       isActive
                         ? tab.danger
                           ? "text-red-600"
-                          : "text-[#FF6B00]"
+                          : "text-orange-700"
                         : "text-gray-400"
                     }`}
                   />

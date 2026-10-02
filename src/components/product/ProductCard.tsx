@@ -26,13 +26,13 @@ export default function ProductCard({ product: p, list = false, belowFold = fals
       <p className="text-xs font-medium text-muted-foreground">{p.brand}{p.isPreorder && <span className="ml-1.5 text-orange-700">· Pre-order</span>}</p>
       <Link href={`/produk/${p.slug}`} className="mt-0.5 line-clamp-2 text-[15px] font-medium leading-snug tracking-[-0.01em] hover:underline">{p.name}</Link>
       <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><Star aria-hidden className="size-3.5 fill-amber-400 text-amber-500" /><span>{p.rating.toFixed(1)} · {p.reviewCount} ulasan</span></p>
-      <div className="mt-auto flex items-end justify-between gap-2 pt-3">
+      <div className="mt-auto flex flex-col gap-2.5 pt-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <p className="tabular-nums text-base font-semibold tracking-[-0.01em]">{formatRupiah(p.price)}</p>
           {diskon > 0 && <p className="text-xs tabular-nums text-muted-foreground line-through">{formatRupiah(p.compareAtPrice!)}</p>}
         </div>
-        {p.hasVariants ? <Button asChild className="h-11 shrink-0 rounded-full px-4 text-sm" disabled={habis}><Link href={`/produk/${p.slug}`}>{habis ? 'Lihat' : 'Pilih Varian'}</Link></Button>
-          : <Button disabled={habis} aria-label={habis ? 'Stok Habis' : 'Tambah ke Keranjang'} className="h-11 shrink-0 rounded-full px-4 text-sm" onClick={() => { tambah({ productId: p.id, variantId: null, quantity: 1, slug: p.slug, name: p.name, variantName: null, image: p.image, price: p.price }); toast.success('Ditambahkan ke keranjang'); }}><ShoppingCart aria-hidden className="size-4" /><span className="max-sm:sr-only">{habis ? 'Habis' : 'Tambah'}</span></Button>}
+        {p.hasVariants ? <Button asChild variant={habis ? "secondary" : "default"} className="w-full sm:w-auto" disabled={habis}><Link href={`/produk/${p.slug}`}>{habis ? 'Lihat' : 'Pilih Varian'}</Link></Button>
+          : <Button disabled={habis} aria-label={habis ? 'Stok Habis' : 'Tambah ke Keranjang'} className="w-full sm:w-auto" onClick={() => { tambah({ productId: p.id, variantId: null, quantity: 1, slug: p.slug, name: p.name, variantName: null, image: p.image, price: p.price }); toast.success('Ditambahkan ke keranjang'); }}><ShoppingCart aria-hidden className="size-4" /><span>{habis ? 'Habis' : 'Tambah'}</span></Button>}
       </div>
     </div>
     {list && <div className="absolute right-2 top-2"><WishlistButton productId={p.id} name={p.name} /></div>}

@@ -46,7 +46,7 @@ export default function PilihanKurir({
           <button
             type="button"
             onClick={onBackToAddress}
-            className="text-xs font-semibold text-[#FF6B00] hover:underline"
+            className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
           >
             Ubah
           </button>
@@ -88,16 +88,16 @@ export default function PilihanKurir({
                   isDisabled
                     ? "cursor-not-allowed border-gray-200 bg-gray-50 opacity-60"
                     : isSelected
-                    ? "cursor-pointer border-[#FF6B00] bg-orange-50/30 shadow-xs"
+                    ? "cursor-pointer border-orange-700 bg-orange-50/30 shadow-xs"
                     : "cursor-pointer border-gray-200 bg-white hover:border-gray-300"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-[#FF6B00]">
+                  <div className="text-orange-700">
                     {isDisabled ? (
                       <Circle className="h-5 w-5 text-gray-300" />
                     ) : isSelected ? (
-                      <CheckCircle2 className="h-5 w-5 fill-[#FF6B00] text-white" />
+                      <CheckCircle2 className="h-5 w-5 fill-orange-700 text-white" />
                     ) : (
                       <Circle className="h-5 w-5 text-gray-300" />
                     )}
