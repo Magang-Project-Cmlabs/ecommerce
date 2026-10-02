@@ -15,25 +15,25 @@ const links = [
 function Merek() {
   return <Link href="/admin" aria-label="TokoKita, ringkasan admin" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
     <Store aria-hidden className="size-7 text-orange-500" /><span>Toko<span className="text-orange-400">Kita</span></span>
-    <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-200">Admin</span>
+    <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-200">Admin</span>
   </Link>;
 }
 
 function DaftarMenu({ onPilih }: { onPilih?: () => void }) {
   const pathname = usePathname();
   return <nav aria-label="Navigasi admin" className="flex flex-1 flex-col gap-1 px-3">
-    <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Menu</p>
+    <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Menu</p>
     {links.map(({ href, label, icon: Icon }) => {
       const active = href === '/admin' ? pathname === href : pathname.startsWith(href);
-      return <Link key={href} href={href} onClick={onPilih} aria-current={active ? 'page' : undefined} className={`flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${active ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}><Icon aria-hidden className="size-[18px]" />{label}</Link>;
+      return <Link key={href} href={href} onClick={onPilih} aria-current={active ? 'page' : undefined} className={`flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? 'bg-white/10 text-white' : 'text-zinc-300 hover:bg-white/5 hover:text-white'}`}><Icon aria-hidden className="size-[18px]" />{label}</Link>;
     })}
-    <Link href="/" onClick={onPilih} className="mt-auto mb-4 flex min-h-11 items-center gap-3 rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-white/5 hover:text-white"><ArrowUpRight aria-hidden className="size-[18px]" />Lihat toko</Link>
+    <Link href="/" onClick={onPilih} className="mt-auto mb-4 flex min-h-11 items-center gap-3 rounded-lg border border-white/10 px-3 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"><ArrowUpRight aria-hidden className="size-[18px]" />Lihat toko</Link>
   </nav>;
 }
 
 /** Sidebar desktop: menempel penuh setinggi layar di tepi kiri. */
 export function AdminSidebar() {
-  return <div className="hidden w-60 shrink-0 bg-slate-900 lg:block"><aside className="sticky top-0 flex h-dvh flex-col text-white">
+  return <div className="hidden w-60 shrink-0 bg-zinc-950 lg:block"><aside className="sticky top-0 flex h-dvh flex-col text-white">
     <div className="flex h-16 shrink-0 items-center px-6"><Merek /></div>
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-4"><DaftarMenu /></div>
   </aside></div>;
@@ -44,7 +44,7 @@ export function AdminMenuMobile() {
   const [open, setOpen] = useState(false);
   return <Sheet open={open} onOpenChange={setOpen}>
     <SheetTrigger asChild><Button variant="outline" size="icon" className="size-11 lg:hidden" aria-label="Menu admin"><Menu /></Button></SheetTrigger>
-    <SheetContent side="left" className="flex w-72 flex-col border-slate-800 bg-slate-900 p-0 text-white">
+    <SheetContent side="left" className="flex w-72 flex-col border-zinc-800 bg-zinc-950 p-0 text-white">
       <SheetHeader className="h-16 justify-center px-6"><SheetTitle className="sr-only">Menu admin</SheetTitle><Merek /><SheetDescription className="sr-only">Navigasi pengelolaan TokoKita.</SheetDescription></SheetHeader>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-2"><DaftarMenu onPilih={() => setOpen(false)} /></div>
     </SheetContent>
