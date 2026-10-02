@@ -5,16 +5,17 @@ vi.mock('next/navigation', () => ({ redirect: vi.fn() }));
 vi.mock('next/server', () => ({ after: vi.fn() }));
 vi.mock('@/lib/auth/pembatas-auth', () => ({ catatBatasAuth: vi.fn(), hapusBatasAuth: vi.fn() }));
 vi.mock('@/lib/auth/sesi', () => ({ simpanSesi: vi.fn(), hapusSesi: vi.fn() }));
-vi.mock('@/lib/data/pengguna', () => ({ buatAkunPembeli: vi.fn(), cariAkunUntukMasuk: vi.fn() }));
+vi.mock('@/lib/data/pengguna', () => ({ buatAkunPembeli: vi.fn(), cariAkunUntukMasuk: vi.fn(), gantiHashLama: vi.fn(async () => true) }));
 vi.mock('@/lib/data/reset-password', () => ({ cariAkunUntukReset: vi.fn(), pakaiTokenReset: vi.fn(), simpanTokenReset: vi.fn(), tokenResetMasihBerlaku: vi.fn() }));
-vi.mock('@/lib/auth/password', () => ({ cocokkanPassword: vi.fn(async () => true), cocokkanPasswordPalsu: vi.fn(), hashPassword: vi.fn(async () => 'hash') }));
+vi.mock('@/lib/auth/password', () => ({ cocokkanPassword: vi.fn(async () => true), cocokkanPasswordPalsu: vi.fn(), hashPassword: vi.fn(async () => 'hash'), perluHashUlang: vi.fn((h: string) => h.startsWith('$2')) }));
 vi.mock('@/lib/email', () => ({ kirimEmail: vi.fn() }));
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { catatBatasAuth, hapusBatasAuth } from '@/lib/auth/pembatas-auth';
 import { simpanSesi } from '@/lib/auth/sesi';
-import { buatAkunPembeli, cariAkunUntukMasuk } from '@/lib/data/pengguna';
+import { buatAkunPembeli, cariAkunUntukMasuk, gantiHashLama } from '@/lib/data/pengguna';
+import { versiPassword } from '@/lib/auth/password-version';
 import { hashPassword } from '@/lib/auth/password';
 import { pakaiTokenReset, tokenResetMasihBerlaku } from '@/lib/data/reset-password';
 import { daftar, masuk, lupaPassword, resetPassword } from './auth';
@@ -26,13 +27,13 @@ const form = () => {
 beforeEach(() => { vi.clearAllMocks(); vi.stubEnv('VERCEL', '1'); vi.stubEnv('AUTH_SECRET', 'rate-limit-test-secret-at-least-32-characters'); vi.spyOn(console, 'error').mockImplementation(() => {}); vi.mocked(headers).mockResolvedValue(new Headers({ 'x-vercel-forwarded-for': '203.0.113.8' }) as Awaited<ReturnType<typeof headers>>); });
 afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
 describe('auth rate limit fail closed', () => {
-  it('reset dengan token format sah yang tidak ditemukan tidak melakukan bcrypt atau consume', async () => {
+  it('reset dengan token format sah yang tidak ditemukan tidak melakukan hash password atau consume', async () => {
     vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(tokenResetMasihBerlaku).mockResolvedValueOnce(false);
     const data = form(); data.set('token', 'a'.repeat(43));
     expect((await resetPassword(undefined, data))?.message).toContain('Link reset tidak berlaku');
     expect(catatBatasAuth).toHaveBeenCalledWith('reset-password:203.0.113.8'); expect(hashPassword).not.toHaveBeenCalled(); expect(pakaiTokenReset).not.toHaveBeenCalled();
   });
-  it('reset yang dibatasi tidak membaca token atau melakukan bcrypt', async () => {
+  it('reset yang dibatasi tidak membaca token atau melakukan hash password', async () => {
     vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: false, tungguDetik: 900 });
     const data = form(); data.set('token', 'a'.repeat(43));
     expect((await resetPassword(undefined, data))?.message).toContain('Terlalu banyak percobaan'); expect(tokenResetMasihBerlaku).not.toHaveBeenCalled(); expect(hashPassword).not.toHaveBeenCalled();
@@ -69,6 +70,27 @@ describe('auth rate limit fail closed', () => {
     const data = form(); if (next) data.set('next', next);
     await masuk(undefined, data);
     expect(redirect).toHaveBeenCalledWith(tujuan);
+  });
+  it('login dengan hash bcrypt lama menggantinya ke Argon2id dan sesi memakai hash baru', async () => {
+    vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockResolvedValueOnce();
+    vi.mocked(cariAkunUntukMasuk).mockResolvedValueOnce({ id: 7, passwordHash: '$2b$10$lama', role: 'customer', deletedAt: null });
+    vi.mocked(hashPassword).mockResolvedValueOnce('$argon2id$baru');
+    await masuk(undefined, form());
+    expect(gantiHashLama).toHaveBeenCalledWith(7, '$2b$10$lama', '$argon2id$baru');
+    expect(simpanSesi).toHaveBeenCalledWith(expect.objectContaining({ userId: 7, passwordVersion: versiPassword('$argon2id$baru') }));
+  });
+  it('hash ulang gagal tidak menggagalkan login; sesi tetap memakai hash lama', async () => {
+    vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockResolvedValueOnce();
+    vi.mocked(cariAkunUntukMasuk).mockResolvedValueOnce({ id: 7, passwordHash: '$2b$10$lama', role: 'customer', deletedAt: null });
+    vi.mocked(gantiHashLama).mockRejectedValueOnce(new Error('db'));
+    await masuk(undefined, form());
+    expect(simpanSesi).toHaveBeenCalledWith(expect.objectContaining({ passwordVersion: versiPassword('$2b$10$lama') }));
+  });
+  it('hash Argon2id terkini tidak di-hash ulang', async () => {
+    vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockResolvedValueOnce();
+    vi.mocked(cariAkunUntukMasuk).mockResolvedValueOnce({ id: 7, passwordHash: '$argon2id$v=19$m=19456,t=2,p=1$x', role: 'customer', deletedAt: null });
+    await masuk(undefined, form());
+    expect(gantiHashLama).not.toHaveBeenCalled();
   });
   it('cleanup gagal setelah password cocok: tidak menerbitkan sesi dan tidak membocorkan error', async () => {
     vi.mocked(catatBatasAuth).mockResolvedValueOnce({ boleh: true }); vi.mocked(hapusBatasAuth).mockRejectedValueOnce(new Error('private'));

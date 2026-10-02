@@ -27,7 +27,7 @@ describe('daftarSchema', () => {
     ['email tidak sah', { email: 'bukan-email' }, 'email'],
     ['telepon berisi huruf', { phone: '0812abc' }, 'phone'],
     ['password kurang dari 8 karakter', { password: 'abc1234', confirmPassword: 'abc1234' }, 'password'],
-    ['password lebih dari 72 byte (batas bcrypt)', { password: 'é'.repeat(37), confirmPassword: 'é'.repeat(37) }, 'password'],
+    ['password lebih dari 128 byte', { password: 'é'.repeat(65), confirmPassword: 'é'.repeat(65) }, 'password'],
     ['konfirmasi tidak sama', { confirmPassword: 'rahasia124' }, 'confirmPassword'],
     ['belum menyetujui S&K dan Kebijakan Privasi', { agree: undefined }, 'agree'],
   ])('menolak %s', (_, ubah, field) => {
@@ -116,7 +116,7 @@ describe('resetPasswordSchema', () => {
     const galat = r.error!.issues.map((i) => i.message);
     expect(galat).toContain('Password minimal 8 karakter');
     expect(galat).toContain('Konfirmasi password tidak sama');
-    expect(resetPasswordSchema.safeParse({ token, password: 'é'.repeat(37), confirmPassword: 'é'.repeat(37) }).success).toBe(false);
+    expect(resetPasswordSchema.safeParse({ token, password: 'é'.repeat(65), confirmPassword: 'é'.repeat(65) }).success).toBe(false);
   });
 
   it('menolak token yang bentuknya bukan buatan server', () => {
