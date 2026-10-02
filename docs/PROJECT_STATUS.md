@@ -2,7 +2,7 @@
 
 **Repo:** `Magang-Project-Cmlabs/ecommerce` (private)
 **Branch integrasi:** `develop` (PR #23 dan #25 di-merge 1 Okt 2026; lanjutan di `feat/penyelesaian-tokokita`)
-**Diperbarui:** 2 Oktober 2026
+**Diperbarui:** 3 Oktober 2026
 
 ## 1. Ringkasan
 
@@ -94,5 +94,5 @@ Butuh akun/tindakan pemilik (rincian di [SERAH_TERIMA](SERAH_TERIMA.md)):
 5. Tinjau PPT di PowerPoint (render tidak diuji di mesin pengembang).
 
 Masih terbuka di sisi kode: LCP seluler > 2,5 s dan QRIS sandbox (simulator error 2603).
-Arah visual terkini ada di [DESIGN.md](../DESIGN.md); pemilik menilai sebagian tampilan masih
-terasa kurang sesuai acuan (Framer/Apple) dan akan memberi contoh konkret.
+Arah visual terkini (3 Okt): monokrom bergaya template Framer pilihan pemilik, mode terang + gelap
+(D16, [DESIGN.md](../DESIGN.md)). Perlu penilaian pemilik di situs online.

@@ -31,7 +31,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
   `/api/payment/midtrans` di domain produksi (diatur pemilik).
 - Cron harian Vercel `0 17 * * *` (00.00 WIB) ke `/api/cron/orders`.
 - Foto produk demo CC0 sesuai produk ([KREDIT_FOTO](KREDIT_FOTO.md)); banner dan
-  kategori berupa ilustrasi (`npm run demo:ilustrasi`).
+  ubin kategori juga foto CC0 (kredit di berkas yang sama).
 - Latihan demo PPT otomatis dan rekaman cadangan: [DEMO](DEMO.md).
 - Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
 - Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md) (gaya ubin/Apple Store, sistem tombol baru, aksi admin ikon + tulisan).

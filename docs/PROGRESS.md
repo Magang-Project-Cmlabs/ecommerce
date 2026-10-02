@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Redesain gaya Framer + mode gelap
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: palet monokrom terang/gelap (D16) dengan merah hanya untuk diskon; font judul Albert Sans; tombol mode gelap di toko dan admin (tanpa kilatan, tersimpan di perangkat); header baru (pita pengumuman berjalan, menu tengah, menu HP); hero foto penuh dengan judul besar; ubin kategori bento berfoto; kartu produk 4:5 dengan tombol bulat; ulasan kutipan besar; pita teks besar; baris jaminan; footer hitam dengan merek besar; judul halaman dalam diseragamkan; sisa warna oranye/abu diganti token. Foto banner/kategori CC0 baru (KREDIT_FOTO); `demo:ilustrasi` tidak lagi menimpa banner/kategori tanpa bendera. DESIGN.md ditulis ulang.
+- Verifikasi: typecheck PASS · lint PASS · test PASS (418) · build PASS · e2e Chrome PASS (aksesibilitas, navigasi, katalog, akun, responsif 360 px, admin, transaksi, ulasan, lupa password: 59 + 83 kasus, 1 dilewati) · axe mode gelap + terang 7 halaman PASS (0 pelanggaran serius) · tangkapan layar terang/gelap desktop + HP diperiksa · lintas browser NOT_RUN (tidak diminta untuk perubahan ini) · PPT belum diganti ke tampilan baru NOT_RUN.
+
 ### 2026-10-02 — Kevin Ilham / Claude Code — Redesain toko dan admin, dokumentasi dan PPT diperbarui
 - Branch / PR: `feat/penyelesaian-tokokita` / #27–#38 di-merge ke `develop` (tanpa 2 reviewer, atas instruksi pemilik; mohon ditinjau ketua tim).
 - Perubahan: bagian "Kata pembeli" dari ulasan nyata; hero scroll-snap dan gerak CSS; arah visual Apple Store (ubin abu muda, kartu tanpa bingkai, hero dua kolom); sistem tombol baru dan penyeragaman oranye kustom; aksi admin ikon + tulisan; halaman dalam (detail, checkout, akun, pesanan) disamakan; admin beraksen oranye. Unggah gambar lewat Vercel Blob (D15); SMTP Gmail terpasang; foto produk CC0 + KREDIT_FOTO; latihan demo otomatis. Dokumen: DESIGN.md ditulis ulang, PPT diperbarui (26 teks + 4 gambar), README/indeks/CLAUDE.md disesuaikan.
