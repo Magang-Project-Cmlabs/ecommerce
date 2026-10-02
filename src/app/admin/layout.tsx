@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { ArrowUpRight, LogOut } from 'lucide-react';
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
 import { keluar } from '@/actions/auth';
 import { AdminMenuMobile, AdminSidebar } from '@/components/admin/navigation';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const pengguna = await ambilPenggunaSaatIni();
   const inisial = (pengguna?.name ?? 'A').trim().charAt(0).toUpperCase();
   return (
-    <div style={{ '--primary': 'var(--secondary)', '--ring': 'var(--secondary)' } as CSSProperties} className="flex flex-1 bg-slate-50">
+    <div className="flex flex-1 bg-tile/60">
       <AdminSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
@@ -24,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <p className="hidden min-w-0 truncate text-sm text-muted-foreground sm:block">Selamat datang, <span className="font-semibold text-foreground">{pengguna?.name ?? 'Admin'}</span></p>
             <nav aria-label="Akun admin" className="ml-auto flex items-center gap-2">
               <Button asChild variant="outline" size="sm" className="pointer-coarse:h-11"><Link href="/" aria-label="Lihat toko"><ArrowUpRight aria-hidden /><span className="hidden sm:inline">Lihat toko</span></Link></Button>
-              <span aria-hidden className="hidden size-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white sm:flex">{inisial}</span>
+              <span aria-hidden className="hidden size-9 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white sm:flex">{inisial}</span>
               <form action={keluar}><Button type="submit" variant="ghost" size="sm" className="pointer-coarse:h-11"><LogOut aria-hidden className="sm:hidden" /><span className="max-sm:sr-only">Keluar</span></Button></form>
             </nav>
           </div>
