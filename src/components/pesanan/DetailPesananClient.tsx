@@ -185,7 +185,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
           {/* Kartu Informasi Kurir & Resi */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs space-y-4">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
-              <Truck className="h-4 w-4 text-[#FF6B00]" />
+              <Truck className="h-4 w-4 text-orange-700" />
               <span>Informasi Pengiriman</span>
             </h2>
 
@@ -215,7 +215,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
             {/* Alamat Pengiriman */}
             <div className="space-y-1.5 text-xs text-gray-600">
               <div className="flex items-center gap-1.5 font-bold text-gray-900">
-                <MapPin className="h-3.5 w-3.5 text-[#FF6B00]" />
+                <MapPin className="h-3.5 w-3.5 text-orange-700" />
                 <span>Alamat Tujuan ({order.shippingAddress?.label ?? 'Utama'})</span>
               </div>
               <p className="font-semibold text-gray-800">
@@ -232,7 +232,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
           {/* Kartu Daftar Barang */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
-              <Package className="h-4 w-4 text-[#FF6B00]" />
+              <Package className="h-4 w-4 text-orange-700" />
               <span>Daftar Produk ({order.items.reduce((acc, i) => acc + i.quantity, 0)} barang)</span>
             </h2>
 
@@ -288,7 +288,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
           {/* Timeline Riwayat Status */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
-              <Clock className="h-4 w-4 text-[#FF6B00]" />
+              <Clock className="h-4 w-4 text-orange-700" />
               <span>Riwayat Status Pesanan</span>
             </h2>
 
@@ -302,7 +302,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
                     <div
                       className={`absolute -left-4 top-1 h-2.5 w-2.5 rounded-full ring-4 ring-white ${
                         isLatest
-                          ? "bg-[#FF6B00] ring-orange-100"
+                          ? "bg-orange-700 ring-orange-100"
                           : "bg-gray-300"
                       }`}
                     />
@@ -369,7 +369,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
 
               <div className="flex justify-between border-t border-gray-100 pt-3 text-sm font-extrabold text-gray-900">
                 <span>Total Tagihan</span>
-                <span className="text-base text-[#FF6B00]">
+                <span className="text-base text-orange-700">
                   {formatRupiah(order.grandTotal)}
                 </span>
               </div>

@@ -109,7 +109,7 @@ export default function DaftarPesananClient({ orders }: Props) {
               onClick={() => setActiveTab(tab.id)}
               className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all ${
                 isActive
-                  ? "bg-[#FF6B00] text-white shadow-xs"
+                  ? "bg-orange-700 text-white shadow-xs"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -144,7 +144,7 @@ export default function DaftarPesananClient({ orders }: Props) {
           </p>
           <Button
             asChild
-            className="mt-6 h-10 rounded-full bg-[#FF6B00] px-6 text-xs font-bold text-white hover:bg-[#e85f00]"
+            className="mt-6"
           >
             <Link href="/">
               Mulai Belanja Sekarang
@@ -245,7 +245,7 @@ export default function DaftarPesananClient({ orders }: Props) {
                 <div className="flex flex-col gap-3 border-t border-gray-100 bg-gray-50/30 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-xs">
                     <span className="text-gray-500">Total Pembayaran: </span>
-                    <span className="text-sm font-extrabold text-[#FF6B00]">
+                    <span className="text-sm font-extrabold text-orange-700">
                       {formatRupiah(order.grandTotal)}
                     </span>
                     {order.trackingNumber && (
@@ -288,7 +288,6 @@ export default function DaftarPesananClient({ orders }: Props) {
                       <Button
                         asChild
                         size="sm"
-                        className="h-8 gap-1.5 rounded-full bg-[#FF6B00] px-4 text-xs font-bold text-white hover:bg-[#e85f00]"
                       >
                         <Link href={`/checkout/berhasil/${order.orderNumber}`}>
                           <CreditCard className="h-3.5 w-3.5" />

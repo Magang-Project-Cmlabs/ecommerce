@@ -143,13 +143,13 @@ export default function KonfirmasiPesanan({
         <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <MapPin className="h-3.5 w-3.5 text-[#FF6B00]" />
+              <MapPin className="h-3.5 w-3.5 text-orange-700" />
               <span>Alamat Pengiriman</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(1)}
-              className="text-xs font-semibold text-[#FF6B00] hover:underline"
+              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
             >
               Ubah
             </button>
@@ -171,13 +171,13 @@ export default function KonfirmasiPesanan({
         <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <Truck className="h-3.5 w-3.5 text-[#FF6B00]" />
+              <Truck className="h-3.5 w-3.5 text-orange-700" />
               <span>Pengiriman</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(2)}
-              className="text-xs font-semibold text-[#FF6B00] hover:underline"
+              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
             >
               Ubah
             </button>
@@ -199,13 +199,13 @@ export default function KonfirmasiPesanan({
         <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-              <PaymentIcon className="h-3.5 w-3.5 text-[#FF6B00]" />
+              <PaymentIcon className="h-3.5 w-3.5 text-orange-700" />
               <span>Pembayaran</span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(3)}
-              className="text-xs font-semibold text-[#FF6B00] hover:underline"
+              className="text-xs font-semibold text-orange-700 underline-offset-4 hover:underline"
             >
               Ubah
             </button>
@@ -228,7 +228,7 @@ export default function KonfirmasiPesanan({
       {/* 4. Daftar Barang yang Dipesan */}
       <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
         <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
-          <Package className="h-4 w-4 text-[#FF6B00]" />
+          <Package className="h-4 w-4 text-orange-700" />
           <h4 className="text-xs font-bold text-gray-900">
             Daftar Produk ({items.reduce((acc, i) => acc + i.quantity, 0)} barang)
           </h4>
@@ -287,7 +287,7 @@ export default function KonfirmasiPesanan({
             htmlFor="order-notes"
             className="flex items-center gap-2 text-xs font-bold text-gray-900"
           >
-            <FileText className="h-3.5 w-3.5 text-[#FF6B00]" />
+            <FileText className="h-3.5 w-3.5 text-orange-700" />
             <span>Catatan untuk Penjual (Opsional)</span>
           </label>
           <span className="text-[11px] text-gray-400">
@@ -301,7 +301,7 @@ export default function KonfirmasiPesanan({
           onChange={(e) => onChangeNotes(e.target.value)}
           placeholder="Contoh: Tolong bungkus ekstra bubble wrap, warna hitam jika ada"
           rows={3}
-          className="mt-2.5 w-full rounded-lg border border-gray-200 p-3 text-xs placeholder:text-gray-400 focus:border-[#FF6B00] focus:ring-1 focus:ring-[#FF6B00] focus:outline-none"
+          className="mt-2.5 w-full rounded-lg border border-gray-200 p-3 text-xs placeholder:text-gray-400 focus:border-orange-700 focus:ring-1 focus:ring-orange-700 focus:outline-none"
         />
       </div>
 
@@ -334,7 +334,7 @@ export default function KonfirmasiPesanan({
 
           <div className="flex justify-between border-t border-gray-100 pt-3 text-sm">
             <span className="font-bold text-gray-900">Total Tagihan</span>
-            <span className="text-base font-extrabold text-[#FF6B00]">
+            <span className="text-base font-extrabold text-orange-700">
               {formatRupiah(grandTotal)}
             </span>
           </div>

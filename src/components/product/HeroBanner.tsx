@@ -27,7 +27,7 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
     el.scrollTo({ left: ((tujuan + slides.length) % slides.length) * el.clientWidth, behavior: kurangiGerak ? 'auto' : 'smooth' });
   }, [slides.length]);
 
-  if (!slides.length) return <section className="flex min-h-[320px] flex-col justify-center rounded-[28px] bg-tile p-10 md:min-h-[400px]"><h1 className="text-4xl font-semibold tracking-[-0.03em]">Belanja nyaman di TokoKita</h1><p className="mt-3 text-lg text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild className="mt-6 h-12 w-fit rounded-full px-6"><Link href="/produk">Mulai Belanja</Link></Button></section>;
+  if (!slides.length) return <section className="flex min-h-[320px] flex-col justify-center rounded-[28px] bg-tile p-10 md:min-h-[400px]"><h1 className="text-4xl font-semibold tracking-[-0.03em]">Belanja nyaman di TokoKita</h1><p className="mt-3 text-lg text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild size="lg" className="mt-6 w-fit"><Link href="/produk">Mulai Belanja</Link></Button></section>;
 
   return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative overflow-hidden rounded-[28px] bg-tile">
     <div ref={jalur} className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -39,7 +39,7 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
             <Judul className="hero-masuk text-balance text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.035em] text-zinc-900 md:text-6xl lg:text-[4.25rem]">{slide.title}</Judul>
             {slide.subtitle && <p className="hero-masuk mt-4 max-w-md text-lg leading-snug tracking-[-0.01em] text-zinc-600 md:text-xl">{slide.subtitle}</p>}
             <div className="hero-masuk mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button asChild className="h-12 rounded-full px-7 text-base"><Link href={href}>{slide.cta || 'Belanja Sekarang'}</Link></Button>
+              <Button asChild size="lg"><Link href={href}>{slide.cta || 'Belanja Sekarang'}</Link></Button>
               <Link href="/produk" className="inline-flex min-h-11 items-center gap-0.5 text-base font-medium text-orange-700 underline-offset-4 hover:underline">Lihat semua produk<ChevronRight aria-hidden className="size-4" /></Link>
             </div>
           </div>
@@ -51,8 +51,8 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
     </div>
     {slides.length > 1 && <div className="absolute bottom-4 left-7 flex items-center gap-1 md:bottom-6 md:left-14 lg:left-20">
       {slides.map((s, i) => <button key={s.id} aria-label={`Tampilkan promo ${i + 1}`} aria-current={index === i} className="flex size-11 items-center justify-center" onClick={() => pergi(i)}><span className={`h-1.5 rounded-full motion-safe:transition-[width,background-color] motion-safe:duration-300 ${i === index ? 'w-6 bg-zinc-900' : 'w-1.5 bg-zinc-400'}`} /></button>)}
-      <Button aria-label="Promo sebelumnya" size="icon" variant="ghost" onClick={() => pergi(index - 1)} className="ml-2 size-11 rounded-full bg-zinc-900/[0.06] text-zinc-900 hover:bg-zinc-900/10"><ChevronLeft /></Button>
-      <Button aria-label="Promo berikutnya" size="icon" variant="ghost" onClick={() => pergi(index + 1)} className="size-11 rounded-full bg-zinc-900/[0.06] text-zinc-900 hover:bg-zinc-900/10"><ChevronRight /></Button>
+      <Button aria-label="Promo sebelumnya" size="icon" variant="secondary" onClick={() => pergi(index - 1)} className="ml-2"><ChevronLeft /></Button>
+      <Button aria-label="Promo berikutnya" size="icon" variant="secondary" onClick={() => pergi(index + 1)}><ChevronRight /></Button>
     </div>}
   </section>;
 }

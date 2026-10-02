@@ -277,7 +277,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
         <Button
           type="submit"
           disabled={isPending}
-          className="h-9 gap-1.5 bg-[#FF6B00] px-4 text-xs font-semibold text-white hover:bg-[#e85f00]"
+          
         >
           {isPending ? (
             <>

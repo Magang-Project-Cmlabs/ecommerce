@@ -48,7 +48,7 @@ export default function SearchBox() {
         if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setAktif((a) => Math.min(a + 1, hasil.length - 1)); }
         if (e.key === 'ArrowUp') { e.preventDefault(); setAktif((a) => Math.max(-1, a - 1)); }
       }} className="h-11 min-w-0 border-0 bg-transparent shadow-none" />
-      <Button type="submit" size="icon" variant="ghost" disabled={!hydrated} aria-label="Cari produk" className="size-11 shrink-0 rounded-full text-zinc-700 hover:bg-zinc-900/[0.06]"><Search className="size-5" /></Button>
+      <Button type="submit" size="icon" variant="ghost" disabled={!hydrated} aria-label="Cari produk" className="shrink-0 text-zinc-700"><Search className="size-5" /></Button>
     </form></PopoverAnchor>
     <PopoverContent align="start" className="w-[var(--radix-popover-trigger-width)] min-w-[280px] p-2" onOpenAutoFocus={(e) => e.preventDefault()} onCloseAutoFocus={(e) => e.preventDefault()} onInteractOutside={(e) => { if (formRef.current?.contains(e.target as Node)) e.preventDefault(); }}>
       <div id="saran-pencarian" role="listbox" aria-label="Saran produk" aria-busy={loading}>

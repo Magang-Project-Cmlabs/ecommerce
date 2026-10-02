@@ -126,7 +126,7 @@ export default function CountdownTimer({
       <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-700">
         <Clock
           className={`h-4 w-4 ${
-            isUrgent ? "animate-pulse text-red-600" : "text-[#FF6B00]"
+            isUrgent ? "animate-pulse text-red-600" : "text-orange-700"
           }`}
         />
         <span>Selesaikan pembayaran dalam waktu:</span>
