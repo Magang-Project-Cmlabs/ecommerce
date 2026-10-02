@@ -143,12 +143,50 @@
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes geser-naik {
+  from { transform: translateY(28px); }
+  to { transform: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
+    /* Kartu hanya bergeser (tanpa memudar) agar kontras teks selalu terukur penuh. */
+    .geser-naik {
+      animation: geser-naik linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
     .muncul {
       animation: muncul-naik linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 30%;
     }
   }
+}
+
+/* Hero: teks masuk bertahap saat halaman dibuka (semua browser) dan foto bergeser pelan
+   saat digulir (paralaks, browser yang mendukung). Jalur merek bergerak pelan, berhenti saat disorot. */
+@keyframes hero-masuk {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes paralaks-hero {
+  from { transform: translateY(0) scale(1.04); }
+  to { transform: translateY(9%) scale(1.04); }
+}
+@keyframes jalur-merek {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-masuk { animation: hero-masuk 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-masuk:nth-child(2) { animation-delay: 0.12s; }
+  .hero-masuk:nth-child(3) { animation-delay: 0.24s; }
+  @supports (animation-timeline: scroll()) {
+    .paralaks { animation: paralaks-hero linear both; animation-timeline: scroll(root); animation-range: 0 520px; }
+  }
+  .jalur-merek { animation: jalur-merek 50s linear infinite; }
+  .jalur-merek-wadah:hover .jalur-merek { animation-play-state: paused; }
+}
+.jalur-merek-wadah {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }

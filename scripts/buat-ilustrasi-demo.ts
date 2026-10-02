@@ -1,7 +1,8 @@
 // Membuat ilustrasi produk, banner, dan kategori untuk data demo (public/demo).
 // Pengganti foto acak Picsum yang tidak cocok dengan nama produk. Nama berkas
 // tetap `tokokita-<slug>-<n>.webp`, sehingga tidak ada URL di database yang berubah.
-// Jalankan: npx tsx scripts/buat-ilustrasi-demo.ts   (hanya membaca DB, menulis public/demo)
+// Jalankan: npx tsx scripts/buat-ilustrasi-demo.ts   (banner + kategori; hanya membaca DB, menulis public/demo)
+// Tambahkan --produk untuk juga menimpa gambar produk dengan ilustrasi (JANGAN jika sudah memakai foto asli).
 import 'dotenv/config';
 import path from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -97,16 +98,29 @@ function ilustrasiProduk(n: number, p: { nama: string; merek: string | null; kat
     ${teks(380, '#0F172A', '#475569')}`);
 }
 
-function ilustrasiBanner(nama: string): string {
-  const peta: Record<string, { ikon: string[]; dari: string; ke: string }> = {
-    diskon: { ikon: ['ShoppingBag', 'Percent', 'Tag'], dari: '#EA580C', ke: '#9A3412' },
-    ongkir: { ikon: ['Truck', 'Package', 'Gift'], dari: '#C2410C', ke: '#7C2D12' },
-    olahraga: { ikon: ['Dumbbell', 'Footprints', 'Activity'], dari: '#F97316', ke: '#9A3412' },
-  };
-  const k = peta[nama] ?? peta.diskon!;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${k.dari}"/><stop offset="1" stop-color="${k.ke}"/></linearGradient></defs>
-    <rect width="1600" height="600" fill="url(#g)"/><circle cx="1330" cy="300" r="380" fill="#fff" opacity="0.07"/><circle cx="1330" cy="300" r="250" fill="#fff" opacity="0.08"/>
-    ${taruh(k.ikon[0]!, 1130, 100, 400, '#ffffff', 1, 0.9)}${taruh(k.ikon[1]!, 940, 360, 170, '#ffffff', 1.2, 0.35)}${taruh(k.ikon[2]!, 1460, 60, 120, '#ffffff', 1.2, 0.35)}</svg>`;
+// Banner: gradien oranye + kolase foto produk nyata (public/demo) pada kartu miring melayang.
+const FOTO_BANNER: Record<string, string[]> = {
+  diskon: ['kaos-polos-premium', 'earbuds-nirkabel-tws-pro', 'sepatu-lari-ringan'],
+  ongkir: ['power-bank-20-000-mah', 'speaker-bluetooth-mini', 'wajan-anti-lengket-26-cm'],
+  olahraga: ['sepatu-lari-ringan', 'dumbel-hex-5-kg-sepasang', 'matras-yoga-6-mm'],
+};
+const WARNA_BANNER: Record<string, [string, string]> = { diskon: ['#EA580C', '#7C2D12'], ongkir: ['#C2410C', '#431407'], olahraga: ['#F97316', '#7C2D12'] };
+
+async function ilustrasiBanner(nama: string): Promise<string> {
+  const [dari, ke] = WARNA_BANNER[nama] ?? WARNA_BANNER.diskon!;
+  const slugs = FOTO_BANNER[nama] ?? FOTO_BANNER.diskon!;
+  const kartu = [
+    { x: 880, y: 150, putar: -7, ukuran: 300 },
+    { x: 1140, y: 70, putar: 5, ukuran: 340 },
+    { x: 1330, y: 250, putar: -4, ukuran: 250 },
+  ];
+  let isi = '';
+  for (const [i, k] of kartu.entries()) {
+    const jpeg = await sharp(path.resolve('public/demo', `tokokita-${slugs[i]}-1.webp`)).resize(k.ukuran, k.ukuran, { fit: 'cover' }).jpeg({ quality: 82 }).toBuffer();
+    const b = k.ukuran + 20;
+    isi += `<g transform="translate(${k.x} ${k.y}) rotate(${k.putar} ${b / 2} ${b / 2})" filter="url(#bayang)"><rect width="${b}" height="${b}" rx="34" fill="#fff"/><clipPath id="c${i}"><rect x="10" y="10" width="${k.ukuran}" height="${k.ukuran}" rx="26"/></clipPath><image x="10" y="10" width="${k.ukuran}" height="${k.ukuran}" clip-path="url(#c${i})" href="data:image/jpeg;base64,${jpeg.toString('base64')}"/></g>`;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${dari}"/><stop offset="1" stop-color="${ke}"/></linearGradient><radialGradient id="cahaya" cx="0.8" cy="0.4" r="0.6"><stop offset="0" stop-color="#fff" stop-opacity="0.22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><filter id="bayang" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#000" flood-opacity="0.38"/></filter></defs><rect width="1600" height="600" fill="url(#g)"/><rect width="1600" height="600" fill="url(#cahaya)"/>${isi}</svg>`;
 }
 
 function ilustrasiKategori(slug: string, nama: string): string {
@@ -130,13 +144,14 @@ async function main() {
     db.category.findMany({ where: { image: { startsWith: '/demo/tokokita-' } }, select: { slug: true, name: true, image: true } }),
   ]);
   let jumlah = 0;
-  for (const g of gambar) {
+  const buatProduk = process.argv.includes('--produk');
+  for (const g of buatProduk ? gambar : []) {
     const n = Number(/-(\d+)\.webp$/.exec(g.url)?.[1] ?? 1);
     const p = g.product;
     await tulis(g.url, ilustrasiProduk(Math.min(n, 3), { nama: p.name, merek: p.brand, kategori: p.category.name, ikon: IKON_PRODUK[p.slug] ?? 'Package', kelompok: KELOMPOK[p.category.slug] ?? 'fashion' }));
     jumlah++;
   }
-  for (const b of banner) { await tulis(b.image, ilustrasiBanner(/banner-([a-z]+)-/.exec(b.image)?.[1] ?? 'diskon')); jumlah++; }
+  for (const b of banner) { await tulis(b.image, await ilustrasiBanner(/banner-([a-z]+)-/.exec(b.image)?.[1] ?? 'diskon')); jumlah++; }
   for (const k of kategori) { await tulis(k.image!, ilustrasiKategori(k.slug, k.name)); jumlah++; }
   console.log(`Ilustrasi dibuat: ${jumlah} berkas di public/demo`);
   await db.$disconnect();
