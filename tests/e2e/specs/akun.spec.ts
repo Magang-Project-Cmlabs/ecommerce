@@ -47,6 +47,13 @@ test.describe('Akun', () => {
     expect(cookie!.expires - Date.now() / 1000).toBeGreaterThan(29 * 24 * 3600);
 
     await barAkun(page).getByRole('button', { name: 'Keluar' }).click();
+    // Keluar meminta konfirmasi; Batal tidak mengeluarkan, Ya, keluar mengeluarkan.
+    const dialog = page.getByRole('alertdialog', { name: 'Keluar dari akun?' });
+    await dialog.getByRole('button', { name: 'Batal' }).click();
+    await expect(dialog).toBeHidden();
+    await expect(barAkun(page)).toContainText('Halo, Pembeli E2E');
+    await barAkun(page).getByRole('button', { name: 'Keluar' }).click();
+    await dialog.getByRole('button', { name: 'Ya, keluar' }).click();
     await expect(barAkun(page).getByRole('link', { name: 'Masuk' })).toBeVisible();
     expect((await context.cookies()).find((c) => c.name === NAMA_COOKIE)).toBeUndefined();
     expect(errors).toEqual([]);

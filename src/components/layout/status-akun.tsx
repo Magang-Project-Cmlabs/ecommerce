@@ -1,7 +1,7 @@
 // Status akun di header (desktop) dan di menu layar kecil: Masuk/Daftar atau Panel Admin + Keluar.
 
 import Link from 'next/link';
-import { keluar } from '@/actions/auth';
+import TombolKeluar from './TombolKeluar';
 import { Button } from '@/components/ui/button';
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
 
@@ -31,11 +31,7 @@ export async function StatusAkun() {
       <span className="text-muted-foreground hidden max-w-[12rem] truncate xl:inline">
         Halo, <span className="text-foreground font-medium">{pengguna.name}</span>
       </span>
-      <form action={keluar}>
-        <Button type="submit" variant="outline" size="sm" className="pointer-coarse:h-11 pointer-coarse:px-4">
-          Keluar
-        </Button>
-      </form>
+      <TombolKeluar className="pointer-coarse:h-11 pointer-coarse:px-4" />
     </nav>
   );
 }
