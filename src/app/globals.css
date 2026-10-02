@@ -35,6 +35,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-tile: var(--tile);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -55,6 +56,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+  --tile: #f5f5f7;
   --primary: #c2410c;
   --primary-foreground: #ffffff;
   --secondary: #2563eb;
@@ -170,15 +172,12 @@
 /* Hero: teks masuk bertahap saat halaman dibuka (semua browser) dan foto bergeser pelan
    saat digulir (paralaks, browser yang mendukung). Jalur merek bergerak pelan, berhenti saat disorot. */
 @keyframes hero-masuk {
-  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
-  to { opacity: 1; transform: none; filter: none; }
+  from { transform: translateY(22px); filter: blur(6px); }
+  to { transform: none; filter: none; }
 }
 @keyframes paralaks-hero {
   from { transform: translateY(0) scale(1.04); }
   to { transform: translateY(9%) scale(1.04); }
-}
-@keyframes jalur-merek {
-  to { transform: translateX(-50%); }
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-masuk { animation: hero-masuk 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -187,12 +186,6 @@
   @supports (animation-timeline: scroll()) {
     .paralaks { animation: paralaks-hero linear both; animation-timeline: scroll(root); animation-range: 0 520px; }
   }
-  .jalur-merek { animation: jalur-merek 50s linear infinite; }
-  .jalur-merek-wadah:hover .jalur-merek { animation-play-state: paused; }
-}
-.jalur-merek-wadah {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
 /* Preferensi aksesibilitas sistem (prinsip Apple): transparansi dan kontras. */

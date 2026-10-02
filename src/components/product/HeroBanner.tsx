@@ -6,8 +6,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { BannerKatalog } from '@/lib/katalog-types';
 
-// Carousel memakai scroll-snap bawaan browser: geser mengikuti jari 1:1, lepas dengan momentum,
-// bisa dihentikan dan dibalik kapan saja (prinsip "fluid interfaces"), tanpa library animasi.
+// Hero gaya Apple Store: panel teks bersih + foto besar. Geser memakai scroll-snap bawaan browser
+// (mengikuti jari 1:1, momentum, bisa dibalik kapan saja), tanpa library animasi.
 export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
   const [index, setIndex] = useState(0);
   const jalur = useRef<HTMLDivElement>(null);
@@ -27,28 +27,32 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
     el.scrollTo({ left: ((tujuan + slides.length) % slides.length) * el.clientWidth, behavior: kurangiGerak ? 'auto' : 'smooth' });
   }, [slides.length]);
 
-  if (!slides.length) return <section className="flex h-[300px] flex-col justify-center rounded-2xl bg-orange-50 p-8 md:h-[400px]"><h1 className="text-3xl font-bold">Belanja nyaman di TokoKita</h1><p className="mt-3 text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild className="mt-6 w-fit"><Link href="/produk">Mulai Belanja</Link></Button></section>;
+  if (!slides.length) return <section className="flex min-h-[320px] flex-col justify-center rounded-[28px] bg-tile p-10 md:min-h-[400px]"><h1 className="text-4xl font-semibold tracking-[-0.03em]">Belanja nyaman di TokoKita</h1><p className="mt-3 text-lg text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild className="mt-6 h-12 w-fit rounded-full px-6"><Link href="/produk">Mulai Belanja</Link></Button></section>;
 
-  return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative overflow-hidden rounded-[2rem] bg-zinc-900">
-    <div ref={jalur} className="flex h-[340px] snap-x snap-mandatory overflow-x-auto overscroll-x-contain md:h-[500px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+  return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative overflow-hidden rounded-[28px] bg-tile">
+    <div ref={jalur} className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {slides.map((slide, i) => {
         const href = slide.href?.startsWith('/') && !slide.href.startsWith('//') ? slide.href : '/produk';
         const Judul = i === 0 ? 'h1' : 'h2';
-        return <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`Promo ${i + 1} dari ${slides.length}`} inert={i !== index} className="relative h-full w-full shrink-0 snap-start">
-          <div className="paralaks absolute inset-0"><Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={60} sizes="(max-width: 1279px) 100vw, 1280px" className="object-cover object-right" /></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/15 md:from-black/45 md:via-black/20 md:to-transparent" />
-          <div className="relative flex h-full max-w-xl flex-col justify-center px-12 pb-8 sm:px-16 md:px-20 lg:max-w-[36rem]">
-            <Judul className="hero-masuk text-balance text-4xl font-extrabold leading-[1.02] tracking-tighter text-white sm:text-6xl md:text-7xl">{slide.title}</Judul>
-            {slide.subtitle && <p className="hero-masuk mt-4 max-w-xl text-sm leading-relaxed text-white/95 md:text-xl">{slide.subtitle}</p>}
-            <Button asChild variant="outline" className="hero-masuk mt-6 h-12 w-fit rounded-full bg-background px-6 text-base text-foreground shadow-lg shadow-black/20"><Link href={href}>{slide.cta || 'Belanja Sekarang'}<ChevronRight className="size-4" /></Link></Button>
+        return <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`Promo ${i + 1} dari ${slides.length}`} inert={i !== index} className="grid w-full shrink-0 snap-start md:min-h-[500px] md:grid-cols-[1fr_1.05fr]">
+          <div className="relative order-2 flex flex-col justify-center px-7 pb-20 pt-8 md:order-1 md:px-14 md:py-16 lg:px-20">
+            <Judul className="hero-masuk text-balance text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.035em] text-zinc-900 md:text-6xl lg:text-[4.25rem]">{slide.title}</Judul>
+            {slide.subtitle && <p className="hero-masuk mt-4 max-w-md text-lg leading-snug tracking-[-0.01em] text-zinc-600 md:text-xl">{slide.subtitle}</p>}
+            <div className="hero-masuk mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Button asChild className="h-12 rounded-full px-7 text-base"><Link href={href}>{slide.cta || 'Belanja Sekarang'}</Link></Button>
+              <Link href="/produk" className="inline-flex min-h-11 items-center gap-0.5 text-base font-medium text-orange-700 underline-offset-4 hover:underline">Lihat semua produk<ChevronRight aria-hidden className="size-4" /></Link>
+            </div>
+          </div>
+          <div className="relative order-1 m-3 aspect-[4/3] overflow-hidden rounded-[22px] bg-white md:order-2 md:m-4 md:aspect-auto">
+            <div className="paralaks absolute inset-0"><Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={70} sizes="(max-width: 767px) 100vw, 660px" className="object-cover" /></div>
           </div>
         </div>;
       })}
     </div>
-    {slides.length > 1 && <>
-      <Button aria-label="Promo sebelumnya" size="icon" variant="outline" onClick={() => pergi(index - 1)} className="absolute left-1 top-1/2 size-11 -translate-y-1/2 rounded-full bg-background/90 backdrop-blur-md sm:left-3"><ChevronLeft /></Button>
-      <Button aria-label="Promo berikutnya" size="icon" variant="outline" onClick={() => pergi(index + 1)} className="absolute right-1 top-1/2 size-11 -translate-y-1/2 rounded-full bg-background/90 backdrop-blur-md sm:right-3"><ChevronRight /></Button>
-      <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2">{slides.map((s, i) => <button key={s.id} aria-label={`Tampilkan promo ${i + 1}`} aria-current={index === i} className="flex size-11 items-center justify-center" onClick={() => pergi(i)}><span className={`h-2 rounded-full motion-safe:transition-[width,background-color] motion-safe:duration-300 ${i === index ? 'w-6 bg-white' : 'w-2 bg-white/60'}`} /></button>)}</div>
-    </>}
+    {slides.length > 1 && <div className="absolute bottom-4 left-7 flex items-center gap-1 md:bottom-6 md:left-14 lg:left-20">
+      {slides.map((s, i) => <button key={s.id} aria-label={`Tampilkan promo ${i + 1}`} aria-current={index === i} className="flex size-11 items-center justify-center" onClick={() => pergi(i)}><span className={`h-1.5 rounded-full motion-safe:transition-[width,background-color] motion-safe:duration-300 ${i === index ? 'w-6 bg-zinc-900' : 'w-1.5 bg-zinc-400'}`} /></button>)}
+      <Button aria-label="Promo sebelumnya" size="icon" variant="ghost" onClick={() => pergi(index - 1)} className="ml-2 size-11 rounded-full bg-zinc-900/[0.06] text-zinc-900 hover:bg-zinc-900/10"><ChevronLeft /></Button>
+      <Button aria-label="Promo berikutnya" size="icon" variant="ghost" onClick={() => pergi(index + 1)} className="size-11 rounded-full bg-zinc-900/[0.06] text-zinc-900 hover:bg-zinc-900/10"><ChevronRight /></Button>
+    </div>}
   </section>;
 }

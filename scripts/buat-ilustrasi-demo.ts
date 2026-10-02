@@ -98,29 +98,17 @@ function ilustrasiProduk(n: number, p: { nama: string; merek: string | null; kat
     ${teks(380, '#0F172A', '#475569')}`);
 }
 
-// Banner: gradien oranye + kolase foto produk nyata (public/demo) pada kartu miring melayang.
-const FOTO_BANNER: Record<string, string[]> = {
-  diskon: ['kaos-polos-premium', 'earbuds-nirkabel-tws-pro', 'sepatu-lari-ringan'],
-  ongkir: ['power-bank-20-000-mah', 'speaker-bluetooth-mini', 'wajan-anti-lengket-26-cm'],
-  olahraga: ['sepatu-lari-ringan', 'dumbel-hex-5-kg-sepasang', 'matras-yoga-6-mm'],
+// Banner: satu foto produk besar (public/demo) untuk panel kanan hero; teks ada di HTML.
+const FOTO_BANNER: Record<string, string> = {
+  diskon: 'earbuds-nirkabel-tws-pro',
+  ongkir: 'power-bank-20-000-mah',
+  olahraga: 'sepatu-lari-ringan',
 };
-const WARNA_BANNER: Record<string, [string, string]> = { diskon: ['#EA580C', '#7C2D12'], ongkir: ['#C2410C', '#431407'], olahraga: ['#F97316', '#7C2D12'] };
 
 async function ilustrasiBanner(nama: string): Promise<string> {
-  const [dari, ke] = WARNA_BANNER[nama] ?? WARNA_BANNER.diskon!;
-  const slugs = FOTO_BANNER[nama] ?? FOTO_BANNER.diskon!;
-  const kartu = [
-    { x: 880, y: 150, putar: -7, ukuran: 300 },
-    { x: 1140, y: 70, putar: 5, ukuran: 340 },
-    { x: 1330, y: 250, putar: -4, ukuran: 250 },
-  ];
-  let isi = '';
-  for (const [i, k] of kartu.entries()) {
-    const jpeg = await sharp(path.resolve('public/demo', `tokokita-${slugs[i]}-1.webp`)).resize(k.ukuran, k.ukuran, { fit: 'cover' }).jpeg({ quality: 82 }).toBuffer();
-    const b = k.ukuran + 20;
-    isi += `<g transform="translate(${k.x} ${k.y}) rotate(${k.putar} ${b / 2} ${b / 2})" filter="url(#bayang)"><rect width="${b}" height="${b}" rx="34" fill="#fff"/><clipPath id="c${i}"><rect x="10" y="10" width="${k.ukuran}" height="${k.ukuran}" rx="26"/></clipPath><image x="10" y="10" width="${k.ukuran}" height="${k.ukuran}" clip-path="url(#c${i})" href="data:image/jpeg;base64,${jpeg.toString('base64')}"/></g>`;
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${dari}"/><stop offset="1" stop-color="${ke}"/></linearGradient><radialGradient id="cahaya" cx="0.8" cy="0.4" r="0.6"><stop offset="0" stop-color="#fff" stop-opacity="0.22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><filter id="bayang" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#000" flood-opacity="0.38"/></filter></defs><rect width="1600" height="600" fill="url(#g)"/><rect width="1600" height="600" fill="url(#cahaya)"/>${isi}</svg>`;
+  const slug = FOTO_BANNER[nama] ?? FOTO_BANNER.diskon!;
+  const jpeg = await sharp(path.resolve('public/demo', `tokokita-${slug}-1.webp`)).resize(1200, 1200, { fit: 'cover' }).jpeg({ quality: 86 }).toBuffer();
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200"><image width="1200" height="1200" href="data:image/jpeg;base64,${jpeg.toString('base64')}"/></svg>`;
 }
 
 function ilustrasiKategori(slug: string, nama: string): string {

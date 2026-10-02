@@ -33,7 +33,7 @@ export async function StatusAkun() {
           <Link href="/admin">Panel Admin</Link>
         </Button>
       )}
-      <span className="text-muted-foreground max-w-[12rem] truncate">
+      <span className="text-muted-foreground hidden max-w-[12rem] truncate xl:inline">
         Halo, <span className="text-foreground font-medium">{pengguna.name}</span>
       </span>
       <form action={keluar}>
