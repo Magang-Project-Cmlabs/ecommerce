@@ -53,7 +53,7 @@ Berkas yang bentrok dan cara menanganinya:
 ```bash
 npm i -E @prisma/client@7.10.0 @prisma/adapter-mariadb@7.10.0
 npm i -D -E prisma@7.10.0
-npm i zod react-hook-form @hookform/resolvers zustand lucide-react framer-motion   date-fns nodemailer yet-another-react-lightbox jose bcryptjs dotenv server-only
+npm i zod react-hook-form @hookform/resolvers zustand lucide-react framer-motion   date-fns nodemailer yet-another-react-lightbox jose @node-rs/argon2 bcryptjs dotenv server-only
 npm i -D @types/nodemailer @playwright/test @axe-core/playwright
 npx prisma init --datasource-provider mysql --output ../src/generated/prisma
 npx shadcn@4.21.0 init -b radix -p nova --no-monorepo --no-rtl -y

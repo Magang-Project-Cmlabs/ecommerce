@@ -3,7 +3,7 @@
 // Daftar, masuk, keluar, lupa & reset password (kartu kvnlhm · Hari 2).
 // Masuk, daftar, dan lupa password dibatasi 5 percobaan / 15 menit per IP
 // (PRD §13, OPEN_DECISIONS D4). Percobaan dihitung setelah lolos validasi Zod,
-// yaitu saat mulai menyentuh database/bcrypt.
+// yaitu saat mulai menyentuh database/argon2.
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -13,11 +13,11 @@ import { Prisma } from '@/generated/prisma/client';
 import { driverBatasAuth, pesanTerlaluSering } from '@/lib/auth/batas-percobaan';
 import { catatBatasAuth, hapusBatasAuth } from '@/lib/auth/pembatas-auth';
 import { ipKlien } from '@/lib/auth/ip';
-import { cocokkanPassword, cocokkanPasswordPalsu, hashPassword } from '@/lib/auth/password';
+import { cocokkanPassword, cocokkanPasswordPalsu, hashPassword, perluHashUlang } from '@/lib/auth/password';
 import { versiPassword } from '@/lib/auth/password-version';
 import { hapusSesi, simpanSesi } from '@/lib/auth/sesi';
 import { MASA_TOKEN_RESET_MS, buatTokenReset, hashTokenReset } from '@/lib/auth/token-reset';
-import { buatAkunPembeli, cariAkunUntukMasuk } from '@/lib/data/pengguna';
+import { buatAkunPembeli, cariAkunUntukMasuk, gantiHashLama } from '@/lib/data/pengguna';
 import { cariAkunUntukReset, pakaiTokenReset, simpanTokenReset, tokenResetMasihBerlaku } from '@/lib/data/reset-password';
 import { kirimEmail } from '@/lib/email';
 import { emailResetPassword } from '@/lib/email/templat';
@@ -126,7 +126,17 @@ export async function masuk(_: StateFormAkun, formData: FormData): Promise<State
     console.error('[masuk] pembatas percobaan belum dapat dibersihkan');
     return { message: BATAS_TIDAK_TERSEDIA, values };
   }
-  await simpanSesi({ userId: akun.id, role: akun.role, passwordVersion: versiPassword(akun.passwordHash) });
+  // Hash bcrypt lama diganti Argon2id diam-diam (D17). Gagal di sini tidak menggagalkan login.
+  let hashAktif = akun.passwordHash;
+  if (perluHashUlang(hashAktif)) {
+    try {
+      const baru = await hashPassword(password);
+      if (await gantiHashLama(akun.id, hashAktif, baru)) hashAktif = baru;
+    } catch {
+      console.error('[masuk] hash password lama belum dapat diperbarui');
+    }
+  }
+  await simpanSesi({ userId: akun.id, role: akun.role, passwordVersion: versiPassword(hashAktif) });
   // Admin masuk ke panelnya; pembeli ke beranda. Tujuan `next` yang aman tetap didahulukan.
   redirect(amanNext(teks(formData, 'next')) ?? (akun.role === 'admin' ? '/admin' : '/'));
 }
@@ -186,7 +196,7 @@ export async function resetPassword(_: StateFormAkun, formData: FormData): Promi
   const tokenHash = hashTokenReset(token);
   let berhasil: Awaited<ReturnType<typeof pakaiTokenReset>>;
   try {
-    // A random/missing/used token never incurs bcrypt work. The precheck is
+    // A random/missing/used token never incurs password-hash work. The precheck is
     // advisory; consuming the token below remains conditional and atomic.
     if (!await tokenResetMasihBerlaku(tokenHash)) return { message: LINK_TIDAK_BERLAKU };
     berhasil = await pakaiTokenReset(tokenHash, await hashPassword(password));

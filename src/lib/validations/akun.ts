@@ -35,7 +35,7 @@ export const gantiPasswordSchema = z
     newPassword: z
       .string({ error: 'Password baru minimal 8 karakter' })
       .min(8, { error: 'Password baru minimal 8 karakter' })
-      .refine((s) => new TextEncoder().encode(s).length <= 72, { error: 'Password maksimal 72 byte' })
+      .refine((s) => new TextEncoder().encode(s).length <= 128, { error: 'Password maksimal 128 byte' })
       .refine((s) => /^(?=.*[a-zA-Z])(?=.*\d)/.test(s), {
         error: 'Password harus memuat kombinasi huruf dan angka',
       }),

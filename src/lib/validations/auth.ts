@@ -3,7 +3,8 @@
 
 import { z } from 'zod';
 
-const BATAS_BCRYPT_BYTE = 72; // bcrypt diam-diam memotong sisa di atas 72 byte
+// Argon2id tidak memotong password; batas ini hanya mencegah isian raksasa membebani server.
+const BATAS_PASSWORD_BYTE = 128;
 
 const email = z
   .string({ error: 'Email wajib diisi' })
@@ -11,12 +12,12 @@ const email = z
   .toLowerCase()
   .pipe(z.email({ error: 'Format email tidak sah' }).max(191, { error: 'Email terlalu panjang' }));
 
-/** Password baru (daftar & reset): min. 8 karakter (PRD §13), maks. 72 byte bcrypt. */
+/** Password baru (daftar & reset): min. 8 karakter (PRD §13), maks. 128 byte. */
 const passwordBaru = z
   .string({ error: 'Password wajib diisi' })
   .min(8, { error: 'Password minimal 8 karakter' })
-  .refine((s) => new TextEncoder().encode(s).length <= BATAS_BCRYPT_BYTE, {
-    error: 'Password terlalu panjang (maksimal 72 byte)',
+  .refine((s) => new TextEncoder().encode(s).length <= BATAS_PASSWORD_BYTE, {
+    error: 'Password terlalu panjang (maksimal 128 byte)',
   });
 
 const konfirmasiSama = (d: { password: string; confirmPassword: string }) => d.password === d.confirmPassword;

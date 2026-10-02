@@ -214,3 +214,10 @@
 @media (prefers-contrast: more) {
   header.sticky { background-color: var(--background); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: currentColor; }
 }
+
+/* Panel admin memakai bahasa visual toko: kartu = ubin abu tanpa garis, tabel lega
+   dengan kepala kolom pelan. Tanpa @layer agar menang atas utilitas bawaan komponen. */
+.ui-admin [data-slot="card"] { background-color: var(--tile); box-shadow: none; border-radius: 1.5rem; --card-spacing: calc(var(--spacing) * 6); }
+.ui-admin [data-slot="card-title"] { font-size: 1.125rem; letter-spacing: -0.01em; }
+.ui-admin [data-slot="table-head"] { height: 2.75rem; padding-inline: 1rem; font-size: 13px; font-weight: 400; color: var(--muted-foreground); }
+.ui-admin [data-slot="table-cell"] { padding: 0.875rem 1rem; }

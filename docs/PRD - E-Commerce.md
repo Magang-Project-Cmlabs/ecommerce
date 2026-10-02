@@ -41,7 +41,7 @@ Toko ini dipakai oleh brand/UMKM Indonesia untuk menjual produk (fashion, elektr
 | Animasi | Framer Motion |
 | State client | Zustand (keranjang di localStorage) |
 | Form & validasi | React Hook Form + Zod |
-| Autentikasi | bcrypt + session JWT (cookie httpOnly) |
+| Autentikasi | Argon2id + session JWT (cookie httpOnly) — semula bcrypt, diganti keputusan D17 |
 | Email | Nodemailer (SMTP) |
 | Penyimpanan gambar | S3-compatible (Cloudflare R2) di production, disk lokal di development |
 | Tanggal | date-fns (locale `id`) |
@@ -334,7 +334,7 @@ S3_PUBLIC_URL=""
 Script: `dev`, `build`, `start`, `db:migrate`, `db:seed`, `db:reset`, `db:studio`
 
 ## 13. Keamanan
-- Password di-hash bcrypt, minimal 8 karakter
+- Password di-hash Argon2id (semula bcrypt; D17), minimal 8 karakter
 - Cookie session `httpOnly`, `secure` (production), `sameSite=lax`, berlaku 30 hari
 - Semua input divalidasi Zod di server
 - Cek kepemilikan data dan role di setiap aksi

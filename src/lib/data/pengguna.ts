@@ -22,3 +22,8 @@ export function ambilProfilPengguna(id: number) {
 export function ambilHashPassword(id: number) {
   return prisma.user.findFirst({ where: { id, deletedAt: null }, select: { passwordHash: true } });
 }
+/** Ganti hash lama (mis. bcrypt) ke hash baru hanya bila belum berubah sejak dibaca. true bila terganti. */
+export async function gantiHashLama(id: number, hashLama: string, hashBaru: string) {
+  const hasil = await prisma.user.updateMany({ where: { id, passwordHash: hashLama, deletedAt: null }, data: { passwordHash: hashBaru } });
+  return hasil.count === 1;
+}

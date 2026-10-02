@@ -1,7 +1,7 @@
 "use client";
 
 // Komponen Tab 2: Ganti Password Pengguna (PRD §5.2).
-// Menegakkan verifikasi bcrypt password lama dan aturan keamanan password baru.
+// Menegakkan verifikasi password lama (Argon2id) dan aturan keamanan password baru.
 
 import { useState, useTransition } from "react";
 import { Lock, Eye, EyeOff, Loader2, CheckCircle2, AlertCircle } from "lucide-react";

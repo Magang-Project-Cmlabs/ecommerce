@@ -13,7 +13,7 @@ data pribadi (alamat, telepon, email).
 ## Checklist
 
 **Autentikasi & sesi**
-- [ ] Password di-hash bcrypt, minimal 8 karakter
+- [ ] Password di-hash Argon2id (m=19 MiB, t=2, p=1), minimal 8 karakter, maksimal 128 byte; hash bcrypt lama diganti saat login berhasil (D17)
 - [ ] Cookie sesi `httpOnly`, `sameSite=lax`, `secure` di production, 30 hari
 - [ ] Pesan login gagal sama untuk "email tidak ada" dan "password salah"
 - [ ] Lupa password: respons selalu sama; token disimpan sebagai hash, 1 jam,

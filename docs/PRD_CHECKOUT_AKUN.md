@@ -20,7 +20,7 @@ Dokumen ini mendefinisikan spesifikasi kebutuhan lengkap untuk menyelesaikan sel
 3. **Halaman Akun Saya (`/akun`):**
    - Panel terpusat pengguna yang dilindungi otentikasi (`requireUser`), mencakup 4 fitur utama:
      - **Ubah Profil:** Pembaruan nama dan nomor telepon berformat valid Indonesia.
-     - **Ganti Password:** Pembaruan kata sandi aman yang mewajibkan verifikasi kata sandi lama via bcrypt.
+     - **Ganti Password:** Pembaruan kata sandi aman yang mewajibkan verifikasi kata sandi lama (Argon2id; hash bcrypt lama tetap dikenali, D17).
      - **Kelola Alamat:** Manajemen buku alamat pengiriman (tambah, edit, hapus, dan atur alamat utama).
      - **Hapus Akun:** Penghapusan akun sesuai kepatuhan UU Pelindungan Data Pribadi (UU PDP) melalui anonimisasi data pribadi tanpa merusak relasi integritas riwayat pesanan akuntansi.
 4. **Laporan & Resolusi Bug Sebelumnya:**
@@ -326,10 +326,10 @@ Sesuai aturan keamanan PRD §10.9 dan `CLAUDE.md` #10:
 1. Ambil sesi pengguna terotentikasi.
 2. Validasi input form via `gantiPasswordSchema`.
 3. Query `passwordHash` pengguna saat ini dari database.
-4. Lakukan pencocokan aman menggunakan `bcrypt.compare(input.currentPassword, user.passwordHash)`.
+4. Lakukan pencocokan aman menggunakan `cocokkanPassword(input.currentPassword, user.passwordHash)` (`src/lib/auth/password.ts`).
    - Jika **tidak cocok**: Kembalikan `{ ok: false, message: 'Password saat ini tidak sesuai.' }`.
 5. Pastikan password baru tidak identik dengan password saat ini.
-6. Hash password baru: `const newHash = await bcrypt.hash(input.newPassword, 10)`.
+6. Hash password baru: `const newHash = await hashPassword(input.newPassword)` (Argon2id).
 7. Perbarui tabel `users`:
    ```ts
    await prisma.user.update({
@@ -373,7 +373,7 @@ Sesuai aturan keras PRD §10.9 dan prinsip integritas relasional akuntansi: **Ak
    - Pengguna wajib memasukkan password saat ini untuk membuktikan kepemilikan akun.
    - Pengguna wajib mencentang persetujuan: *"Saya mengerti bahwa akun saya akan dinonaktifkan secara permanen dan seluruh data pribadi akan dihapus."*
 2. **Eksekusi Server Action dalam Transaksi:**
-   - Verifikasi password via `bcrypt.compare`.
+   - Verifikasi password via `cocokkanPassword`.
    - Anonimkan data pengguna di tabel `users`:
      - `name = 'Pengguna TokoKita (Dihapus)'`
      - `email = 'deleted-' + userId + '-' + Date.now() + '@tokokita.internal'`
@@ -503,7 +503,7 @@ Sebelum implementasi dianggap selesai dan siap untuk Pull Request, seluruh stand
    - Uji hitung mundur waktu `paymentDueAt` (format jam-menit-detik, penanganan waktu kedaluwarsa).
 3. **Server Actions (Mocked Prisma Transaction):**
    - Uji Server Action `buatPesanan`: verifikasi pemotongan stok bersyarat, kalkulasi total dari database, rollback jika stok tidak cukup, dan pembuatan nomor invoice bulanan.
-   - Uji Server Action `ubahProfil`, `gantiPassword` (verifikasi bcrypt compare), dan `hapusAkun` (verifikasi anonimisasi dan pencabutan sesi).
+   - Uji Server Action `ubahProfil`, `gantiPassword` (verifikasi `cocokkanPassword`), dan `hapusAkun` (verifikasi anonimisasi dan pencabutan sesi).
 
 ### 7.2 Gate Verification Checklist
 - [x] **Integritas Berkas:** Tidak ada berkas berukuran 0 byte (`find src/ -type f -size 0` mengembalikan 0).

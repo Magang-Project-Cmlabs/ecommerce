@@ -60,6 +60,8 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Lighthouse produksi online (simulasi) | FAIL | Seluler perf 91–92, a11y/bp 100, LCP 2,9–3,1 s (> 2,5 s); desktop 100, LCP 0,5–0,6 s |
 | Lighthouse produksi online (DevTools) | FAIL | Seluler perf 71–78, FCP 2,7–2,9 s, LCP 3,4–3,7 s |
 | Unduhan PPT diperbarui (2 Okt) | PASS (file) / NOT_RUN (visual) | 26 teks + 4 gambar (slide 1, 10–13) diganti; validator PPTX resmi lulus; perkiraan muat-teks tidak menunjukkan penambahan baris. Render slide NOT_RUN (LibreOffice tidak tersedia di mesin ini); tinjau sekali di PowerPoint |
+| Redesain admin + modal, Pilihan, konfirmasi keluar, Argon2id (3 Okt) | PASS | typecheck, lint, 425 unit (2 dilewati), integrasi auth MySQL 12/12, build, E2E Chrome 83/84 (1 dilewati), axe terang+gelap 8 halaman admin/katalog + modal 0 pelanggaran serius |
+| Unduhan PPT diperbarui (3 Okt) | PASS (file) / NOT_RUN (visual) | Slide 10–13 tangkapan layar tampilan baru (slide 13 admin mode gelap), teks slide 10, 13 (modal, mode gelap), 17 (Argon2id); validator PPTX resmi lulus. Render NOT_RUN (LibreOffice tidak ada) |
 | Latihan demo PPT 5 adegan | PASS | `demo-ppt.spec.ts` 30 dtk; 15 tangkapan layar di docs/screenshots/demo-ppt |
 | Bayar sandbox online sampai lunas | NOT_RUN | Butuh daftar akun/login di situs online (tidak dilakukan agen). Setara: BCA & Mandiri sandbox PASS di lokal dengan kode terbaru; webhook PRODUKSI: tanda tangan palsu HTTP 401, tanda tangan sah dengan kunci sandbox diterima (HTTP 404 untuk pesanan fiktif) |
 | Cadangan manual DB produksi | PASS | mysqldump TLS 1 Okt 2026: 155 KB, 17 tabel, "Dump completed"; disimpan di luar repo (`C:UsersIlhamcadangan-tokokita`). Jadwal backup otomatis Aiven NOT_RUN (halaman Backups gagal dimuat) |
@@ -95,4 +97,5 @@ Butuh akun/tindakan pemilik (rincian di [SERAH_TERIMA](SERAH_TERIMA.md)):
 
 Masih terbuka di sisi kode: LCP seluler > 2,5 s dan QRIS sandbox (simulator error 2603).
 Arah visual terkini (3 Okt): monokrom bergaya template Framer pilihan pemilik, mode terang + gelap
-(D16, [DESIGN.md](../DESIGN.md)). Perlu penilaian pemilik di situs online.
+(D16, [DESIGN.md](../DESIGN.md)); admin satu gaya dengan toko, tambah/edit lewat modal, tanpa `<select>`
+bawaan, keluar dikonfirmasi. Password Argon2id (D17). Perlu penilaian pemilik di situs online.

@@ -22,12 +22,14 @@ prinsipnya; skill ini yang mengikatnya ke repo ini.
 Pakai token (`bg-primary`, `text-muted-foreground`, `ring-ring`). Aturan yang
 paling sering dilanggar:
 
-- Teks di atas `bg-primary` (oranye) **gelap** (`text-primary-foreground`),
-  bukan putih.
-- Harga oranye `text-orange-600` hanya pada `text-xl font-bold` ke atas;
-  lebih kecil pakai `text-orange-700`.
-- Badge diskon `bg-red-600`, bukan `bg-red-500`.
-- Hijau sukses untuk teks `text-green-700`.
+- Palet monokrom dengan mode terang dan gelap (D16): `bg-primary` hitam di
+  terang / putih di gelap, ubin `bg-tile`, teks sekunder `text-muted-foreground`.
+- Merah `bg-sale` hanya untuk label diskon dan hati wishlist; harga memakai
+  warna teks biasa (`font-semibold tabular-nums`).
+- Warna status memakai pasangan gelap, mis. `text-green-700 dark:text-green-300`.
+- Jangan memakai `zinc-*`, `gray-*`, `orange-*`, `bg-white`, `text-black`.
+- Daftar pilihan: komponen `Pilihan`, bukan `<select>` bawaan. Form tambah/edit
+  admin: `ModalAdmin`. Konfirmasi (hapus, batal, keluar): `AlertDialog`.
 
 ## 3. Server vs client
 

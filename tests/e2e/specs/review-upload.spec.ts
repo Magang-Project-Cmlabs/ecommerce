@@ -5,6 +5,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { hasCredentials, performLogin } from '../helpers/auth';
+import { pilihOpsi } from '../helpers/pilihan';
 
 const exec = promisify(execFile);
 const root = path.join(__dirname, '..', '..', '..');
@@ -47,8 +48,8 @@ test('tiga foto2MB diunggah terpisah dan ulasanfinal hanya membawa token', async
     await performLogin(page, 'customer');
     await page.goto(`/produk/${item.product.slug}#ulasan`);
     await expect(page.getByRole('heading', { name: 'Tulis Ulasan' })).toBeVisible();
-    await page.getByLabel('Produk dari pesanan').selectOption(String(item.id));
-    await page.getByLabel('Rating', { exact: true }).selectOption('5');
+    await pilihOpsi(page, 'Produk dari pesanan', /^E2ER/);
+    await pilihOpsi(page, 'Rating', '5 bintang');
     await page.getByLabel('Ulasan Anda').fill(marker);
     const image = await sharp({ create: { width: 1000, height: 1000, channels: 3, background: '#f97316' } }).png().toBuffer();
     const buffer = Buffer.concat([image, Buffer.alloc(2 * 1024 * 1024 - image.length)]);

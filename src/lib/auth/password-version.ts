@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { kunciDariRahasia } from './token';
 
-// JWT carries an opaque version, never the bcrypt hash. A password change
+// JWT carries an opaque version, never the password hash. A password change
 // automatically revokes all previously issued sessions without a session table.
 export function versiPassword(passwordHash: string, rahasia = process.env.AUTH_SECRET): string {
   return createHmac('sha256', kunciDariRahasia(rahasia)).update(passwordHash).digest('hex');

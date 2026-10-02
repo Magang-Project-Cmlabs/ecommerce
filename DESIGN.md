@@ -4,7 +4,7 @@ Maksud desain ada di PRD §17-19; palet PRD §17 diganti keputusan **D16**
 (`docs/OPEN_DECISIONS.md`). Kalau berkas ini berbeda dari kode di
 `src/app/globals.css`, **kode yang menang** — perbarui berkas ini.
 
-**Arah visual (diperbarui 3 Oktober 2026):** modern dan elegan seperti template
+**Arah visual (diperbarui 3 Oktober 2026; admin diselaraskan di hari yang sama):** modern dan elegan seperti template
 Framer yang dipilih pemilik (ecom, sabina, sneako, horven, furnexa). Ciri
 utamanya: foto lifestyle besar, judul display besar dengan jarak huruf rapat,
 palet monokrom, kartu produk tanpa bingkai, aksi berupa pil kecil, pita teks
@@ -26,13 +26,13 @@ memakai token, bukan warna mentah, supaya kedua mode otomatis benar.
 | `--ring` | `#0a0a0a` | `#d4d4d4` | Cincin fokus keyboard |
 | `--sale` | `#dc2626` | `#dc2626` | **Satu-satunya warna**: label diskon, titik merek, hati wishlist |
 
-**Tetap gelap di kedua mode:** pita pengumuman, footer, sidebar admin
-(`#0a0a0a`, teks putih). **Selalu putih di atas foto:** judul hero, label ubin
+**Tetap gelap di kedua mode:** pita pengumuman dan footer (`#0a0a0a`, teks
+putih). Panel admin memakai latar dan token yang sama dengan toko (ikut mode). **Selalu putih di atas foto:** judul hero, label ubin
 kategori (di atas gradasi gelap).
 
 Warna status pesanan (amber, hijau, merah, biru) memakai pasangan
 `dark:bg-<warna>-500/10 dark:text-<warna>-300`. Jangan memakai `zinc-*`,
-`gray-*`, `orange-*`, `bg-white`, atau `text-black` di halaman toko.
+`gray-*`, `orange-*`, `bg-white`, atau `text-black` di halaman toko maupun admin.
 
 ## 2. Tipografi
 
@@ -66,8 +66,19 @@ berat 500, jarak huruf rapat: `h1` −0,035em, `h2` −0,03em, `h3` −0,015em.
   wishlist kanan atas, tombol bulat (Tambah ke Keranjang / Pilih Varian) kanan
   bawah foto — muncul saat disorot/fokus di desktop, selalu terlihat di layar
   sentuh. Nama + rating, merek, harga + harga coret di bawah tanpa bingkai.
-- Admin: sidebar hitam + bilah atas berisi tombol mode gelap; header/footer toko
-  disembunyikan di `/admin`; di HP sidebar jadi `Sheet`.
+- Admin: bahasa visual sama dengan toko. Sidebar terang/gelap mengikuti tema dengan
+  menu pil (item aktif `bg-foreground text-background`), bilah atas translusen berisi
+  tombol mode gelap, Lihat toko, dan Keluar. Judul halaman `text-4xl md:text-5xl`,
+  kartu = ubin `bg-tile rounded-3xl` tanpa garis (aturan `.ui-admin` di
+  `globals.css`), tabel dalam bingkai `rounded-3xl border`, angka ringkasan besar
+  dengan Albert Sans; ubin "Perlu diproses" berbalik warna bila ada antrean.
+  Header/footer toko disembunyikan di `/admin`; di HP sidebar jadi `Sheet`.
+- **Tambah/edit admin = modal**, bukan halaman terpisah: tombol "Tambah …" membuka
+  `?tambah=1`, tautan "Edit" membuka `?edit=ID` di halaman daftar yang sama
+  (`ModalAdmin`). Simpan berhasil → toast, modal tertutup, daftar diperbarui.
+  Klik di luar modal tidak menutup (mencegah isian hilang); Esc dan tombol ✕
+  menutup. Di HP modal tampil sebagai lembar dari bawah. `/admin/produk/baru` dan
+  `/admin/produk/[id]` tetap ada sebagai pengalih ke modal.
 - Lebar minimum 360 px tanpa gulir mendatar; target sentuh minimal 44×44 px.
 
 ## 4. Tombol dan komponen
@@ -94,8 +105,12 @@ Tombol di atas foto (CTA hero, panah carousel) memakai putih / kaca
 | Mega-menu kategori | `NavigationMenu` |
 | Saran pencarian | `Popover` (id unik per instans, `useId`) |
 | Mode gelap | `TemaToggle` (`src/components/layout/TemaToggle.tsx`) |
-| Pilihan varian | `ToggleGroup` |
-| Tabel admin / konfirmasi | `Table` / `AlertDialog` |
+| Pilihan varian produk | `ToggleGroup` |
+| Daftar pilihan (kategori, merek, rating, urutan, status, jenis promo) | `Pilihan` (`src/components/ui/pilihan.tsx`) — **jangan pernah `<select>` bawaan**. Pemicu setinggi 44 px `rounded-xl`, daftar melayang `rounded-2xl`, subkategori menjorok di bawah induknya, nilai dikirim lewat input tersembunyi |
+| Kolom isian | `Input` (44 px, `rounded-xl`) dan textarea dengan gaya yang sama |
+| Form tambah/edit admin | `ModalAdmin` di atas `Dialog` (`src/components/ui/dialog.tsx`) |
+| Konfirmasi hapus, arsip, batal, keluar | `AlertDialog` (`rounded-3xl`, judul besar, tombol Batal + aksi). Keluar selalu dikonfirmasi ("Keluar dari akun?") lewat `TombolKeluar` |
+| Tabel admin | `Table` |
 
 ## 5. Interaksi
 

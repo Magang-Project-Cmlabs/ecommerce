@@ -12,7 +12,7 @@ Sebelum kerja: baca [`docs/MULAI_DI_SINI.md`](docs/MULAI_DI_SINI.md) lalu
 
 Next.js App Router + React + TypeScript · MySQL 8 / MariaDB 10.4+ · Prisma ·
 Tailwind CSS · shadcn/ui · Lucide · Framer Motion · Zustand (keranjang di
-localStorage) · React Hook Form + Zod · bcrypt + JWT di cookie httpOnly ·
+localStorage) · React Hook Form + Zod · Argon2id (`@node-rs/argon2`, D17) + JWT di cookie httpOnly ·
 Nodemailer · penyimpanan gambar lokal (dev) / Vercel Blob atau S3-compatible (prod, D15) · date-fns `id` ·
 Vitest (unit test) · Midtrans Snap sandbox lewat `fetch` (tanpa SDK, D9).
 
@@ -80,7 +80,7 @@ user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
    tidak diedit; perbaikan = migration baru. Produk diarsipkan
    (`is_active = false`), tidak dihapus.
 10. **Rahasia hanya di `.env`** (diabaikan Git). `.env.example` berisi placeholder.
-    Password bcrypt, token reset disimpan sebagai hash.
+    Password Argon2id (hash bcrypt lama diganti otomatis saat login), token reset disimpan sebagai hash.
 11. **Bahasa & format.** UI Bahasa Indonesia; label status, mata uang
     (`Rp 89.000`), dan tanggal (`23 Sep 2026, 14.30 WIB`) dari satu sumber —
     lihat [`docs/GLOSSARY.md`](docs/GLOSSARY.md).

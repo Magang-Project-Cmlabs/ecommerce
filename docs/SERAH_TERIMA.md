@@ -1,6 +1,6 @@
 # Serah Terima — TokoKita
 
-**Tanggal:** 2 Oktober 2026
+**Tanggal:** 3 Oktober 2026
 **Branch:** `develop` sudah memuat PR #23 dan #25. Pekerjaan lanjutan ada di
 `feat/penyelesaian-tokokita` (dikirim lewat PR ke `develop`).
 **Status lengkap:** [PROJECT_STATUS](PROJECT_STATUS.md) · log: [PROGRESS](PROGRESS.md)
@@ -34,7 +34,8 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
   ubin kategori juga foto CC0 (kredit di berkas yang sama).
 - Latihan demo PPT otomatis dan rekaman cadangan: [DEMO](DEMO.md).
 - Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
-- Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md) (gaya ubin/Apple Store, sistem tombol baru, aksi admin ikon + tulisan).
+- Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md): gaya template Framer, monokrom, mode terang + gelap (D16); admin satu bahasa visual dengan toko, tambah/edit lewat modal, semua daftar pilihan memakai komponen `Pilihan` (tanpa `<select>` bawaan), keluar selalu dikonfirmasi.
+- Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
 
 ## Menunggu pemilik
 
@@ -42,7 +43,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 2. Tinjau PPT di PowerPoint (render slide tidak diuji di mesin pengembang).
 3. Cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven; cadangan manual 1 Okt ada di luar repo.
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
-5. Beri contoh konkret bagian tampilan yang dianggap belum sesuai acuan (Framer/Apple) agar bisa diperbaiki tepat sasaran.
+5. Nilai tampilan baru (toko dan admin, terang dan gelap) di situs online; sebutkan bagian yang masih kurang.
 
 Pembayaran uang asli butuh akun Midtrans produksi atas nama badan usaha; di
 luar cakupan magang.

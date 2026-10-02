@@ -12,7 +12,7 @@
 import "dotenv/config";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import bcrypt from "bcryptjs";
+import { hash, type Algorithm } from "@node-rs/argon2";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { konfigurasiDb } from "../src/lib/konfigurasi-db";
@@ -260,8 +260,10 @@ async function main() {
 
   // --- Pengguna -------------------------------------------------------------
   console.log("Membuat pengguna…");
-  const hashAdmin = await bcrypt.hash("admin12345", 10);
-  const hashPembeli = await bcrypt.hash("password123", 10);
+  // Parameter sama dengan src/lib/auth/password.ts (Argon2id, D17).
+  const opsiArgon = { algorithm: 2 as Algorithm /* Argon2id */, memoryCost: 19_456, timeCost: 2, parallelism: 1 };
+  const hashAdmin = await hash("admin12345", opsiArgon);
+  const hashPembeli = await hash("password123", opsiArgon);
 
   const admin = await prisma.user.create({
     data: { name: "Admin TokoKita", email: "admin@tokokita.id", phone: "081100000001", passwordHash: hashAdmin, role: "admin", createdAt: lalu(120) },
