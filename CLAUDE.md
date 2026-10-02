@@ -13,7 +13,7 @@ Sebelum kerja: baca [`docs/MULAI_DI_SINI.md`](docs/MULAI_DI_SINI.md) lalu
 Next.js App Router + React + TypeScript · MySQL 8 / MariaDB 10.4+ · Prisma ·
 Tailwind CSS · shadcn/ui · Lucide · Framer Motion · Zustand (keranjang di
 localStorage) · React Hook Form + Zod · bcrypt + JWT di cookie httpOnly ·
-Nodemailer · penyimpanan gambar lokal (dev) / S3-compatible (prod) · date-fns `id` ·
+Nodemailer · penyimpanan gambar lokal (dev) / Vercel Blob atau S3-compatible (prod, D15) · date-fns `id` ·
 Vitest (unit test) · Midtrans Snap sandbox lewat `fetch` (tanpa SDK, D9).
 
 Versi terkunci: Next.js 16.3.6, React 19.2, Prisma 7.10.0 (CLI, client, dan

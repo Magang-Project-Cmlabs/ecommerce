@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-02 — Kevin Ilham / Claude Code — Redesain toko dan admin, dokumentasi dan PPT diperbarui
+- Branch / PR: `feat/penyelesaian-tokokita` / #27–#38 di-merge ke `develop` (tanpa 2 reviewer, atas instruksi pemilik; mohon ditinjau ketua tim).
+- Perubahan: bagian "Kata pembeli" dari ulasan nyata; hero scroll-snap dan gerak CSS; arah visual Apple Store (ubin abu muda, kartu tanpa bingkai, hero dua kolom); sistem tombol baru dan penyeragaman oranye kustom; aksi admin ikon + tulisan; halaman dalam (detail, checkout, akun, pesanan) disamakan; admin beraksen oranye. Unggah gambar lewat Vercel Blob (D15); SMTP Gmail terpasang; foto produk CC0 + KREDIT_FOTO; latihan demo otomatis. Dokumen: DESIGN.md ditulis ulang, PPT diperbarui (26 teks + 4 gambar), README/indeks/CLAUDE.md disesuaikan.
+- Verifikasi: lint PASS · typecheck PASS · test PASS (418) · e2e Chrome subset PASS (78 kasus) · suite lintas browser 299/310 lalu 28/28 setelah isi ulang stok data uji · Lighthouse produksi: desktop 100, seluler 91–92 (LCP 2,9–3,1 s FAIL terhadap 2,5 s) · validator PPTX PASS · render PPT NOT_RUN · uji bayar sandbox di situs online NOT_RUN.
+- Catatan: pemilik menilai sebagian tampilan masih belum sesuai acuan dan meminta contoh lebih konkret; QRIS sandbox tetap FAIL (simulator 2603).
+
 ### 2026-10-01 — Kevin Ilham / Claude Code — Rilis Vercel, Midtrans sandbox online, polesan UI dan latihan demo
 - Branch / PR: `feat/penyelesaian-tokokita` / #23 dan #25 di-merge ke `develop` (tanpa 2 reviewer, atas instruksi pemilik; mohon ditinjau ketua tim).
 - Perubahan: Preview Vercel diperbaiki (env DB per lingkungan, DB uji `tokokita_preview`); produksi publik dari `develop`; kunci Midtrans sandbox + Notification URL; cron harian Vercel; akun admin/pembeli online dengan kata sandi acak. UI: tema tombol orange-700 putih, ikon kategori, judul tab, admin (bilah atas sendiri, sidebar penuh, ringkasan, kategori berjenjang, pemilih gambar Indonesia, tombol detail/kembali), login admin langsung ke panel, beranda tanpa produk berulang, tab bergaris bawah. Foto produk CC0 sesuai produk (docs/KREDIT_FOTO.md). Seed: akun demo tidak lagi memakai HEMAT10. Latihan demo otomatis `demo-ppt.spec.ts`.

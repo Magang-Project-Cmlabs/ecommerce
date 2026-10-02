@@ -1,6 +1,6 @@
 # Serah Terima — TokoKita
 
-**Tanggal:** 1 Oktober 2026
+**Tanggal:** 2 Oktober 2026
 **Branch:** `develop` sudah memuat PR #23 dan #25. Pekerjaan lanjutan ada di
 `feat/penyelesaian-tokokita` (dikirim lewat PR ke `develop`).
 **Status lengkap:** [PROJECT_STATUS](PROJECT_STATUS.md) · log: [PROGRESS](PROGRESS.md)
@@ -33,14 +33,16 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 - Foto produk demo CC0 sesuai produk ([KREDIT_FOTO](KREDIT_FOTO.md)); banner dan
   kategori berupa ilustrasi (`npm run demo:ilustrasi`).
 - Latihan demo PPT otomatis dan rekaman cadangan: [DEMO](DEMO.md).
+- Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
+- Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md) (gaya ubin/Apple Store, sistem tombol baru, aksi admin ikon + tulisan).
 
 ## Menunggu pemilik
 
-1. **Pasang SMTP ke Vercel**: `.env.smtp` sudah benar (login Gmail berhasil, email uji terkirim) tetapi belum dikirim ke Vercel. Jalankan `node scripts/pasang-env-vercel.mjs .env.smtp`, lalu minta deploy ulang. (Unggah gambar sudah aktif lewat Vercel Blob, OPEN_DECISIONS D15; R2 aktif sebagai cadangan.)
-2. Uji manusia di situs produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin.
-3. Cadangan: manual sudah dibuat (lihat PROJECT_STATUS); jadwal otomatis Aiven belum bisa dicek.
-4. Cron 15 menit (Vercel Pro atau secret GitHub Actions), jadwal backup Aiven,
-   dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
+1. Uji manusia di produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar (HEMAT10 minimal belanja Rp 100.000), unggah gambar lewat admin, cek email "Lupa password".
+2. Tinjau PPT di PowerPoint (render slide tidak diuji di mesin pengembang).
+3. Cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven; cadangan manual 1 Okt ada di luar repo.
+4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
+5. Beri contoh konkret bagian tampilan yang dianggap belum sesuai acuan (Framer/Apple) agar bisa diperbaiki tepat sasaran.
 
 Pembayaran uang asli butuh akun Midtrans produksi atas nama badan usaha; di
 luar cakupan magang.
