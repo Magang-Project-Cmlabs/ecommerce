@@ -11,7 +11,7 @@ export default async function Navbar() {
   const kategori = await ambilKategori();
   return <>
     <a href="#konten-utama" className="sr-only fixed left-4 top-4 z-[100] rounded bg-background p-3 focus:not-sr-only">Lewati ke konten utama</a>
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-black/[0.06] bg-background/85 backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 md:gap-6">
         <Link href="/" aria-label="TokoKita, beranda" className="mr-auto flex items-center gap-2 text-2xl font-extrabold tracking-tight md:mr-0"><Store aria-hidden className="size-8 text-orange-600" /><span>Toko<span className="text-orange-700">Kita</span></span></Link>
         <div className="order-3 w-full md:order-none md:min-w-0 md:flex-1"><SearchBox /></div>

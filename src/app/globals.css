@@ -127,6 +127,10 @@
   html {
     @apply font-sans;
   }
+  /* Tipografi optis: jarak huruf mengecil seiring ukuran judul, body tetap normal. */
+  h1 { letter-spacing: -0.025em; }
+  h2 { letter-spacing: -0.02em; }
+  h3 { letter-spacing: -0.01em; }
 }
 
 @media (pointer: coarse) {
@@ -189,4 +193,12 @@
 .jalur-merek-wadah {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Preferensi aksesibilitas sistem (prinsip Apple): transparansi dan kontras. */
+@media (prefers-reduced-transparency: reduce) {
+  header.sticky { background-color: var(--background); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  header.sticky { background-color: var(--background); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: currentColor; }
 }
