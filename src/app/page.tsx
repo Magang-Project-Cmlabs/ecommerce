@@ -4,8 +4,7 @@ import CategoryList from '@/components/product/CategoryList';
 import { ProductSection } from '@/components/product/ProductSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { UlasanPilihan } from '@/components/product/UlasanPilihan';
-import { MerekPilihan } from '@/components/product/MerekPilihan';
-import { ambilBanner, ambilKategori, ambilPilihanBeranda, ambilUlasanBeranda, ambilBrand } from '@/lib/data/katalog';
+import { ambilBanner, ambilKategori, ambilPilihanBeranda, ambilUlasanBeranda } from '@/lib/data/katalog';
 
 const sections = [
   { key: 'populer', title: 'Produk Terpopuler', subtitle: 'Terlaris dalam 30 hari terakhir', href: '/produk?urut=populer', count: 8 },
@@ -13,10 +12,6 @@ const sections = [
   { key: 'diskon', title: 'Penawaran Spesial', subtitle: 'Harga terbaik untuk produk pilihan', href: '/produk?promo=1', count: 4 },
   { key: 'terbaru', title: 'Produk Terbaru', href: '/produk?urut=terbaru', count: 4 },
 ] as const;
-
-async function AsyncMerek() {
-  return <MerekPilihan merek={await ambilBrand()} />;
-}
 
 async function AsyncUlasan() {
   return <UlasanPilihan ulasan={await ambilUlasanBeranda()} />;
@@ -59,7 +54,6 @@ export default async function Home() {
   const [banner, kategori] = await Promise.all([ambilBanner(), ambilKategori()]);
   return <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-5">
     <HeroBanner slides={banner} />
-    <Suspense fallback={null}><AsyncMerek /></Suspense>
     <CategoryList categories={kategori} />
     <Suspense fallback={<ProductSectionsSkeleton />}><AsyncProductSections products={products} /></Suspense>
     <Suspense fallback={null}><AsyncUlasan /></Suspense>
