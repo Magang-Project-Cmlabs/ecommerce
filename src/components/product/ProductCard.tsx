@@ -13,7 +13,7 @@ export default function ProductCard({ product: p, list = false, belowFold = fals
   const tambah = useCartStore((s) => s.tambahItem);
   const habis = p.stock <= 0 && !p.isPreorder;
   const diskon = p.compareAtPrice && p.compareAtPrice > p.price ? Math.round((1 - p.price / p.compareAtPrice) * 100) : 0;
-  return <article className={`group relative overflow-hidden rounded-2xl border bg-card shadow-sm motion-safe:transition-[transform,box-shadow] motion-safe:duration-300 motion-safe:hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-900/10 ${list ? 'grid grid-cols-[112px_1fr] sm:grid-cols-[180px_1fr]' : 'flex h-full flex-col'}`}>
+  return <article className={`geser-naik group relative overflow-hidden rounded-2xl border bg-card shadow-sm motion-safe:transition-[transform,box-shadow] motion-safe:duration-300 motion-safe:hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-900/10 ${list ? 'grid grid-cols-[112px_1fr] sm:grid-cols-[180px_1fr]' : 'flex h-full flex-col'}`}>
     <div className="relative aspect-square overflow-hidden bg-muted">
       <Link href={`/produk/${p.slug}`} aria-label={`Lihat ${p.name}`} className="relative block size-full"><Image src={p.image || '/placeholder-produk.svg'} alt={p.name} fill quality={50} loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : belowFold ? 'low' : 'auto'} sizes={list ? '180px' : '(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw'} className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-105" /></Link>
       {diskon > 0 && <span className="absolute left-2 top-2 rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">-{diskon}%</span>}
