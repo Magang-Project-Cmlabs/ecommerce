@@ -26,7 +26,7 @@ export default async function HalamanDetailPesanan({ params }: Props) {
   }
 
   return (
-    <main className="min-h-full flex-1 bg-gray-50/50 py-8 sm:py-12">
+    <main className="min-h-full flex-1 bg-background py-8 sm:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <DetailPesananClient order={order} gatewayEnabled={!!process.env.MIDTRANS_SERVER_KEY} sandbox={process.env.MIDTRANS_IS_PRODUCTION !== 'true'} simulationEnabled={process.env.NODE_ENV !== 'production' && process.env.PAYMENT_SIMULATION_ENABLED === 'true'} />
       </div>

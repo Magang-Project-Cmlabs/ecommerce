@@ -28,7 +28,7 @@ export default function PilihanKurir({
   return (
     <div className="space-y-5">
       {/* Ringkasan Alamat Tujuan */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+      <div className="rounded-3xl bg-tile p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 text-xs">
             <span className="font-semibold text-gray-500">

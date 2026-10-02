@@ -140,7 +140,7 @@ export default function KonfirmasiPesanan({
       {/* Grid 3 Kartu Ringkasan (Alamat, Kurir, Pembayaran) */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* 1. Alamat Pengiriman */}
-        <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+        <div className="relative rounded-3xl bg-tile p-4">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
               <MapPin className="h-3.5 w-3.5 text-orange-700" />
@@ -168,7 +168,7 @@ export default function KonfirmasiPesanan({
         </div>
 
         {/* 2. Pengiriman & Kurir */}
-        <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+        <div className="relative rounded-3xl bg-tile p-4">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
               <Truck className="h-3.5 w-3.5 text-orange-700" />
@@ -196,7 +196,7 @@ export default function KonfirmasiPesanan({
         </div>
 
         {/* 3. Metode Pembayaran */}
-        <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+        <div className="relative rounded-3xl bg-tile p-4">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
               <PaymentIcon className="h-3.5 w-3.5 text-orange-700" />
@@ -226,7 +226,7 @@ export default function KonfirmasiPesanan({
       </div>
 
       {/* 4. Daftar Barang yang Dipesan */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+      <div className="rounded-3xl bg-tile p-4">
         <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
           <Package className="h-4 w-4 text-orange-700" />
           <h4 className="text-xs font-bold text-gray-900">
@@ -281,7 +281,7 @@ export default function KonfirmasiPesanan({
       </div>
 
       {/* 5. Catatan untuk Penjual */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+      <div className="rounded-3xl bg-tile p-4">
         <div className="flex items-center justify-between">
           <label
             htmlFor="order-notes"
@@ -306,7 +306,7 @@ export default function KonfirmasiPesanan({
       </div>
 
       {/* 6. Rincian Biaya */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+      <div className="rounded-3xl bg-tile p-4">
         <h4 className="border-b border-gray-100 pb-2 text-xs font-bold text-gray-900">
           Rincian Pembayaran
         </h4>

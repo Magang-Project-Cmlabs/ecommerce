@@ -162,10 +162,10 @@ export default function DaftarPesananClient({ orders }: Props) {
             return (
               <div
                 key={order.id}
-                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs transition-hover hover:border-gray-300"
+                className="overflow-hidden rounded-3xl bg-tile transition-hover hover:border-gray-300"
               >
                 {/* Header Kartu Pesanan */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50/60 px-5 py-3 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.06] px-5 py-3 text-xs">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="font-extrabold text-gray-900 font-mono tracking-tight">
                       {order.orderNumber}
@@ -202,7 +202,7 @@ export default function DaftarPesananClient({ orders }: Props) {
                       key={item.id}
                       className="flex items-center gap-4 py-2.5 text-xs"
                     >
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white">
                         {item.image ? (
                           <Image
                             src={item.image}
@@ -242,7 +242,7 @@ export default function DaftarPesananClient({ orders }: Props) {
                 </div>
 
                 {/* Footer Kartu Pesanan: Total & Tombol Aksi */}
-                <div className="flex flex-col gap-3 border-t border-gray-100 bg-gray-50/30 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 border-t border-black/[0.06] px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-xs">
                     <span className="text-gray-500">Total Pembayaran: </span>
                     <span className="text-sm font-extrabold text-orange-700">
@@ -259,7 +259,7 @@ export default function DaftarPesananClient({ orders }: Props) {
                     {/* Tombol Detail Pesanan */}
                     <Button
                       asChild
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
                     >
                       <Link href={`/akun/pesanan/${order.orderNumber}`}>

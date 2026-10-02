@@ -121,7 +121,7 @@ export default function AlamatTab({ initialAddresses }: Props) {
 
       {/* Form Tambah Alamat Baru */}
       {showAddForm && (
-        <div className="rounded-xl border border-orange-200 bg-white p-5 shadow-xs">
+        <div className="rounded-3xl bg-tile ring-1 ring-orange-300 p-5">
           <AlamatForm
             onSuccess={handleAddressAdded}
             onCancel={() => setShowAddForm(false)}

@@ -80,7 +80,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border border-gray-200 bg-gray-50/70 p-5 shadow-xs"
+      className="rounded-3xl bg-tile p-5"
     >
       <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-3">
         <h3 className="text-sm font-bold text-gray-900">Tambah Alamat Baru</h3>
