@@ -25,7 +25,7 @@ export function WishlistButton({ productId, name, text = false }: { productId: n
       else toast.error(hasil.message);
     });
   }
-  return <Button variant="outline" size={text ? 'default' : 'icon'} onClick={klik} disabled={pending} aria-pressed={tersimpan} aria-label={`${tersimpan ? 'Hapus' : 'Simpan'} ${name} ${tersimpan ? 'dari' : 'ke'} wishlist`} className={`${text ? 'h-11' : 'size-11 rounded-full'} bg-background/95`}><Heart className={`size-5 ${tersimpan ? 'fill-red-600 text-red-600' : ''}`} />{text && (tersimpan ? 'Tersimpan' : 'Wishlist')}</Button>;
+  return <Button variant="outline" size={text ? 'default' : 'icon'} onClick={klik} disabled={pending} aria-pressed={tersimpan} aria-label={`${tersimpan ? 'Hapus' : 'Simpan'} ${name} ${tersimpan ? 'dari' : 'ke'} wishlist`} className={text ? 'h-11' : 'size-11 rounded-full border-transparent bg-background/75 backdrop-blur-sm hover:border-transparent hover:bg-background'}><Heart strokeWidth={1.7} className={`size-5 ${tersimpan ? 'fill-sale text-sale' : ''}`} />{text && (tersimpan ? 'Tersimpan' : 'Wishlist')}</Button>;
 }
 export function LanjutkanWishlist({ productId }: { productId: number }) {
   const { ubah } = useContext(WishlistContext);

@@ -20,7 +20,7 @@ export default async function HalamanDaftar({ searchParams }: PageProps<'/daftar
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-xl font-semibold">Buat akun TokoKita</h1>
+            <h1 className="text-3xl font-medium leading-tight">Buat akun TokoKita</h1>
           </CardTitle>
           <CardDescription>Daftar gratis untuk checkout, melacak pesanan, dan menyimpan wishlist.</CardDescription>
         </CardHeader>

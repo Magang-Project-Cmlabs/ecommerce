@@ -31,10 +31,10 @@ export default function DaftarAlamat({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-gray-900">
+          <h2 className="text-base font-bold text-foreground">
             Alamat Pengiriman
           </h2>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Pilih alamat tersimpan atau tambahkan alamat baru untuk tujuan pengiriman.
           </p>
         </div>
@@ -61,14 +61,14 @@ export default function DaftarAlamat({
 
       {/* Daftar Alamat Tersimpan */}
       {addresses.length === 0 && !isFormOpen ? (
-        <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-orange-700">
+        <div className="rounded-xl border border-dashed border-border p-8 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted text-foreground">
             <MapPin className="h-6 w-6" />
           </div>
-          <h3 className="mt-3 text-sm font-semibold text-gray-900">
+          <h3 className="mt-3 text-sm font-semibold text-foreground">
             Belum ada alamat tersimpan
           </h3>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             Tambahkan alamat pengiriman terlebih dahulu untuk melanjutkan proses pesanan.
           </p>
           <Button
@@ -91,38 +91,38 @@ export default function DaftarAlamat({
                 onClick={() => onSelectAddress(alamat.id)}
                 className={`relative flex w-full cursor-pointer items-start gap-3 rounded-xl border p-4 text-left transition-all ${
                   isSelected
-                    ? "border-orange-700 bg-orange-50/30 shadow-xs"
-                    : "border-gray-200 bg-white hover:border-gray-300"
+                    ? "border-foreground bg-muted shadow-xs"
+                    : "border-border bg-background hover:border-border"
                 }`}
               >
-                <div className="pt-0.5 text-orange-700">
+                <div className="pt-0.5 text-foreground">
                   {isSelected ? (
-                    <CheckCircle2 className="h-5 w-5 fill-orange-700 text-white" />
+                    <CheckCircle2 className="h-5 w-5 fill-foreground text-background" />
                   ) : (
-                    <Circle className="h-5 w-5 text-gray-300" />
+                    <Circle className="h-5 w-5 text-muted-foreground/70" />
                   )}
                 </div>
 
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-900">
+                    <span className="text-xs font-bold text-foreground">
                       {alamat.label}
                     </span>
                     {alamat.isDefault && (
-                      <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-600">
+                      <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
                         Utama
                       </span>
                     )}
                   </div>
 
-                  <p className="text-xs font-semibold text-gray-800">
+                  <p className="text-xs font-semibold text-foreground">
                     {alamat.name}{" "}
-                    <span className="font-normal text-gray-500">
+                    <span className="font-normal text-muted-foreground">
                       ({alamat.phone})
                     </span>
                   </p>
 
-                  <p className="text-xs leading-relaxed text-gray-600">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     {alamat.street}, {alamat.district}, {alamat.city},{" "}
                     {alamat.province} {alamat.postalCode}
                   </p>

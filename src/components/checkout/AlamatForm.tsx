@@ -82,12 +82,12 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
       onSubmit={handleSubmit}
       className="rounded-3xl bg-tile p-5"
     >
-      <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-3">
-        <h3 className="text-sm font-bold text-gray-900">Tambah Alamat Baru</h3>
+      <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
+        <h3 className="text-sm font-bold text-foreground">Tambah Alamat Baru</h3>
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-muted-foreground/70 hover:text-muted-foreground"
           aria-label="Tutup form"
         >
           <X className="h-4 w-4" />
@@ -95,7 +95,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
       </div>
 
       {generalError && (
-        <div className="mb-4 rounded-lg bg-red-50 p-3 text-xs text-red-700">
+        <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-500/10 p-3 text-xs text-red-700 dark:text-red-300">
           {generalError}
         </div>
       )}
@@ -103,7 +103,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Label Alamat */}
         <div>
-          <Label htmlFor="label" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="label" className="text-xs font-semibold text-foreground/80">
             Label Alamat *
           </Label>
           <Input
@@ -111,7 +111,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             placeholder="Contoh: Rumah, Kantor, Kos"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.label && (
@@ -121,7 +121,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Nama Penerima */}
         <div>
-          <Label htmlFor="name" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="name" className="text-xs font-semibold text-foreground/80">
             Nama Penerima *
           </Label>
           <Input
@@ -129,7 +129,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nama lengkap penerima"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.name && (
@@ -139,7 +139,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Nomor Telepon */}
         <div className="sm:col-span-2">
-          <Label htmlFor="phone" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="phone" className="text-xs font-semibold text-foreground/80">
             Nomor Telepon *
           </Label>
           <Input
@@ -148,7 +148,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="081234567890"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.phone && (
@@ -158,7 +158,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Alamat Lengkap */}
         <div className="sm:col-span-2">
-          <Label htmlFor="street" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="street" className="text-xs font-semibold text-foreground/80">
             Alamat Lengkap (Jalan, No Rumah, RT/RW) *
           </Label>
           <Input
@@ -166,7 +166,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={street}
             onChange={(e) => setStreet(e.target.value)}
             placeholder="Nama jalan, gedung, nomor rumah, RT/RW"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.street && (
@@ -176,7 +176,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Kecamatan */}
         <div>
-          <Label htmlFor="district" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="district" className="text-xs font-semibold text-foreground/80">
             Kecamatan *
           </Label>
           <Input
@@ -184,7 +184,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
             placeholder="Kecamatan"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.district && (
@@ -194,7 +194,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Kota / Kabupaten */}
         <div>
-          <Label htmlFor="city" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="city" className="text-xs font-semibold text-foreground/80">
             Kota / Kabupaten *
           </Label>
           <Input
@@ -202,7 +202,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={city}
             onChange={(e) => setCity(e.target.value)}
             placeholder="Contoh: Jakarta, Bandung, Surabaya"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.city && (
@@ -212,7 +212,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Provinsi */}
         <div>
-          <Label htmlFor="province" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="province" className="text-xs font-semibold text-foreground/80">
             Provinsi *
           </Label>
           <Input
@@ -220,7 +220,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={province}
             onChange={(e) => setProvince(e.target.value)}
             placeholder="Provinsi"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.province && (
@@ -230,7 +230,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
 
         {/* Kode Pos */}
         <div>
-          <Label htmlFor="postalCode" className="text-xs font-semibold text-gray-700">
+          <Label htmlFor="postalCode" className="text-xs font-semibold text-foreground/80">
             Kode Pos * (5 digit)
           </Label>
           <Input
@@ -239,7 +239,7 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
             placeholder="12820"
-            className="mt-1 h-9 bg-white text-xs"
+            className="mt-1 h-9 bg-background text-xs"
             disabled={isPending}
           />
           {errors.postalCode && (
@@ -257,14 +257,14 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
           />
           <Label
             htmlFor="isDefault"
-            className="cursor-pointer text-xs text-gray-600"
+            className="cursor-pointer text-xs text-muted-foreground"
           >
             Jadikan sebagai alamat utama
           </Label>
         </div>
       </div>
 
-      <div className="mt-5 flex justify-end gap-2 border-t border-gray-200 pt-4">
+      <div className="mt-5 flex justify-end gap-2 border-t border-border pt-4">
         <Button
           type="button"
           variant="outline"

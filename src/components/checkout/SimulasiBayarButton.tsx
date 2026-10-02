@@ -22,7 +22,7 @@ export default function SimulasiBayarButton({ orderNumber, isPaid }: Props) {
 
   if (isPaid || success) {
     return (
-      <div className="inline-flex items-center gap-2 rounded-full border border-green-300 bg-green-50 px-4 py-2 text-xs font-bold text-green-700">
+      <div className="inline-flex items-center gap-2 rounded-full border border-green-300 bg-green-50 dark:bg-green-500/10 px-4 py-2 text-xs font-bold text-green-700 dark:text-green-300">
         <Check className="h-4 w-4 text-green-600" />
         <span>Status: Lunas (Terverifikasi)</span>
       </div>
@@ -55,10 +55,10 @@ export default function SimulasiBayarButton({ orderNumber, isPaid }: Props) {
         variant="outline"
         disabled={loading}
         onClick={handleSimulasi}
-        className="h-10 gap-2 rounded-full border-dashed border-amber-400 bg-amber-50/60 px-5 text-xs font-bold text-amber-900 transition-colors hover:bg-amber-100 hover:text-amber-950"
+        className="h-10 gap-2 rounded-full border-dashed border-amber-400 bg-amber-50/60 dark:bg-amber-500/10 px-5 text-xs font-bold text-amber-900 dark:text-amber-300 transition-colors hover:bg-amber-100 dark:bg-amber-500/15 hover:text-amber-950"
       >
         {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin text-amber-700" />
+          <Loader2 className="h-4 w-4 animate-spin text-amber-700 dark:text-amber-300" />
         ) : (
           <Sparkles className="h-4 w-4 text-amber-600" />
         )}

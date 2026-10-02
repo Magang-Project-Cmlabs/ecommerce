@@ -20,7 +20,7 @@ export default async function HalamanMasuk({ searchParams }: PageProps<'/masuk'>
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-xl font-semibold">Masuk ke TokoKita</h1>
+            <h1 className="text-3xl font-medium leading-tight">Masuk ke TokoKita</h1>
           </CardTitle>
           <CardDescription>
             {tujuan ? 'Masuk dulu untuk melanjutkan.' : 'Masuk untuk berbelanja dan melihat pesananmu.'}

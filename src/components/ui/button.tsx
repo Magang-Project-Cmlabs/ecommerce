@@ -4,7 +4,7 @@ import { cn } from "cn"
 import { Slot } from "radix-ui"
 
 // Sistem tombol gaya Apple: bentuk pil, hierarki jelas, gerak singkat dan jujur.
-//  - default   : aksi utama, satu per area (oranye tua, teks putih, kontras 5.2:1)
+//  - default   : aksi utama, satu per area (hitam di mode terang, putih di mode gelap)
 //  - secondary : aksi pendamping di atas ubin abu muda
 //  - outline   : aksi lain dengan garis tipis
 //  - ghost     : aksi ringan tanpa bidang, bidang muncul saat disorot
@@ -23,15 +23,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.16)] hover:bg-[color-mix(in_oklch,var(--primary),black_14%)]",
+          "bg-primary text-primary-foreground hover:bg-primary/85",
         secondary:
-          "bg-tile text-foreground hover:bg-zinc-200/80 aria-expanded:bg-zinc-200/80",
+          "bg-tile text-foreground hover:bg-foreground/10 aria-expanded:bg-foreground/10",
         outline:
-          "border-zinc-300 bg-background text-foreground hover:border-zinc-400 hover:bg-zinc-900/[0.04] aria-expanded:bg-zinc-900/[0.06]",
+          "border-border bg-background text-foreground hover:border-foreground/30 hover:bg-foreground/[0.04] aria-expanded:bg-foreground/[0.06]",
         ghost:
-          "text-foreground hover:bg-zinc-900/[0.06] aria-expanded:bg-zinc-900/[0.06]",
+          "text-foreground hover:bg-foreground/[0.06] aria-expanded:bg-foreground/[0.06]",
         destructive:
-          "bg-red-50 text-red-700 hover:bg-red-100 focus-visible:ring-red-500/60",
+          "bg-red-50 text-red-700 hover:bg-red-100 focus-visible:ring-red-500/60 dark:bg-red-500/15 dark:text-red-300 dark:hover:bg-red-500/25",
         link: "rounded-md px-0.5 text-primary underline-offset-4 hover:underline",
       },
       size: {

@@ -2,12 +2,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { BannerKatalog } from '@/lib/katalog-types';
 
-// Hero gaya Apple Store: panel teks bersih + foto besar. Geser memakai scroll-snap bawaan browser
-// (mengikuti jari 1:1, momentum, bisa dibalik kapan saja), tanpa library animasi.
+// Hero foto penuh ala template Framer: foto lifestyle besar, judul putih besar di kiri bawah,
+// satu tombol pil putih. Geser memakai scroll-snap bawaan browser (mengikuti jari, bisa dibalik).
 export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
   const [index, setIndex] = useState(0);
   const jalur = useRef<HTMLDivElement>(null);
@@ -27,32 +27,28 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
     el.scrollTo({ left: ((tujuan + slides.length) % slides.length) * el.clientWidth, behavior: kurangiGerak ? 'auto' : 'smooth' });
   }, [slides.length]);
 
-  if (!slides.length) return <section className="flex min-h-[320px] flex-col justify-center rounded-[28px] bg-tile p-10 md:min-h-[400px]"><h1 className="text-4xl font-semibold tracking-[-0.03em]">Belanja nyaman di TokoKita</h1><p className="mt-3 text-lg text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild size="lg" className="mt-6 w-fit"><Link href="/produk">Mulai Belanja</Link></Button></section>;
+  if (!slides.length) return <section className="flex min-h-[420px] flex-col justify-end rounded-[28px] bg-tile p-8 md:p-14"><h1 className="max-w-3xl text-5xl font-medium leading-[0.98] md:text-7xl">Belanja nyaman di TokoKita</h1><p className="mt-4 text-lg text-muted-foreground">Pilihan untuk semua kebutuhan harian Anda.</p><Button asChild size="lg" className="mt-7 w-fit"><Link href="/produk">Mulai Belanja</Link></Button></section>;
 
-  return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative overflow-hidden rounded-[28px] bg-tile">
+  return <section aria-label="Promo pilihan" aria-roledescription="carousel" className="relative overflow-hidden rounded-[28px] bg-[#111]">
     <div ref={jalur} className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {slides.map((slide, i) => {
         const href = slide.href?.startsWith('/') && !slide.href.startsWith('//') ? slide.href : '/produk';
         const Judul = i === 0 ? 'h1' : 'h2';
-        return <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`Promo ${i + 1} dari ${slides.length}`} inert={i !== index} className="grid w-full shrink-0 snap-start md:min-h-[500px] md:grid-cols-[1fr_1.05fr]">
-          <div className="relative order-2 flex flex-col justify-center px-7 pb-20 pt-8 md:order-1 md:px-14 md:py-16 lg:px-20">
-            <Judul className="hero-masuk text-balance text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.035em] text-zinc-900 md:text-6xl lg:text-[4.25rem]">{slide.title}</Judul>
-            {slide.subtitle && <p className="hero-masuk mt-4 max-w-md text-lg leading-snug tracking-[-0.01em] text-zinc-600 md:text-xl">{slide.subtitle}</p>}
-            <div className="hero-masuk mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button asChild size="lg"><Link href={href}>{slide.cta || 'Belanja Sekarang'}</Link></Button>
-              <Link href="/produk" className="inline-flex min-h-11 items-center gap-0.5 text-base font-medium text-orange-700 underline-offset-4 hover:underline">Lihat semua produk<ChevronRight aria-hidden className="size-4" /></Link>
-            </div>
-          </div>
-          <div className="relative order-1 m-3 aspect-[4/3] overflow-hidden rounded-[22px] bg-white md:order-2 md:m-4 md:aspect-auto">
-            <div className="paralaks absolute inset-0"><Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={70} sizes="(max-width: 767px) 100vw, 660px" className="object-cover" /></div>
+        return <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`Promo ${i + 1} dari ${slides.length}`} inert={i !== index} className="relative h-[min(78svh,720px)] min-h-[480px] w-full shrink-0 snap-start overflow-hidden">
+          <div className="paralaks absolute inset-0"><Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={75} sizes="(max-width: 1400px) 100vw, 1400px" className="object-cover" /></div>
+          <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.72),rgb(0_0_0/0.25)_45%,transparent_70%)] md:bg-[linear-gradient(to_top_right,rgb(0_0_0/0.7),rgb(0_0_0/0.2)_50%,transparent_75%)]" />
+          <div className="absolute inset-x-0 bottom-0 px-6 pb-24 text-white md:px-14 md:pb-16 lg:px-16">
+            <Judul className="hero-masuk max-w-[14ch] text-balance text-[2.75rem] font-medium leading-[0.98] tracking-[-0.045em] md:text-7xl lg:text-[5.5rem]">{slide.title}</Judul>
+            {slide.subtitle && <p className="hero-masuk mt-4 max-w-md text-base leading-snug text-white/85 md:text-lg">{slide.subtitle}</p>}
+            <div className="hero-masuk mt-7"><Link href={href} className="group/cta inline-flex h-12 items-center gap-2 rounded-full bg-white pl-6 pr-5 text-[15px] font-medium text-[#0a0a0a] transition-colors hover:bg-white/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-safe:active:scale-[0.97]">{slide.cta || 'Belanja Sekarang'}<ArrowRight aria-hidden className="size-4 motion-safe:transition-transform motion-safe:group-hover/cta:translate-x-0.5" /></Link></div>
           </div>
         </div>;
       })}
     </div>
-    {slides.length > 1 && <div className="absolute bottom-4 left-7 flex items-center gap-1 md:bottom-6 md:left-14 lg:left-20">
-      {slides.map((s, i) => <button key={s.id} aria-label={`Tampilkan promo ${i + 1}`} aria-current={index === i} className="flex size-11 items-center justify-center" onClick={() => pergi(i)}><span className={`h-1.5 rounded-full motion-safe:transition-[width,background-color] motion-safe:duration-300 ${i === index ? 'w-6 bg-zinc-900' : 'w-1.5 bg-zinc-400'}`} /></button>)}
-      <Button aria-label="Promo sebelumnya" size="icon" variant="secondary" onClick={() => pergi(index - 1)} className="ml-2"><ChevronLeft /></Button>
-      <Button aria-label="Promo berikutnya" size="icon" variant="secondary" onClick={() => pergi(index + 1)}><ChevronRight /></Button>
+    {slides.length > 1 && <div className="absolute bottom-5 right-4 flex items-center gap-1 md:bottom-8 md:right-8">
+      {slides.map((s, i) => <button key={s.id} aria-label={`Tampilkan promo ${i + 1}`} aria-current={index === i} className="group/titik flex size-11 items-center justify-center" onClick={() => pergi(i)}><span className={`h-[3px] rounded-full motion-safe:transition-[width,background-color] motion-safe:duration-300 ${i === index ? 'w-8 bg-white' : 'w-4 bg-white/45 group-hover/titik:bg-white/70'}`} /></button>)}
+      <button aria-label="Promo sebelumnya" onClick={() => pergi(index - 1)} className="ml-2 flex size-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-md transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-white"><ChevronLeft aria-hidden className="size-5" /></button>
+      <button aria-label="Promo berikutnya" onClick={() => pergi(index + 1)} className="flex size-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-md transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-white"><ChevronRight aria-hidden className="size-5" /></button>
     </div>}
   </section>;
 }

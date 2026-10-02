@@ -40,8 +40,8 @@ export default function SalinTeksButton({
       onClick={handleCopy}
       className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition-all ${
         copied
-          ? "bg-green-100 text-green-700"
-          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+          ? "bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-300"
+          : "bg-muted text-foreground/80 hover:bg-muted"
       } ${className}`}
       title="Salin ke papan klip"
     >
@@ -52,7 +52,7 @@ export default function SalinTeksButton({
         </>
       ) : (
         <>
-          <Copy className="h-3.5 w-3.5 text-gray-500" />
+          <Copy className="h-3.5 w-3.5 text-muted-foreground" />
           <span>{label}</span>
         </>
       )}
