@@ -23,9 +23,12 @@ keduanya otoritatif.
 
 - Komponen dari `src/components/ui/` (shadcn). Belum ada →
   `npx shadcn@latest add <nama>`. Jangan menambah library UI lain.
-- Warna lewat token semantik. Teks di atas `bg-primary` gelap
-  (`text-primary-foreground`); harga oranye kecil pakai `text-orange-700`; badge
-  diskon `bg-red-600`.
+- Warna lewat token semantik (monokrom, mode terang + gelap, D16): aksi utama
+  `bg-primary`, ubin `bg-tile`, merah `bg-sale` hanya untuk label diskon. Tidak ada
+  `zinc-*`/`gray-*`/`orange-*`/`bg-white` di halaman.
+- Pilihan daftar memakai `Pilihan` (`src/components/ui/pilihan.tsx`), tidak pernah
+  `<select>` bawaan. Form tambah/edit admin tampil di `ModalAdmin` (`?tambah=1` /
+  `?edit=ID`). Aksi merusak dan keluar memakai `AlertDialog`.
 - Ikon `lucide-react`; gabung kelas dengan `cn()`.
 - Isi dan teks halaman persis PRD §7-8 dan §18 (empty state, toast).
 - Server Component secara bawaan; `"use client"` hanya di bagian interaktif.

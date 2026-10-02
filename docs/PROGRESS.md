@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Admin bergaya toko, modal tambah/edit, Pilihan kustom, konfirmasi keluar, Argon2id
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: komponen `Pilihan` menggantikan 12 `<select>` bawaan (filter katalog, urutan, ulasan, form dan filter admin; subkategori menjorok di bawah induk); `Input` 44 px `rounded-xl`; dialog bersama (`Dialog`, `AlertDialog`) bergaya baru; `TombolKeluar` meminta konfirmasi di toko dan admin; admin: sidebar terang/gelap dengan menu pil, judul besar, kartu ubin, tabel lega, tambah/edit produk/kategori/promo/banner lewat `ModalAdmin` (`?tambah=1`/`?edit=ID`, rute lama dialihkan); password Argon2id `@node-rs/argon2` (D17) dengan migrasi diam-diam hash bcrypt saat login, batas 128 byte, seed Argon2id; dokumen (CLAUDE.md, DESIGN.md, OPEN_DECISIONS D17, PRD catatan, runbook, panduan agent/skill, UJI_MANDIRI, SERAH_TERIMA, README E2E) dan PPT (slide 10, 11, 12, 13, 17) diperbarui.
+- Verifikasi: typecheck PASS · lint PASS · test PASS (423 + 2 dilewati) · integrasi auth MySQL PASS (12) · build PASS · e2e Chrome PASS (83, 1 dilewati) · axe terang/gelap admin + modal + katalog PASS · validator PPTX PASS · render PPT NOT_RUN (LibreOffice tidak tersedia) · lintas browser NOT_RUN.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Redesain gaya Framer + mode gelap
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: palet monokrom terang/gelap (D16) dengan merah hanya untuk diskon; font judul Albert Sans; tombol mode gelap di toko dan admin (tanpa kilatan, tersimpan di perangkat); header baru (pita pengumuman berjalan, menu tengah, menu HP); hero foto penuh dengan judul besar; ubin kategori bento berfoto; kartu produk 4:5 dengan tombol bulat; ulasan kutipan besar; pita teks besar; baris jaminan; footer hitam dengan merek besar; judul halaman dalam diseragamkan; sisa warna oranye/abu diganti token. Foto banner/kategori CC0 baru (KREDIT_FOTO); `demo:ilustrasi` tidak lagi menimpa banner/kategori tanpa bendera. DESIGN.md ditulis ulang.

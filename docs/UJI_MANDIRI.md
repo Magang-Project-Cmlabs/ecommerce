@@ -46,6 +46,10 @@ Untuk perubahan yang terlihat pengguna:
 - [ ] Console browser bersih dari error; tidak ada request gagal di tab Network
 - [ ] Halaman terlindungi mengarah ke `/masuk?next=…` saat belum login
 - [ ] Pembeli tidak bisa membuka data pembeli lain atau halaman `/admin`
+- [ ] Tampilan benar di **mode terang dan mode gelap** (tombol bulan/matahari di header)
+- [ ] Tidak ada `<select>` bawaan browser; daftar pilihan memakai komponen `Pilihan`
+- [ ] Admin: tambah/edit terbuka sebagai modal, simpan menutup modal dan daftar ikut berubah
+- [ ] Keluar (toko dan admin) meminta konfirmasi; "Batal" tidak mengeluarkan
 
 ## 4. Tes E2E (Playwright)
 

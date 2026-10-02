@@ -7,7 +7,7 @@ Terakhir diperbarui: **1 Oktober 2026**.
 Aplikasi memakai Next.js 16.3.6, Prisma 7.10.0, MySQL, Tailwind 4 dan shadcn.
 Katalog, wishlist, ulasan, keranjang, checkout 4 langkah, pesanan, akun,
 dan admin lengkap sudah memakai database. Tidak ada fallback pesanan palsu
-ketika database gagal. Desain mengikuti PPT halaman beranda/detail/checkout/admin.
+ketika database gagal. Desain mengikuti [`DESIGN.md`](../DESIGN.md) (gaya Framer, mode terang/gelap); PPT berisi tangkapan layar terbaru.
 
 Branch integrasi: `feat/penyelesaian-tokokita`, dari `develop`, menggabungkan
 pekerjaan A3 di branch `feature` dan penyelesaian seluruh fitur atas instruksi

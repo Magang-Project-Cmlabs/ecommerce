@@ -13,14 +13,14 @@ ketahuan lebih dulu, sebelum pembeli yang menemukannya.
 
 | Berkas | Isinya |
 |---|---|
-| `specs/akun.spec.ts` | Daftar, masuk, keluar; pesan gagal seragam; cookie httpOnly 30 hari; open redirect lewat `next` ditolak |
+| `specs/akun.spec.ts` | Daftar, masuk, keluar dengan konfirmasi (Batal lalu Ya, keluar); pesan gagal seragam; cookie httpOnly 30 hari; open redirect lewat `next` ditolak |
 | `specs/navigation.spec.ts` | Semua halaman dibuka satu per satu: tanpa galat HTTP, tanpa error JavaScript, tepat satu `<h1>` |
 | `specs/auth-guard.spec.ts` | Tamu dialihkan ke `/masuk?next=…`; pembeli tidak bisa membuka `/admin` |
 | `specs/accessibility.spec.ts` | Pemindaian axe-core (WCAG 2.1 AA, tingkat serious & critical) |
 | `specs/responsive.spec.ts` | Layar 360 px: tidak melebar, tombol minimal 44×44 px |
 | `specs/katalog.spec.ts` | Saran keyboard, filter/list/pagination, varian, zoom, wishlist dan metadata |
 | `specs/commerce.spec.ts` | Checkout nyata, admin konfirmasi/kirim, pembeli terima/ulasan, batal dan IDOR |
-| `specs/admin.spec.ts` | Produk delapan foto, stok/arsip, kategori/promo/banner dan transisi pesanan |
+| `specs/admin.spec.ts` | Produk delapan foto, stok/arsip, kategori/promo/banner (tambah/edit lewat modal) dan transisi pesanan. Daftar pilihan dipilih lewat `helpers/pilihan.ts` (`pilihOpsi`), bukan `selectOption` |
 | `specs/review-upload.spec.ts` | Tiga foto hampir 2 MB/file, token unggah dan batas request |
 
 Race stok/promo dan pembatalan otomatis juga diuji pada suite integrasi MySQL

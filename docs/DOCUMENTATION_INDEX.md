@@ -24,7 +24,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 |---|---|---|
 | [`PRD - E-Commerce.md`](PRD%20-%20E-Commerce.md) | Spesifikasi | Fitur, aturan bisnis, skema DB, keamanan, desain |
 | [`PRD_CHECKOUT_AKUN.md`](PRD_CHECKOUT_AKUN.md) | Spesifikasi | Detail fitur Checkout Langkah 3 & 4, Pesanan Berhasil, dan Halaman Akun |
-| [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | Pembagian peran (slide 14), alur kerja tim (slide 15), risiko; slide 10–13 = tangkapan layar aplikasi (2 Okt 2026), slide 19 = deployment dan pembayaran terkini |
+| [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | Pembagian peran (slide 14), alur kerja tim (slide 15), risiko; slide 10–13 = tangkapan layar aplikasi (3 Okt 2026, gaya Framer; slide 13 mode gelap), slide 17 = keamanan (Argon2id), slide 19 = deployment dan pembayaran terkini |
 | [`KREDIT_FOTO.md`](KREDIT_FOTO.md) | Referensi | Sumber dan lisensi foto produk demo |
 | [`DEMO.md`](DEMO.md) | Prosedur | Naskah demo 7 menit, status kesiapan, latihan otomatis |
 | [`trello-board-plan.md`](trello-board-plan.md) | Rencana | Kartu per anggota, urutan Blocker |

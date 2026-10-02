@@ -21,7 +21,7 @@ pembatalan ganda mengembalikan stok dua kali; promo divalidasi di luar transaksi
 pesanan, alamat, ulasan, atau wishlist tanpa `userId` sesi. Cari otorisasi yang
 hanya ada di `proxy.ts` atau di UI.
 
-**Autentikasi** — bcrypt, panjang minimal, cookie `httpOnly`/`secure`/
+**Autentikasi** — Argon2id (`src/lib/auth/password.ts`, migrasi bcrypt lama saat login), panjang minimal 8 / maks. 128 byte, cookie `httpOnly`/`secure`/
 `sameSite=lax`, verifikasi tanda tangan dan kedaluwarsa JWT, rate limit login dan
 lupa password, pesan gagal seragam, token reset di-hash + 1 jam + sekali pakai,
 open redirect lewat `next`.
