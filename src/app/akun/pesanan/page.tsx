@@ -19,7 +19,7 @@ export default async function HalamanDaftarPesanan() {
   const orders = await ambilDaftarPesanan(pengguna.id);
 
   return (
-    <main className="min-h-full flex-1 bg-gray-50/50 py-8 sm:py-12">
+    <main className="min-h-full flex-1 bg-background py-8 sm:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>

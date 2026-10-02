@@ -26,7 +26,7 @@ export default function RingkasanPesanan({
   grandTotal,
 }: Props) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs">
+    <div className="rounded-3xl bg-tile p-5">
       <h3 className="border-b border-gray-100 pb-3 text-sm font-bold text-gray-900">
         Ringkasan Belanja
       </h3>

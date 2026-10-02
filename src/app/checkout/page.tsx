@@ -16,7 +16,7 @@ export default async function HalamanCheckout() {
   const addresses = await ambilDaftarAlamat(pengguna.id);
 
   return (
-    <main className="min-h-full flex-1 bg-gray-50/50 py-6 sm:py-10">
+    <main className="min-h-full flex-1 bg-background py-6 sm:py-10">
       <CheckoutWizard initialAddresses={addresses} user={pengguna} />
     </main>
   );

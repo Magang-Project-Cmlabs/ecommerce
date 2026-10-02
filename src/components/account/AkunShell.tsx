@@ -44,7 +44,7 @@ export default function AkunShell({ user, initialAddresses }: Props) {
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
       {/* Sidebar Navigasi Tab */}
       <aside className="lg:col-span-4">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+        <div className="rounded-3xl bg-tile p-5">
           {/* Info Singkat Profil Pengguna */}
           <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">
@@ -110,7 +110,7 @@ export default function AkunShell({ user, initialAddresses }: Props) {
 
       {/* Konten Tab Aktif */}
       <main className="lg:col-span-8">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs sm:p-8">
+        <div className="rounded-3xl bg-tile p-6 sm:p-8">
           {activeTab === "profil" && <ProfilTab user={user} />}
           {activeTab === "password" && <PasswordTab />}
           {activeTab === "alamat" && (

@@ -85,7 +85,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
       </div>
 
       {/* Header Rincian Pesanan */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
+      <div className="rounded-3xl bg-tile p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 pb-5">
           <div>
             <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
         {/* Kolom Kiri: Informasi Pengiriman & Resi */}
         <div className="space-y-6 lg:col-span-7">
           {/* Kartu Informasi Kurir & Resi */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs space-y-4">
+          <div className="rounded-3xl bg-tile p-5 space-y-4">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
               <Truck className="h-4 w-4 text-orange-700" />
               <span>Informasi Pengiriman</span>
@@ -230,7 +230,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
           </div>
 
           {/* Kartu Daftar Barang */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+          <div className="rounded-3xl bg-tile p-5">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
               <Package className="h-4 w-4 text-orange-700" />
               <span>Daftar Produk ({order.items.reduce((acc, i) => acc + i.quantity, 0)} barang)</span>
@@ -286,7 +286,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
         {/* Kolom Kanan: Timeline Riwayat Status & Rincian Biaya */}
         <div className="space-y-6 lg:col-span-5">
           {/* Timeline Riwayat Status */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+          <div className="rounded-3xl bg-tile p-5">
             <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
               <Clock className="h-4 w-4 text-orange-700" />
               <span>Riwayat Status Pesanan</span>
@@ -333,7 +333,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
           </div>
 
           {/* Rincian Biaya Pembayaran */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+          <div className="rounded-3xl bg-tile p-5">
             <h2 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-3">
               Rincian Pembayaran
             </h2>
