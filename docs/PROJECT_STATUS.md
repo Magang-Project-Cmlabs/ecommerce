@@ -2,7 +2,7 @@
 
 **Repo:** `Magang-Project-Cmlabs/ecommerce` (private)
 **Branch integrasi:** `develop` (PR #23 dan #25 di-merge 1 Okt 2026; lanjutan di `feat/penyelesaian-tokokita`)
-**Diperbarui:** 1 Oktober 2026
+**Diperbarui:** 2 Oktober 2026
 
 ## 1. Ringkasan
 
@@ -49,7 +49,7 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Settlement sandbox QRIS | FAIL | QR muncul pada Snap; simulator resmi mengembalikan error 2603 saat memproses QR. Penyelidikan kanal masih berlangsung |
 | Firefox/WebKit: regresi akun/katalog/unggahan | PASS | 24/24 setelah memperbaiki input sebelum hydration, refresh wishlist berlebih, fixture ulasan unik dan pengukuran multipart/cookie lintas engine |
 | Suite lintas browser penuh (310 kasus: Chrome/Android, Edge, Firefox, WebKit, mobile WebKit) | PASS | Putaran 1 Okt: 299 lulus, 11 gagal karena stok varian M Kaos Polos di DB uji habis dipakai tes (bukan bug). Stok diisi ulang, 28 kasus commerce+katalog diulang di semua browser: 28/28 lulus. Suite penuh tidak diulang utuh dalam satu putaran |
-| SMTP eksternal (Gmail) | PASS (login) / NOT_RUN (Vercel) | Login `smtp.gmail.com:587` dengan sandi aplikasi berhasil dan satu email uji terkirim ke kotak masuk toko (1 Okt). Variabel `SMTP_*`/`MAIL_FROM` BELUM terpasang di Vercel: jalankan `node scripts/pasang-env-vercel.mjs .env.smtp` |
+| SMTP eksternal (Gmail) | PASS (login + terpasang) / NOT_RUN (kirim dari situs) | Login `smtp.gmail.com:587` berhasil, satu email uji terkirim ke kotak masuk toko, dan `SMTP_*`/`MAIL_FROM` terpasang di Vercel Preview + Production (production sudah di-deploy ulang). Pengiriman dari situs online (lupa password/invoice) belum diuji pemilik |
 | Unggah gambar ke penyimpanan nyata | PASS | Vercel Blob (D15): tes E2E `unggah-blob.spec.ts` (opt-in) mengunggah lewat layar admin ke store sungguhan, gambar tampil lalu dibersihkan. R2 diaktifkan pemilik sebagai cadangan, belum dipakai |
 | Preview Vercel terbaru | PASS | Penyebab FAIL lama: `DATABASE_URL`/`DATABASE_CA_CERT` hanya ada di Production. Preview kini memakai `tokokita_preview`; halaman, pencarian dan login berjalan |
 | Rilis production terbaru | PASS | `develop` 38370ce; publik HTTP 200, `/admin` dialihkan ke masuk, webhook tanda tangan palsu HTTP 401, log galat kosong |
@@ -59,6 +59,7 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 | Lighthouse simulasi bawaan | FAIL | Beranda 80, katalog 85, detail 85; LCP sekitar 4,3–4,4 s. Hasil kedua metode dipertahankan; domain Vercel belum diuji |
 | Lighthouse produksi online (simulasi) | FAIL | Seluler perf 91–92, a11y/bp 100, LCP 2,9–3,1 s (> 2,5 s); desktop 100, LCP 0,5–0,6 s |
 | Lighthouse produksi online (DevTools) | FAIL | Seluler perf 71–78, FCP 2,7–2,9 s, LCP 3,4–3,7 s |
+| Unduhan PPT diperbarui (2 Okt) | PASS (file) / NOT_RUN (visual) | 26 teks + 4 gambar (slide 1, 10–13) diganti; validator PPTX resmi lulus; perkiraan muat-teks tidak menunjukkan penambahan baris. Render slide NOT_RUN (LibreOffice tidak tersedia di mesin ini); tinjau sekali di PowerPoint |
 | Latihan demo PPT 5 adegan | PASS | `demo-ppt.spec.ts` 30 dtk; 15 tangkapan layar di docs/screenshots/demo-ppt |
 | Bayar sandbox online sampai lunas | NOT_RUN | Butuh daftar akun/login di situs online (tidak dilakukan agen). Setara: BCA & Mandiri sandbox PASS di lokal dengan kode terbaru; webhook PRODUKSI: tanda tangan palsu HTTP 401, tanda tangan sah dengan kunci sandbox diterima (HTTP 404 untuk pesanan fiktif) |
 | Cadangan manual DB produksi | PASS | mysqldump TLS 1 Okt 2026: 155 KB, 17 tabel, "Dump completed"; disimpan di luar repo (`C:UsersIlhamcadangan-tokokita`). Jadwal backup otomatis Aiven NOT_RUN (halaman Backups gagal dimuat) |
@@ -84,14 +85,14 @@ uji bayar online sampai lunas, QRIS sandbox, dan LCP seluler.
 
 ## 5. Sisa rilis
 
-Butuh akun/tindakan pemilik (rincian dan skrip di [SERAH_TERIMA](SERAH_TERIMA.md)):
+Butuh akun/tindakan pemilik (rincian di [SERAH_TERIMA](SERAH_TERIMA.md)):
 
-1. Cloudflare R2 → environment `STORAGE_DRIVER=s3`, `S3_*` (unggah gambar online).
-2. SMTP → `SMTP_*`, `MAIL_FROM` (invoice, notifikasi status, lupa password).
-3. Uji bayar sandbox di produksi sampai status Dibayar (pembeli login sendiri).
-4. Cron 15 menit: Vercel Pro, atau secret `CRON_SECRET` + variabel `APP_URL` di GitHub Actions.
-5. Jadwal backup dan retensi Aiven.
-6. Bersihkan data demo di DB produksi sebelum dipakai pelanggan nyata; unggah foto asli.
+1. Uji manusia di produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin, lupa password (email).
+2. Cron 15 menit: Vercel Pro, atau secret `CRON_SECRET` + variabel `APP_URL` di GitHub Actions.
+3. Jadwal backup dan retensi Aiven (cadangan manual 1 Okt sudah ada).
+4. Foto produk asli dan pembersihan data demo di DB produksi sebelum dipakai pelanggan nyata.
+5. Tinjau PPT di PowerPoint (render tidak diuji di mesin pengembang).
 
-Masih terbuka di sisi kode: LCP seluler > 2,5 s (FCP ~2,8 s di jaringan nyata) dan
-QRIS sandbox (simulator error 2603).
+Masih terbuka di sisi kode: LCP seluler > 2,5 s dan QRIS sandbox (simulator error 2603).
+Arah visual terkini ada di [DESIGN.md](../DESIGN.md); pemilik menilai sebagian tampilan masih
+terasa kurang sesuai acuan (Framer/Apple) dan akan memberi contoh konkret.

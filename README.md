@@ -19,6 +19,9 @@ shadcn/ui
 | Produksi (cabang `develop`) | **https://ecommerce-peach-seven-47.vercel.app** | Publik. Database Aiven `tokokita`. |
 | Preview (cabang fitur) | https://ecommerce-git-feat-penyelesaian-tokokita-tes-2254s-projects.vercel.app | Perlu login Vercel. Database uji `tokokita_preview`. |
 
+Arah visual ada di [`DESIGN.md`](DESIGN.md); PPT (`docs/Presentasi_ECommerce_TokoKita.pptx`) memuat
+tangkapan layar aplikasi yang berjalan.
+
 Vercel membangun ulang otomatis setiap ada push ke repo `kvnlhm/ecommerce`
 (cermin repo organisasi). Akun admin/pembeli online tidak dicantumkan di sini;
 mintalah kepada ketua tim.
