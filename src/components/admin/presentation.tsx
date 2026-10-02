@@ -22,8 +22,9 @@ export function StokBadge({ stok }: { stok: number }) {
   return <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums ${stok === 0 ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-800'}`}>{stok === 0 ? 'Habis' : `Sisa ${stok}`}</span>;
 }
 
-/** Aksi umum sebagai tombol ikon: nama tetap ada untuk pembaca layar dan tooltip bawaan (title). */
-export function AksiIkon({ href, label, jenis }: { href: string; label: string; jenis: 'edit' | 'tambah' | 'detail' }) {
+/** Aksi umum: ikon + tulisan. `teks` = tulisan pendek di layar; `label` penuh menjadi nama aksesibel bila berbeda. */
+export function AksiIkon({ href, label, jenis, teks }: { href: string; label: string; jenis: 'edit' | 'tambah' | 'detail'; teks?: string }) {
   const Ikon = jenis === 'edit' ? Pencil : jenis === 'detail' ? Eye : Plus;
-  return <Button asChild variant={jenis === 'tambah' ? 'secondary' : 'ghost'} size="icon-sm" className="pointer-coarse:size-11"><Link href={href} aria-label={label} title={label}><Ikon aria-hidden /></Link></Button>;
+  const tampil = teks ?? label;
+  return <Button asChild variant={jenis === 'tambah' ? 'secondary' : 'outline'} size="sm" className="pointer-coarse:h-11"><Link href={href} aria-label={tampil === label ? undefined : label}><Ikon aria-hidden />{tampil}</Link></Button>;
 }
