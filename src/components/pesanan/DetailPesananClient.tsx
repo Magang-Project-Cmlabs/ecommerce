@@ -28,6 +28,7 @@ import TerimaPesananDialog from "./TerimaPesananDialog";
 import PaymentControls from '@/components/checkout/PaymentControls';
 import { LencanaPembayaran, LencanaStatus } from '@/components/pesanan/Lencana';
 import LacakPaket from './LacakPaket';
+import TautanLacakKurir from './TautanLacakKurir';
 import { TARIF_KURIR, type KurirKode } from '@/lib/pesanan/ongkir';
 
 type Props = {
@@ -173,6 +174,7 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
                 <p className="mt-1 text-[11px] text-blue-700 dark:text-blue-300">
                   Layanan: <strong>{TARIF_KURIR[order.shippingMethod as KurirKode]?.label ?? order.shippingMethod.replaceAll('_', ' ')}</strong>
                 </p>
+                <TautanLacakKurir kurir={order.shippingMethod} resi={order.trackingNumber} />
                 {lacakAktif && <LacakPaket orderNumber={order.orderNumber} />}
               </div>
             ) : (

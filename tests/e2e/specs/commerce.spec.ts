@@ -66,6 +66,11 @@ test('belanja nyata: alamat → checkout → admin konfirmasi/kirim → pembeli 
     }
     await page.goto(`/akun/pesanan/${number}`);
     await expect(page.getByText('JNE-E2E-123456', { exact: true })).toBeVisible();
+    // Tautan gratis ke halaman lacak resmi kurir, tab baru tanpa akses ke halaman toko.
+    const cekKurir = page.getByRole('link', { name: /Cek di situs JNE/ });
+    await expect(cekKurir).toHaveAttribute('href', 'https://www.jne.co.id/tracking-package');
+    await expect(cekKurir).toHaveAttribute('target', '_blank');
+    await expect(cekKurir).toHaveAttribute('rel', 'noopener noreferrer');
     await page.getByRole('button', { name: 'Pesanan Diterima', exact: true }).click();
     await page.getByRole('button', { name: 'Ya, Pesanan Diterima', exact: true }).click();
     await expect(page.getByRole('link', { name: 'Beri Ulasan' })).toBeVisible();

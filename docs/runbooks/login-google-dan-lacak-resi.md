@@ -57,6 +57,9 @@ pemilik akun Google bisa masuk begitu kodenya dirilis. Tanpa logo dan hanya izin
 > "Lacak paket" tidak tampil dan pembeli tetap bisa menyalin resi. Mengisi saldo adalah keputusan pemilik
 > (uang asli).
 
+Tanpa kunci pun pembeli dan admin mendapat tombol gratis **"Cek di situs JNE/SiCepat"** yang membuka
+halaman lacak resmi kurir dan menyalin resi otomatis (tempel di kolom cek resi kurir).
+
 1. Masuk ke https://hub.binderbyte.com, buat key di **API Keys** (produk API Cek Resi), salin **API key**.
    Periksa kuota paket gratisnya. **Kalau diminta pembayaran, berhenti dan kabari
    pengembang.**
