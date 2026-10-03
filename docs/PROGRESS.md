@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Pengaman asisten AI
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: instruksi sistem membatasi topik (daftar topik ditolak, kalimat penolakan tetap `PENOLAKAN_TOPIK`, larangan kode/SQL, data toko ditandai bukan instruksi, pengingat di akhir); pembatas berlapis per pengguna/IP + harian + global; batas total riwayat 6.000 karakter; jawaban maks. 800 token tanpa `tools`; cache jawaban pertanyaan pembuka 1 jam; tombol darurat `ASISTEN_NONAKTIF`.
+- Verifikasi: typecheck PASS · lint PASS · unit PASS (459 + 2 dilewati) · uji langsung penyalahgunaan 16/16 PASS (Gemini dan Groq) · catatan: Groq gratis ~1.700+ token per pertanyaan sehingga hanya beberapa pertanyaan per menit (cadangan saja).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Penyedia AI cadangan (Groq)
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: `daftarPenyedia` (utama Gemini + cadangan Groq dari `ASISTEN_CADANGAN_*`), `mintaJawaban` berpindah penyedia saat kunci ditolak/kuota habis dengan batas 4 panggilan & 30 detik; tombol tampil bila salah satu kunci ada; `pasang-env-vercel.mjs` menerima kunci cadangan dan menolak kunci berspasi; `.env.example`, D18, SERAH_TERIMA diperbarui.

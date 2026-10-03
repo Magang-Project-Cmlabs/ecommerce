@@ -52,6 +52,7 @@ Untuk perubahan yang terlihat pengguna:
 - [ ] Keluar (toko dan admin) meminta konfirmasi; "Batal" tidak mengeluarkan
 - [ ] Pilihan panjang (kategori, merek) bisa dicari dengan mengetik
 - [ ] "Tanya AI": jawaban sesuai data toko, menolak nomor kartu/password (dan menyamarkannya), tidak tampil di admin/checkout
+- [ ] "Tanya AI" menolak dipakai di luar toko (minta kode Python, PR matematika, puisi, terjemahan, SQL) dengan kalimat "Maaf, saya hanya bisa membantu seputar belanja di TokoKita…"
 
 ## 4. Tes E2E (Playwright)
 
