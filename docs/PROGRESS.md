@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Hapus file gambar lama dan tombol tampilkan password
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop`.
+- Perubahan: (1) foto yang dilepas saat edit produk, gambar banner/kategori yang diganti, dan gambar banner/kategori yang dihapus kini ikut dihapus dari penyimpanan (Vercel Blob `POST /delete`, S3 `DELETE` bertanda tangan, atau berkas lokal) lewat `after()` setelah data tersimpan. Hanya `uploads/<uuid>.webp` milik aplikasi dan hanya bila tidak lagi dirujuk produk, kategori, banner, atau `order_items`; foto demo tidak disentuh; kegagalan hanya dicatat. Produk yang diarsipkan tetap menyimpan fotonya (bisa diaktifkan lagi). (2) Tombol tampilkan/sembunyikan password di formulir masuk, daftar, dan reset password (komponen `KolomIsian`); tab akun sudah punya.
+- Verifikasi: unit PASS (471 + 2 dilewati; tes baru untuk kunci unggahan, Blob/S3/lokal, dan pemeriksaan pemakaian) · E2E akun/admin/lupa password/penjaga/batasi PASS (32) · tes hapus file FAIL tanpa fitur, PASS dengan fitur · aksesibilitas + responsif desktop/HP PASS (22) · typecheck PASS · lint PASS.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Uji unggah gambar admin di produksi
 - Cara: Claude in Chrome memakai sesi admin yang di-login pemilik (tanpa mengetik password). Produk "Kabel USB-C Anyaman 1 m": tambah 1 foto (salinan foto demo produk itu), simpan, lalu hapus lagi dan simpan.
 - Verifikasi: "Produk berhasil disimpan" · halaman publik memuat URL `*.public.blob.vercel-storage.com/uploads/…webp` dengan HTTP 200 `image/webp` 15 KB · setelah dihapus halaman publik kembali ke 3 foto demo, 0 URL Blob · file Blob tidak dihapus aplikasi (perilaku yang ada, 15 KB).

@@ -1,6 +1,6 @@
 import 'server-only';
 import { createHash, createHmac, randomUUID } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp, { type Metadata } from 'sharp';
 
@@ -35,8 +35,8 @@ const sha256 = (value: string | Buffer) => createHash('sha256').update(value).di
 const hmac = (key: string | Buffer, value: string) => createHmac('sha256', key).update(value).digest();
 const encode = (value: string) => encodeURIComponent(value).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
 
-/** S3-compatible PUT dengan AWS Signature v4, tanpa SDK. */
-async function simpanS3(key: string, buffer: Buffer) {
+/** Request S3-compatible (PUT/DELETE) dengan AWS Signature v4, tanpa SDK. */
+async function permintaanS3(method: 'PUT' | 'DELETE', key: string, buffer?: Buffer) {
   const { S3_ENDPOINT: endpoint, S3_BUCKET: bucket, S3_ACCESS_KEY: access, S3_SECRET_KEY: secret, S3_PUBLIC_URL: publicUrl } = process.env;
   if (!endpoint || !bucket || !access || !secret || !publicUrl) throw new Error('Penyimpanan gambar belum dikonfigurasi. Hubungi administrator.');
   const url = new URL(endpoint);
@@ -46,21 +46,27 @@ async function simpanS3(key: string, buffer: Buffer) {
   const dateTime = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
   const date = dateTime.slice(0, 8);
   const region = process.env.S3_REGION || 'auto';
-  const payloadHash = sha256(buffer);
-  const signedHeaders = 'content-type;host;x-amz-content-sha256;x-amz-date';
-  const headers = `content-type:image/webp\nhost:${url.host}\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${dateTime}\n`;
-  const canonical = `PUT\n${url.pathname}\n\n${headers}\n${signedHeaders}\n${payloadHash}`;
+  const payloadHash = sha256(buffer ?? '');
+  const denganIsi = method === 'PUT';
+  const signedHeaders = `${denganIsi ? 'content-type;' : ''}host;x-amz-content-sha256;x-amz-date`;
+  const headers = `${denganIsi ? 'content-type:image/webp\n' : ''}host:${url.host}\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${dateTime}\n`;
+  const canonical = `${method}\n${url.pathname}\n\n${headers}\n${signedHeaders}\n${payloadHash}`;
   const scope = `${date}/${region}/s3/aws4_request`;
   const signingKey = hmac(hmac(hmac(hmac(`AWS4${secret}`, date), region), 's3'), 'aws4_request');
   const signature = createHmac('sha256', signingKey).update(`AWS4-HMAC-SHA256\n${dateTime}\n${scope}\n${sha256(canonical)}`).digest('hex');
   const response = await fetch(url, {
-    method: 'PUT', body: new Uint8Array(buffer), signal: AbortSignal.timeout(30_000),
+    method, ...(buffer ? { body: new Uint8Array(buffer) } : {}), signal: AbortSignal.timeout(30_000),
     headers: {
-      'Content-Type': 'image/webp', 'X-Amz-Date': dateTime, 'X-Amz-Content-Sha256': payloadHash,
+      ...(denganIsi ? { 'Content-Type': 'image/webp' } : {}), 'X-Amz-Date': dateTime, 'X-Amz-Content-Sha256': payloadHash,
       Authorization: `AWS4-HMAC-SHA256 Credential=${access}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
     },
   });
-  if (!response.ok) throw new Error('Gagal menyimpan gambar. Silakan coba lagi.');
+  return { ok: response.ok, publicUrl };
+}
+
+async function simpanS3(key: string, buffer: Buffer) {
+  const { ok, publicUrl } = await permintaanS3('PUT', key, buffer);
+  if (!ok) throw new Error('Gagal menyimpan gambar. Silakan coba lagi.');
   return `${publicUrl.replace(/\/$/, '')}/${key}`;
 }
 
@@ -96,4 +102,49 @@ export async function simpanGambar(file: File, options: { minDimension?: number 
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, filename), buffer, { flag: 'wx' });
   return `/uploads/${filename}`;
+}
+
+const NAMA_UNGGAHAN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.webp$/;
+
+/**
+ * Kunci `uploads/<uuid>.webp` bila URL adalah unggahan milik aplikasi ini
+ * (lokal, Vercel Blob publik, atau S3_PUBLIC_URL). Selain itu null: foto demo,
+ * URL luar, dan path aneh tidak pernah dihapus.
+ */
+export function kunciUnggahan(alamat: string): string | null {
+  const nama = (pathname: string) => {
+    const m = /^\/uploads\/([^/]+)$/.exec(pathname);
+    return m && NAMA_UNGGAHAN.test(m[1]!) ? `uploads/${m[1]}` : null;
+  };
+  if (alamat.startsWith('/')) return nama(alamat);
+  let url: URL;
+  try { url = new URL(alamat); } catch { return null; }
+  if (url.protocol !== 'https:' || url.search || url.hash) return null;
+  if (url.hostname.endsWith('.public.blob.vercel-storage.com')) return nama(url.pathname);
+  const publik = process.env.S3_PUBLIC_URL?.replace(/\/$/, '');
+  if (publik && alamat.startsWith(`${publik}/`)) return nama(`/${alamat.slice(publik.length + 1)}`);
+  return null;
+}
+
+/** Menghapus satu file unggahan dari penyimpanannya. true bila terhapus (atau memang sudah tidak ada). */
+export async function hapusFileGambar(alamat: string): Promise<boolean> {
+  const kunci = kunciUnggahan(alamat);
+  if (!kunci) return false;
+  if (alamat.startsWith('/')) {
+    // Berkas lokal hanya ada di mesin pengembangan; nama sudah divalidasi (tanpa ../).
+    if (process.env.NODE_ENV === 'production') return false;
+    try { await unlink(path.join(process.cwd(), 'public', kunci)); return true; }
+    catch (error) { return (error as NodeJS.ErrnoException).code === 'ENOENT'; }
+  }
+  if (new URL(alamat).hostname.endsWith('.public.blob.vercel-storage.com')) {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) return false;
+    const response = await fetch('https://vercel.com/api/blob/delete', {
+      method: 'POST', signal: AbortSignal.timeout(15_000), body: JSON.stringify({ urls: [alamat] }),
+      headers: { authorization: `Bearer ${token}`, 'x-api-version': '12', 'content-type': 'application/json' },
+    });
+    return response.ok;
+  }
+  const { ok } = await permintaanS3('DELETE', kunci);
+  return ok;
 }

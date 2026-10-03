@@ -1,6 +1,8 @@
 import { test, expect, type Browser } from '@playwright/test';
 import sharp from 'sharp';
 import { randomBytes } from 'node:crypto';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { performLogin, hasCredentials, alasanLewati } from '../helpers/auth';
 import { buatPesananAdminUji, bacaPesananAdminUji, hapusPesananAdminUji, hapusProdukAdminUji, hapusKontenAdminUji } from '../helpers/db';
 import { OPSI_TINDAKAN, pilihOpsi } from '../helpers/pilihan';
@@ -74,7 +76,15 @@ test.describe('Admin: toko memakai data nyata', () => {
       await expect(page.getByRole('dialog', { name: 'Edit produk' })).toBeVisible(); await expect(page.getByLabel('Nama produk', { exact: true })).toHaveValue(`Kaos Admin ${stamp}`);
       await page.getByLabel('Nama produk', { exact: true }).fill(`Kaos Admin Edit ${stamp}`);
       await page.getByRole('group', { name: 'Varian 1', exact: true }).getByLabel('Stok', { exact: true }).fill('12');
+      // Foto yang dilepas dari produk ikut dihapus dari penyimpanan (driver lokal: public/uploads).
+      const srcFoto1 = await page.getByRole('dialog').getByRole('img', { name: /gambar 1$/ }).getAttribute('src');
+      const fotoDilepas = decodeURIComponent(new URL(srcFoto1!, 'http://x').searchParams.get('url') ?? srcFoto1!);
+      expect(fotoDilepas).toMatch(/^\/uploads\/[0-9a-f-]{36}\.webp$/);
+      const berkasDilepas = path.join(process.cwd(), 'public', fotoDilepas);
+      expect(existsSync(berkasDilepas)).toBe(true);
+      await page.getByRole('button', { name: 'Hapus gambar 1', exact: true }).click();
       await page.getByRole('button', { name: 'Simpan perubahan', exact: true }).click(); await expect(page.getByText('Produk berhasil disimpan.').first()).toBeVisible(); await expect(page.getByRole('dialog')).toBeHidden();
+      await expect.poll(() => existsSync(berkasDilepas), { timeout: 15000 }).toBe(false);
       await page.goto(`/admin/produk?q=${stamp}`); const row = page.getByRole('row').filter({ hasText: `Kaos Admin Edit ${stamp}` }); await expect(row).toContainText('12');
       await row.getByRole('button', { name: 'Arsipkan', exact: true }).click(); await page.getByRole('alertdialog').getByRole('button', { name: 'Lanjutkan' }).click();
       await expect(row).toContainText('Diarsipkan');
