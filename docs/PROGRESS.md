@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Rilis fitur lanjutan D19–D21 ke produksi
+- Atas permintaan pemilik (sebelum akhir sesi): migration `20261003150000_login_google` diterapkan ke Aiven produksi lebih dulu, lalu PR #62 di-merge ke `develop` dan dicerminkan; deploy produksi Ready.
+- Verifikasi produksi: halaman utama/katalog/masuk/daftar/kebijakan/syarat 200 · tombol "Masuk dengan Google" tampil · `/api/auth/google` 307 ke Google dengan redirect produksi, PKCE S256, state, nonce, cookie `Secure; HttpOnly; SameSite=lax` · callback state palsu → `/masuk?galat=google` · cron tanpa kunci 401 · admin pesanan Dikirim menampilkan "Cek di situs SiCepat". Login Google penuh di produksi NOT_RUN (sudah PASS di localhost dengan akun asli; tidak membuat akun produksi baru tanpa perlu).
+- Perbaikan kecil: label kurir di detail pesanan admin memakai `TARIF_KURIR` ("SiCepat REG", bukan "SICEPAT REG").
+- PPT dan dokumen diperbarui (aturan akhir sesi).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Tombol gratis "Cek di situs kurir"
 - Pengganti lacak otomatis yang berbayar: `src/lib/pengiriman/tautan-kurir.ts` + komponen `TautanLacakKurir` di detail pesanan pembeli dan admin. JNE → `https://www.jne.co.id/tracking-package` (dicek HTTP 200; formulir POST + token, jadi resi disalin otomatis), SiCepat → `https://www.sicepat.com/` (`/checkAwb` kini dialihkan ke beranda yang memuat Cek Resi), GoSend tanpa tautan. Uji manual di jne.co.id (3 Okt): setelah resi dimasukkan, detail baru tampil setelah 5 digit terakhir telepon penerima diisi, jadi tombol JNE kini memberi petunjuk itu. Tab baru dengan `rel="noopener noreferrer"`. Tanpa biaya dan tanpa API.
 - Verifikasi: unit PASS (tautan kurir) · E2E commerce + admin + aksesibilitas desktop/HP PASS (18; tautan JNE, target, rel diperiksa) · klik di browser lokal membuka situs SiCepat di tab baru dan clipboard berisi resi · typecheck PASS · lint PASS.

@@ -41,13 +41,16 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
 - Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini) dan `ASISTEN_CADANGAN_API_KEY` (Groq), keduanya kunci gratis milik pemilik, terpasang di Vercel Preview + Production sejak 3 Okt 2026. Pengaman: topik dibatasi ke belanja di toko, tanpa tools/SQL, batas 20 pertanyaan/10 menit dan 100/hari per pengguna atau IP, 1.500/hari untuk seluruh toko; uji penyalahgunaan 16/16 ditolak. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Mengganti kunci: ubah `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`.
 
-## Fitur lanjutan menunggu rilis (setelah presentasi)
+## Fitur lanjutan (dirilis 3 Okt 2026 malam, PR #62)
 
-Branch `feat/lanjutan-ongkir-resi-google`: ongkir per zona provinsi (D19), lacak resi Binderbyte (D20),
-Login Google (D21). Pemilik membuat OAuth Client Google dan akun Binderbyte lalu memasang kunci;
-langkah lengkap dan urutan rilis (migration produksi dulu, baru merge) di
-[runbook](runbooks/login-google-dan-lacak-resi.md). Setelah rilis: perbarui PPT dan contekan
-(ongkir luar Jawa berubah; Jawa tetap).
+- **Ongkir per zona provinsi** (D19): Jawa tetap JNE Rp 15.000/SiCepat Rp 13.000 per kg; luar Jawa lebih mahal
+  sampai Maluku & Papua Rp 58.000/kg. Provinsi dipilih dari daftar.
+- **Login Google** (D21): aktif untuk semua akun Google; admin tetap email + password. Kunci di Vercel;
+  project Google Cloud `tokokita-510509`. Penautan akun lama mengganti password lamanya (keamanan).
+- **Tombol "Cek di situs kurir"**: gratis, membuka halaman lacak resmi JNE/SiCepat dan menyalin resi.
+- **Lacak resi otomatis** (D20): kode siap tetapi nonaktif; Binderbyte berbayar (Rp 15/hit, isi minimal Rp 5.000).
+  Aktifkan cukup dengan mengisi saldo lalu memasang `LACAK_RESI_API_KEY` ([runbook](runbooks/login-google-dan-lacak-resi.md)).
+- Migration `20261003150000_login_google` sudah diterapkan ke DB produksi. DB Preview belum (Preview bisa galat saat login).
 
 ## Menunggu pemilik
 

@@ -36,6 +36,8 @@ Nilai rahasia dimasukkan lewat Vercel Environment Variables, bukan Git.
 | `ASISTEN_API_KEY` (+ `ASISTEN_BASE_URL`, `ASISTEN_MODEL` opsional) | Kunci gratis Google AI Studio (Gemini) untuk "Tanya AI"; tanpa kunci tombol tidak tampil (D18) |
 | `ASISTEN_CADANGAN_API_KEY` (+ `_BASE_URL`, `_MODEL` opsional) | Kunci gratis Groq sebagai cadangan bila Gemini penuh |
 | `ASISTEN_NONAKTIF` | `1` mematikan asisten seketika setelah deploy ulang (tombol darurat) |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Login Google (D21); OAuth Client Web dengan redirect `<APP_URL>/api/auth/google/callback`. Kosong = tombol tidak tampil |
+| `LACAK_RESI_API_KEY` | Lacak resi otomatis Binderbyte (D20, berbayar). Kosong = hanya tombol gratis "Cek di situs kurir" |
 
 Koneksi Aiven memverifikasi CA; jangan menonaktifkan verifikasi sertifikat.
 Environment build juga memerlukan `DATABASE_URL`, karena Next memuat modul

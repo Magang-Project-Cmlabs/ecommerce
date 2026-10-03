@@ -8,7 +8,8 @@ Aplikasi memakai Next.js 16.3.6, Prisma 7.10.0, MySQL, Tailwind 4 dan shadcn.
 Katalog, wishlist, ulasan, keranjang, checkout 4 langkah, pesanan, akun,
 dan admin lengkap sudah memakai database. Tidak ada fallback pesanan palsu
 ketika database gagal. Desain mengikuti [`DESIGN.md`](../DESIGN.md) (gaya Framer, mode terang/gelap,
-pilihan dropdown yang bisa dicari, admin dengan modal tambah/ubah). Tombol "Tanya AI"
+pilihan dropdown yang bisa dicari, admin dengan modal tambah/ubah). Ongkir per zona provinsi (D19),
+Login Google (D21), dan tombol cek resi di situs kurir sudah aktif. Tombol "Tanya AI"
 menjawab pertanyaan seputar toko (D18). PPT 22 slide berisi tangkapan layar terbaru.
 
 Versi online: https://ecommerce-peach-seven-47.vercel.app (Vercel + Aiven).
