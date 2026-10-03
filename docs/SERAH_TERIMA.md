@@ -43,7 +43,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 
 ## Menunggu pemilik
 
-1. Uji manusia di produksi: selesai 3 Okt. Bayar sandbox BCA sampai Dibayar PASS (pesanan uji INV-202610-0001, Kabel USB-C, Dikonfirmasi · Lunas; batalkan lewat admin bila ingin stok kembali), email "Lupa password" diuji pemilik (aman), password akun admin/pembeli demo produksi sudah diganti pemilik, nama di halaman Midtrans "TokoKita". Berkas lokal `.env.akun-produksi` masih berisi password lama: perbarui atau hapus.
+1. Uji manusia di produksi: selesai 3 Okt. Bayar sandbox BCA sampai Dibayar PASS (pesanan uji INV-202610-0001 kemudian dibatalkan admin dengan status pembayaran Dikembalikan; stok Kabel USB-C kembali 62), email "Lupa password" diuji pemilik (aman), password akun admin/pembeli demo produksi sudah diganti pemilik, nama di halaman Midtrans "TokoKita". Berkas lokal `.env.akun-produksi` masih berisi password lama: perbarui atau hapus.
 2. Tinjau isi PPT 22 slide dan sesuaikan nama/peran tim bila perlu.
 3. Pesanan otomatis tiap jam dan backup harian: secret sudah dipasang lewat `node scripts/pasang-otomasi-github.mjs` (3 Okt); workflow aktif di branch `sinkron` repo pribadi dan run pertama keduanya PASS (3 Okt). Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman. Panduan: [backup-restore](runbooks/backup-restore.md).
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
