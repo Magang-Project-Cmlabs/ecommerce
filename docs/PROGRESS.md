@@ -15,6 +15,10 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Uji unggah gambar admin di produksi
+- Cara: Claude in Chrome memakai sesi admin yang di-login pemilik (tanpa mengetik password). Produk "Kabel USB-C Anyaman 1 m": tambah 1 foto (salinan foto demo produk itu), simpan, lalu hapus lagi dan simpan.
+- Verifikasi: "Produk berhasil disimpan" · halaman publik memuat URL `*.public.blob.vercel-storage.com/uploads/…webp` dengan HTTP 200 `image/webp` 15 KB · setelah dihapus halaman publik kembali ke 3 foto demo, 0 URL Blob · file Blob tidak dihapus aplikasi (perilaku yang ada, 15 KB).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Kerangka admin tersembunyi bagi pembeli
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop`.
 - Temuan (uji produksi lewat Chrome dengan sesi pembeli yang di-login pemilik): `/admin/*` menolak dengan 404 dan tanpa data, tetapi layout tetap menampilkan sidebar, sapaan, dan tombol admin. Tes E2E penjaga masih mencari nama navigasi lama "Menu admin" sehingga lulus tanpa memeriksa.

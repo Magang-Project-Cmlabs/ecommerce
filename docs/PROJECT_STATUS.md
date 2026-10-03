@@ -54,7 +54,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Layanan | Status | Catatan |
 |---|---|---|
 | Vercel + Aiven (TLS) | PASS | HTTP 200, `/admin` dialihkan ke masuk, deploy otomatis setiap merge |
-| Unggah gambar (Vercel Blob, D15) | PASS | E2E opt-in `unggah-blob.spec.ts` ke store sungguhan |
+| Unggah gambar (Vercel Blob, D15) | PASS | E2E opt-in `unggah-blob.spec.ts`; uji di produksi 3 Okt lewat admin (Chrome, sesi admin pemilik): foto tersimpan di Blob, tampil di halaman publik (HTTP 200, WebP), lalu dihapus lagi dari produk |
 | Email (Gmail SMTP) | PASS / NOT_RUN | Login SMTP + email uji terkirim; pengiriman dari situs (lupa password/invoice) belum diuji manusia |
 | Midtrans sandbox | PASS / FAIL | BCA & Mandiri sampai lunas (diulang 3 Okt di server uji lokal; webhook produksi menolak tanda tangan palsu); QRIS gagal di simulator |
 | Cron pesanan | PASS | Workflow `pesanan-otomatis.yml` tiap jam di repo pribadi; run pertama 3 Okt HTTP 200 (0 gagal); cron harian Vercel tetap sebagai cadangan |
@@ -82,7 +82,7 @@ dan uji manusia di produksi (lihat bagian 6).
 ## 6. Sisa pekerjaan
 
 **Menunggu pemilik** (langkah rinci di [SERAH_TERIMA](SERAH_TERIMA.md)):
-1. Uji manusia di produksi: daftar pembeli, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin, email lupa password.
+1. Uji manusia di produksi: bayar sandbox BCA sampai Dibayar (sudah PASS di server uji lokal) dan email lupa password. Unggah gambar admin dan penjaga admin sudah diuji di produksi (3 Okt).
 2. Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman; uji buka satu backup mengikuti runbook.
 3. Foto produk asli dan pembersihan data demo sebelum dipakai pelanggan nyata.
 
