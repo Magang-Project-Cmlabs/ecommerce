@@ -18,7 +18,8 @@ describe('susunInstruksi', () => {
     expect(teks).toContain('Lampu Pintar Wi-Fi | Terang | Elektronik | Rp 119.000 | stok habis | /produk/lampu-pintar-wi-fi');
   });
   it('memuat aturan ongkir, pembayaran, dan alur status dari sumber kode', () => {
-    expect(teks).toContain('JNE Regular: Rp 15.000 per kg');
+    expect(teks).toContain('Jawa — JNE Regular: Rp 15.000 per kg');
+    expect(teks).toContain('Maluku & Papua — JNE Regular: Rp 58.000 per kg');
     expect(teks).toContain('GoSend Instant: Rp 30.000 tarif tetap');
     expect(teks).toContain('Menunggu Pembayaran → Dikonfirmasi → Dikemas → Dikirim → Selesai → Dibatalkan');
     expect(teks).toContain('QRIS');

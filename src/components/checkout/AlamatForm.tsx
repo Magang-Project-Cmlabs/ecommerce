@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Pilihan } from "@/components/ui/pilihan";
+import { DAFTAR_PROVINSI } from "@/lib/pesanan/wilayah";
 import { simpanAlamat } from "@/actions/alamat";
 import { alamatSchema, type AlamatInput } from "@/lib/validations/alamat";
 import type { Alamat } from "@/lib/data/alamat";
+
+const OPSI_PROVINSI = DAFTAR_PROVINSI.map((p) => ({ value: p, label: p }));
 
 type Props = {
   onSuccess: (alamatBaru: Alamat) => void;
@@ -215,13 +219,16 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
           <Label htmlFor="province" className="text-xs font-semibold text-foreground/80">
             Provinsi *
           </Label>
-          <Input
+          <Pilihan
             id="province"
+            options={OPSI_PROVINSI}
             value={province}
-            onChange={(e) => setProvince(e.target.value)}
-            placeholder="Provinsi"
-            className="mt-1 h-9 bg-background text-xs"
+            onValueChange={setProvince}
+            placeholder="Pilih provinsi"
+            cari
+            className="mt-1"
             disabled={isPending}
+            invalid={!!errors.province}
           />
           {errors.province && (
             <p className="mt-1 text-[11px] text-red-600">{errors.province[0]}</p>
