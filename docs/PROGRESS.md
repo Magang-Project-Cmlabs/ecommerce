@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Otomasi pesanan dan backup
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop`.
+- Perubahan: `scripts/pasang-otomasi-github.mjs` (CRON_SECRET baru di Vercel + GitHub, pengguna MySQL khusus baca `tokokita_backup`, kunci backup di `.env.otomasi`); workflow `pesanan-otomatis.yml` (tiap jam) dan `backup-db.yml` (harian, gpg AES-256, artifact 30 hari) untuk branch `sinkron` repo pribadi; runbook backup-restore. Cache dev E2E (`.sandbox/next-e2e`) yang basi setelah pindah `shadcn` dibersihkan.
+- Verifikasi: skrip pemasang dijalankan pemilik — semua langkah OK · E2E lokal `E2E_MIDTRANS_SANDBOX` BCA PASS, Mandiri PASS, QRIS FAIL (simulator) · latihan demo `E2E_DEMO` PASS · workflow terjadwal NOT_RUN (belum dikirim ke `sinkron`; pengiriman ditolak pengaman otomatis Claude Code, menunggu pemilik).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Dokumentasi akhir dan PPT baru
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: PPT dibangun ulang (22 slide, tema monokrom "TokoKita Monokrom" sesuai web, tangkapan layar terang/gelap/admin modal/Tanya AI, catatan pembicara, angka verifikasi terbaru); `PROJECT_STATUS` ditulis ulang sebagai potret 3 Okt; MULAI_DI_SINI, SERAH_TERIMA, DEMO, runbook deployment (variabel Blob/asisten), audit keamanan (bagian asisten AI), indeks dokumentasi, README diperbarui; `shadcn` (CLI) dipindah ke devDependencies karena advisori `braces` tanpa versi tambalan.

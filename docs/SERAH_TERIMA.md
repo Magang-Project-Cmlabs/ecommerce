@@ -22,7 +22,8 @@ Menyalin `develop` organisasi ke cermin dilakukan hanya setelah PR di-merge:
 Berkas lokal Git-ignored (jangan dicetak/di-commit): `.env`, `.env.aiven`,
 `.env.local`, `tests/e2e/.env.e2e`, `.env.akun-preview` (akun admin/pembeli
 Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
-`.env.smtp` dan `.env.asisten` (kunci Gmail SMTP dan kunci AI).
+`.env.smtp` dan `.env.asisten` (kunci Gmail SMTP dan kunci AI), `.env.otomasi`
+(`CRON_SECRET` produksi, kunci pembuka backup, password pengguna backup).
 
 ## Sudah aktif
 
@@ -44,7 +45,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 
 1. Uji manusia di produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar (HEMAT10 minimal belanja Rp 100.000), unggah gambar lewat admin, cek email "Lupa password".
 2. Tinjau isi PPT 22 slide dan sesuaikan nama/peran tim bila perlu.
-3. Cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven; cadangan manual 1 Okt ada di luar repo.
+3. Pesanan otomatis tiap jam dan backup harian: secret sudah dipasang lewat `node scripts/pasang-otomasi-github.mjs` (3 Okt); tinggal mengirim workflow ke branch `sinkron` repo pribadi. Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman. Panduan: [backup-restore](runbooks/backup-restore.md).
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
 5. Nilai tampilan baru (toko dan admin, terang dan gelap) di situs online; sebutkan bagian yang masih kurang.
 

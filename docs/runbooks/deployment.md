@@ -86,9 +86,13 @@ pengaman: hanya berjalan pada deployment Production, dan Vercel mengirim
 `CRON_SECRET` sendiri. Untuk ketepatan 15 menit, pilih salah satu:
 
 - Pro: tambahkan cron `*/15 * * * *` ke Vercel, secret dikirim otomatis.
-- Hobby: penjadwal eksternal memanggil URL dengan header Bearer setiap 15 menit.
-  Alternatif yang sudah disiapkan: `.github/workflows/orders-cron.yml`;
-  isi GitHub Actions variable `APP_URL` dan secret `CRON_SECRET`.
+- Hobby: penjadwal eksternal memanggil URL dengan header Bearer.
+  Yang dipakai TokoKita: workflow `pesanan-otomatis.yml` di repo pribadi
+  `kvnlhm/ecommerce` (branch default `sinkron`), **tiap jam** — jatah Actions repo
+  private 2.000 menit/bulan tidak cukup untuk tiap 15 menit. Secret dan variabel
+  dipasang `node scripts/pasang-otomasi-github.mjs` (juga mengganti `CRON_SECRET`
+  Vercel; deploy ulang setelahnya). `.github/workflows/orders-cron.yml` di repo ini
+  tetap tersedia untuk repo yang punya jatah cukup.
 
 GitHub scheduled workflows memakai default branch dan dapat terlambat.
 Periksa kuota Actions pada repo private sebelum mengaktifkan jadwal penuh.
@@ -96,14 +100,14 @@ Untuk uji manual: `node --env-file=.env scripts/run-orders-cron.mjs`.
 
 ## Backup dan verifikasi online
 
-Periksa backup yang tersedia pada paket Aiven, retensi dan uji restore ke
-database terpisah. Jika paket tidak menyediakan backup yang sesuai PRD,
-gunakan backup MySQL terjadwal ke storage terpisah. Jangan simpan dump di Git.
+Paket gratis Aiven tidak menjanjikan retensi backup. Backup harian terenkripsi
+berjalan lewat workflow `backup-db.yml` di repo pribadi (30 hari, pengguna MySQL
+khusus baca); cara kerja dan pemulihan: [backup-restore](backup-restore.md).
+Jangan simpan dump di Git.
 
 Backup manual TLS dan restore Aiven telah diuji pada 1 Oktober 2026 ke
 DB lokal terpisah: 26 produk, 14 pengguna, 79 pesanan, 188 ulasan dan tiga
-migration. Dump hanya lokal dan diabaikan Git; jadwal/retensi backup cloud
-belum dikonfigurasi.
+migration. Dump hanya lokal dan diabaikan Git.
 
 Status online per 3 Oktober 2026: domain/build, query TLS, unggah Vercel Blob,
 login SMTP, webhook Midtrans dan asisten AI `PASS`; restore manual `PASS`;
