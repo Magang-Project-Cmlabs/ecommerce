@@ -26,6 +26,7 @@ export default function TautanLacakKurir({ kurir, resi }: { kurir: string; resi:
       </a>
       <p role="status" className="text-[11px] text-muted-foreground">
         {disalin ? 'Nomor resi sudah disalin. Tempel di kolom cek resi pada halaman kurir.' : 'Nomor resi otomatis disalin saat tombol diklik.'}
+        {halaman.catatan && <> {halaman.catatan}</>}
       </p>
     </div>
   );

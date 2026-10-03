@@ -16,7 +16,7 @@ Format entri:
 ---
 
 ### 2026-10-03 — Kevin Ilham / Claude Code — Tombol gratis "Cek di situs kurir"
-- Pengganti lacak otomatis yang berbayar: `src/lib/pengiriman/tautan-kurir.ts` + komponen `TautanLacakKurir` di detail pesanan pembeli dan admin. JNE → `https://www.jne.co.id/tracking-package` (dicek HTTP 200; formulir POST + token, jadi resi disalin otomatis), SiCepat → `https://www.sicepat.com/` (`/checkAwb` kini dialihkan ke beranda yang memuat Cek Resi), GoSend tanpa tautan. Tab baru dengan `rel="noopener noreferrer"`. Tanpa biaya dan tanpa API.
+- Pengganti lacak otomatis yang berbayar: `src/lib/pengiriman/tautan-kurir.ts` + komponen `TautanLacakKurir` di detail pesanan pembeli dan admin. JNE → `https://www.jne.co.id/tracking-package` (dicek HTTP 200; formulir POST + token, jadi resi disalin otomatis), SiCepat → `https://www.sicepat.com/` (`/checkAwb` kini dialihkan ke beranda yang memuat Cek Resi), GoSend tanpa tautan. Uji manual di jne.co.id (3 Okt): setelah resi dimasukkan, detail baru tampil setelah 5 digit terakhir telepon penerima diisi, jadi tombol JNE kini memberi petunjuk itu. Tab baru dengan `rel="noopener noreferrer"`. Tanpa biaya dan tanpa API.
 - Verifikasi: unit PASS (tautan kurir) · E2E commerce + admin + aksesibilitas desktop/HP PASS (18; tautan JNE, target, rel diperiksa) · klik di browser lokal membuka situs SiCepat di tab baru dan clipboard berisi resi · typecheck PASS · lint PASS.
 
 ### 2026-10-03 — Kevin Ilham / Claude Code — Google OAuth dipublikasikan; Binderbyte ternyata berbayar
