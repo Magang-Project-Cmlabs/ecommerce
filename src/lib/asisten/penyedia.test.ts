@@ -42,6 +42,14 @@ describe('mintaJawaban', () => {
     expect(ambil.mock.calls[1]![1].headers.authorization).toBe('Bearer g');
   });
 
+  it('permintaan ke model hanya berisi teks: tanpa tools/functions dan jawaban dibatasi', async () => {
+    const ambil = vi.fn().mockResolvedValue(jawab(200, 'ok'));
+    await mintaJawaban(pesan, [utama], ambil);
+    const badan = JSON.parse(ambil.mock.calls[0]![1].body);
+    expect(Object.keys(badan).sort()).toEqual(['max_tokens', 'messages', 'model', 'temperature']);
+    expect(badan.max_tokens).toBeLessThanOrEqual(800);
+  });
+
   it('kuota utama habis (429 di semua model) → cadangan menjawab dengan kuncinya sendiri', async () => {
     diam();
     const ambil = vi.fn().mockResolvedValueOnce(jawab(429)).mockResolvedValueOnce(jawab(429)).mockResolvedValueOnce(jawab(200, 'Dari Groq'));
