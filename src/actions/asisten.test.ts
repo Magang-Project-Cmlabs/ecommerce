@@ -3,7 +3,7 @@ vi.mock('server-only', () => ({}));
 vi.mock('next/headers', () => ({ headers: vi.fn(async () => new Headers({ 'x-vercel-forwarded-for': '203.0.113.9' })) }));
 vi.mock('@/lib/asisten/pembatas', () => ({ catatBatasAsisten: vi.fn(async () => ({ boleh: true })) }));
 vi.mock('@/lib/data/asisten', () => ({ ambilDataAsisten: vi.fn(async () => ({ produk: [], kategori: ['Elektronik'], promo: [] })) }));
-vi.mock('@/lib/asisten/penyedia', async (asli) => ({ ...(await asli<typeof import('@/lib/asisten/penyedia')>()), mintaJawaban: vi.fn(async () => ({ ok: true, jawaban: 'Ongkir JNE Rp 15.000 per kg.', model: 'm' })) }));
+vi.mock('@/lib/asisten/penyedia', async (asli) => ({ ...(await asli<typeof import('@/lib/asisten/penyedia')>()), mintaJawaban: vi.fn(async () => ({ ok: true, jawaban: 'Ongkir JNE Rp 15.000 per kg.', model: 'm', penyedia: 'utama' })) }));
 import { catatBatasAsisten } from '@/lib/asisten/pembatas';
 import { mintaJawaban } from '@/lib/asisten/penyedia';
 import { tanyaAsisten } from './asisten';
@@ -17,11 +17,13 @@ describe('tanyaAsisten', () => {
     expect(await tanya('Berapa ongkir JNE?')).toEqual({ ok: true, jawaban: 'Ongkir JNE Rp 15.000 per kg.' });
     vi.stubEnv('ASISTEN_API_KEY', 'kunci-uji');
     await tanya('Berapa ongkir JNE?');
-    const [pesan, konfigurasi] = vi.mocked(mintaJawaban).mock.calls[1]!;
+    vi.stubEnv('ASISTEN_CADANGAN_API_KEY', 'kunci-cadangan');
+    await tanya('Berapa ongkir JNE?');
+    const [pesan, penyedia] = vi.mocked(mintaJawaban).mock.calls[2]!;
     expect(pesan[0]!.role).toBe('system');
     expect(pesan[0]!.content).toContain('Asisten TokoKita');
     expect(pesan.at(-1)).toEqual({ role: 'user', content: 'Berapa ongkir JNE?' });
-    expect(konfigurasi?.kunci).toBe('kunci-uji');
+    expect(penyedia.map((p) => [p.nama, p.kunci])).toEqual([['utama', 'kunci-uji'], ['cadangan', 'kunci-cadangan']]);
     expect(catatBatasAsisten).toHaveBeenCalledWith('203.0.113.9');
   });
 

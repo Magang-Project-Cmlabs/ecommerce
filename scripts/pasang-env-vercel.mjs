@@ -17,7 +17,8 @@ const isi = Object.fromEntries(readFileSync(berkas, 'utf8').split(/\r?\n/)
 const KELOMPOK = {
   r2: { wajib: ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY', 'S3_PUBLIC_URL'], tambahan: { STORAGE_DRIVER: 's3' } },
   smtp: { wajib: ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM'], tambahan: {} },
-  asisten: { wajib: ['ASISTEN_API_KEY'], tambahan: {}, opsional: ['ASISTEN_BASE_URL', 'ASISTEN_MODEL'] },
+  // Asisten AI: minimal satu kunci (utama Gemini dan/atau cadangan Groq).
+  asisten: { wajib: [], tambahan: {}, opsional: ['ASISTEN_API_KEY', 'ASISTEN_BASE_URL', 'ASISTEN_MODEL', 'ASISTEN_CADANGAN_API_KEY', 'ASISTEN_CADANGAN_BASE_URL', 'ASISTEN_CADANGAN_MODEL'] },
 };
 const jenis = Object.keys(isi).some((k) => k.startsWith('S3_')) ? 'r2' : Object.keys(isi).some((k) => k.startsWith('SMTP_')) ? 'smtp' : Object.keys(isi).some((k) => k.startsWith('ASISTEN_')) ? 'asisten' : null;
 if (!jenis) { console.error('Berkas tidak berisi S3_*, SMTP_*, atau ASISTEN_*.'); process.exit(1); }
@@ -33,13 +34,16 @@ if (jenis === 'smtp') {
   if (!['465', '587'].includes(isi.SMTP_PORT)) salah.push('SMTP_PORT biasanya 587 atau 465');
   if (!/@/.test(isi.MAIL_FROM)) salah.push('MAIL_FROM harus memuat alamat email, mis. TokoKita <toko@gmail.com>');
 }
-if (jenis === 'asisten' && /s/.test(isi.ASISTEN_API_KEY)) salah.push('ASISTEN_API_KEY tidak boleh berisi spasi; salin ulang kuncinya dari Google AI Studio');
+if (jenis === 'asisten') {
+  if (!isi.ASISTEN_API_KEY && !isi.ASISTEN_CADANGAN_API_KEY) salah.push('Isi ASISTEN_API_KEY (Gemini) dan/atau ASISTEN_CADANGAN_API_KEY (Groq)');
+  for (const k of ['ASISTEN_API_KEY', 'ASISTEN_CADANGAN_API_KEY']) if (isi[k] && /\s/.test(isi[k])) salah.push(`${k} tidak boleh berisi spasi; salin ulang kuncinya`);
+}
 if (salah.length) { console.error(salah.join('\n')); process.exit(1); }
 
 // Google menampilkan sandi aplikasi dalam empat kelompok berspasi; spasinya tidak bagian dari sandi.
 if (isi.SMTP_PASS) isi.SMTP_PASS = isi.SMTP_PASS.replace(/\s+/g, '');
 
-const RAHASIA = new Set(['S3_ACCESS_KEY', 'S3_SECRET_KEY', 'SMTP_PASS', 'SMTP_USER', 'ASISTEN_API_KEY']);
+const RAHASIA = new Set(['S3_ACCESS_KEY', 'S3_SECRET_KEY', 'SMTP_PASS', 'SMTP_USER', 'ASISTEN_API_KEY', 'ASISTEN_CADANGAN_API_KEY']);
 const pasangan = { ...Object.fromEntries([...KELOMPOK[jenis].wajib, ...(KELOMPOK[jenis].opsional ?? []).filter((k) => isi[k])].map((k) => [k, isi[k]])), ...KELOMPOK[jenis].tambahan };
 const vercel = (args, input) => spawnSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vercel', ...args], { input, encoding: 'utf8', shell: process.platform === 'win32' });
 
@@ -50,7 +54,7 @@ for (const target of ['preview', 'production']) {
     const hasil = vercel(['env', 'add', kunci, target, ...(RAHASIA.has(kunci) ? ['--sensitive'] : []), '--yes'], nilai);
     const ok = hasil.status === 0;
     if (!ok) gagal++;
-    console.log(`${target.padEnd(10)} ${kunci.padEnd(16)} ${ok ? 'OK terpasang' : 'GAGAL'}`);
+    console.log(`${target.padEnd(10)} ${kunci.padEnd(26)} ${ok ? 'OK terpasang' : 'GAGAL'}`);
   }
 }
 console.log(gagal ? `\n${gagal} pengaturan gagal. Kirim tulisan GAGAL di atas ke pengembang.` : '\nSelesai. Beri tahu pengembang agar deploy ulang.');
