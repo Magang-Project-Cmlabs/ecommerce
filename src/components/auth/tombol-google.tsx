@@ -30,4 +30,5 @@ export const PESAN_GALAT_GOOGLE: Record<string, string> = {
   'google-admin': 'Akun admin masuk memakai email dan password.',
   'google-dihapus': 'Akun dengan email ini sudah dihapus.',
   'google-tertaut-lain': 'Email ini sudah terhubung dengan akun Google lain.',
+  'google-sering': 'Terlalu banyak percobaan masuk dengan Google. Coba lagi dalam beberapa menit.',
 };

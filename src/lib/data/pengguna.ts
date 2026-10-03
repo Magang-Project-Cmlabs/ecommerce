@@ -36,8 +36,13 @@ export type HasilAkunGoogle =
  * Login Google (D21): cari akun lewat ID Google, lalu lewat email yang sudah diverifikasi
  * Google (ditautkan), atau buat akun pembeli baru. Akun admin tidak boleh masuk lewat
  * Google; akun yang dihapus ditolak; email yang sudah tertaut ke akun Google lain ditolak.
+ *
+ * Saat menautkan akun lama, password lama diganti hash acak di update yang sama: pendaftaran
+ * password tidak memverifikasi email, jadi akun itu bisa saja dibuat orang lain dengan email
+ * korban (pra-pembajakan). Password dan sesi lamanya langsung tidak berlaku; pemilik asli bisa
+ * mengatur password lewat Lupa password. `buatHashAcak` hanya dipanggil bila perlu (Argon2 mahal).
  */
-export async function masukAtauDaftarGoogle(profil: { sub: string; email: string; name: string }, passwordHashAcak: string, ulang = true): Promise<HasilAkunGoogle> {
+export async function masukAtauDaftarGoogle(profil: { sub: string; email: string; name: string }, buatHashAcak: () => Promise<string>, ulang = true): Promise<HasilAkunGoogle> {
   const pilih = { id: true, role: true, passwordHash: true, deletedAt: true, googleSub: true } as const;
   const periksa = (u: { id: number; role: 'customer' | 'admin'; passwordHash: string; deletedAt: Date | null }): HasilAkunGoogle =>
     u.deletedAt ? { ok: false, alasan: 'dihapus' } : u.role === 'admin' ? { ok: false, alasan: 'admin' }
@@ -51,20 +56,24 @@ export async function masukAtauDaftarGoogle(profil: { sub: string; email: string
     const hasil = periksa(olehEmail);
     if (!hasil.ok) return hasil;
     if (olehEmail.googleSub && olehEmail.googleSub !== profil.sub) return { ok: false, alasan: 'tertaut-lain' };
-    const tertaut = await prisma.user.updateMany({ where: { id: olehEmail.id, googleSub: null, deletedAt: null, role: 'customer' }, data: { googleSub: profil.sub } });
-    if (tertaut.count !== 1) return ulang ? masukAtauDaftarGoogle(profil, passwordHashAcak, false) : { ok: false, alasan: 'tertaut-lain' };
-    return hasil;
+    const hashBaru = await buatHashAcak();
+    const tertaut = await prisma.user.updateMany({
+      where: { id: olehEmail.id, googleSub: null, deletedAt: null, role: 'customer' },
+      data: { googleSub: profil.sub, passwordHash: hashBaru },
+    });
+    if (tertaut.count !== 1) return ulang ? masukAtauDaftarGoogle(profil, buatHashAcak, false) : { ok: false, alasan: 'tertaut-lain' };
+    return { ok: true, akun: { ...hasil.akun, passwordHash: hashBaru } };
   }
 
   try {
     const baru = await prisma.user.create({
-      data: { name: profil.name, email: profil.email, phone: null, passwordHash: passwordHashAcak, googleSub: profil.sub, role: 'customer' },
+      data: { name: profil.name, email: profil.email, phone: null, passwordHash: await buatHashAcak(), googleSub: profil.sub, role: 'customer' },
       select: { id: true, role: true, passwordHash: true },
     });
     return { ok: true, akun: baru };
   } catch (error) {
     // Dua callback bersamaan untuk orang yang sama: baris unik sudah dibuat, baca ulang sekali.
-    if (ulang && (error as { code?: string })?.code === 'P2002') return masukAtauDaftarGoogle(profil, passwordHashAcak, false);
+    if (ulang && (error as { code?: string })?.code === 'P2002') return masukAtauDaftarGoogle(profil, buatHashAcak, false);
     throw error;
   }
 }

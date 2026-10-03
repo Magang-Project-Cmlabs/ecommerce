@@ -74,6 +74,18 @@ describe('lacak resi (Binderbyte, D20)', () => {
     expect(ambil).not.toHaveBeenCalled();
   });
 
+  it('alamat API hanya HTTPS (HTTP hanya untuk localhost uji)', async () => {
+    vi.stubEnv('LACAK_RESI_API_KEY', 'kunci-uji');
+    const ambil = balas(sukses);
+    vi.stubEnv('LACAK_RESI_BASE_URL', 'http://evil.example/track');
+    expect(await lacakResi('jne_reg', 'JNE123456789', ambil)).toEqual({ status: 'gagal' });
+    vi.stubEnv('LACAK_RESI_BASE_URL', 'bukan url');
+    expect(await lacakResi('jne_reg', 'JNE123456789', ambil)).toEqual({ status: 'gagal' });
+    expect(ambil).not.toHaveBeenCalled();
+    vi.stubEnv('LACAK_RESI_BASE_URL', 'http://127.0.0.1:3999/v1/track');
+    expect((await lacakResi('jne_reg', 'JNE123456789', ambil)).status).toBe('ok');
+  });
+
   it('tidak mengembalikan kunci API ke pemanggil dan memotong teks panjang', async () => {
     vi.stubEnv('LACAK_RESI_API_KEY', 'kunci-rahasia-uji');
     const panjang = { ...sukses, data: { ...sukses.data, history: [{ date: 'bukan tanggal', desc: 'a'.repeat(1000), location: '' }] } };

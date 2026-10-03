@@ -36,6 +36,9 @@ Tanpa kunci, kedua fitur otomatis nonaktif: tombol "Masuk dengan Google" dan
 Aturan yang perlu diketahui:
 - **Akun admin tidak bisa masuk lewat Google**, hanya email + password.
 - Email yang sudah terdaftar dan sudah diverifikasi Google otomatis tertaut ke akun lama.
+  **Demi keamanan, password lama akun itu diganti saat ditautkan.** Pendaftaran biasa tidak
+  memverifikasi email, jadi akun itu bisa saja dibuat orang lain memakai email Anda. Untuk
+  kembali masuk dengan password, atur ulang lewat **Lupa password**.
 - Akun baru dari Google mendapat password acak. Kalau pemiliknya ingin mengganti
   password atau menghapus akun (keduanya meminta password lama), atur dulu password
   lewat **Lupa password**.

@@ -32,6 +32,19 @@ const waktuWib = (nilai: unknown) => {
   return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(t) ? `${t.replace(' ', 'T')}+07:00` : null;
 };
 
+/** Hanya HTTPS; HTTP diizinkan untuk localhost (server tiruan uji lokal) agar kunci tidak terkirim ke host lain tanpa enkripsi. */
+function alamatApi(): URL | null {
+  const nilai = process.env.LACAK_RESI_BASE_URL?.trim();
+  if (!nilai) return new URL(ALAMAT_BAWAAN);
+  try {
+    const url = new URL(nilai);
+    const lokal = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    return url.protocol === 'https:' || (lokal && url.protocol === 'http:') ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function lacakResi(kurir: string, resi: string, ambil: typeof fetch = fetch): Promise<HasilLacak> {
   const kunci = process.env.LACAK_RESI_API_KEY?.trim();
   if (!kunci) return { status: 'tidak-dikonfigurasi' };
@@ -39,7 +52,8 @@ export async function lacakResi(kurir: string, resi: string, ambil: typeof fetch
   if (!kode) return { status: 'tidak-didukung' };
   if (!POLA_RESI.test(resi)) return { status: 'tidak-ditemukan' };
 
-  const url = new URL(process.env.LACAK_RESI_BASE_URL?.trim() || ALAMAT_BAWAAN);
+  const url = alamatApi();
+  if (!url) return { status: 'gagal' };
   url.search = new URLSearchParams({ api_key: kunci, courier: kode, awb: resi }).toString();
   let isi: { status?: unknown; data?: { summary?: Record<string, unknown>; history?: unknown } };
   try {

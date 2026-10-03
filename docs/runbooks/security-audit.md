@@ -46,6 +46,7 @@ data pribadi (alamat, telepon, email).
 - [ ] `state` dibandingkan waktu-konstan dengan cookie httpOnly; PKCE S256; `nonce` dicek di ID token
 - [ ] ID token diverifikasi tanda tangan (kunci publik Google), penerbit, audiens, kedaluwarsa, `email_verified`
 - [ ] Admin tidak bisa masuk lewat Google; akun dihapus ditolak; email yang tertaut akun Google lain ditolak
+- [ ] Penautan akun lama lewat email mengganti password lama (cegah pra-pembajakan); callback dibatasi per IP; hash Argon2 hanya dihitung bila perlu
 - [ ] `next` setelah login tetap lewat `amanNext` (cegah open redirect); client secret hanya di server
 
 **Lacak resi (D20)**

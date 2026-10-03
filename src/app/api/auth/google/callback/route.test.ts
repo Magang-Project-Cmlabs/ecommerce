@@ -3,7 +3,10 @@ import { NextRequest } from 'next/server';
 
 vi.mock('server-only', () => ({}));
 const kue = vi.hoisted(() => ({ nilai: undefined as string | undefined, dihapus: [] as unknown[] }));
-vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => (kue.nilai ? { value: kue.nilai } : undefined), delete: (x: unknown) => kue.dihapus.push(x) }) }));
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => (kue.nilai ? { value: kue.nilai } : undefined), delete: (x: unknown) => kue.dihapus.push(x) }), headers: async () => new Headers() }));
+vi.mock('@/lib/auth/ip', () => ({ ipKlien: () => '203.0.113.9' }));
+const catatBatasAuthDb = vi.hoisted(() => vi.fn(async () => ({ boleh: true })));
+vi.mock('@/lib/data/batas-auth', () => ({ catatBatasAuthDb }));
 vi.mock('next/navigation', () => ({ redirect: (url: string) => { throw Object.assign(new Error('REDIRECT'), { url }); } }));
 const google = vi.hoisted(() => ({ tukar: vi.fn(), verifikasi: vi.fn() }));
 vi.mock('@/lib/auth/google', () => ({
@@ -58,6 +61,14 @@ describe('callback Login Google (D21)', () => {
     google.tukar.mockResolvedValue('t'); google.verifikasi.mockResolvedValue({ sub: '1', email: 'a@gmail.com', name: 'A' });
     masukAtauDaftarGoogle.mockResolvedValue({ ok: true, akun: { id: 9, role: 'customer', passwordHash: 'h' } });
     expect(await panggil('code=abc&state=s1')).toBe('/');
+  });
+
+  it('dibatasi per IP sebelum memanggil Google', async () => {
+    kue.nilai = cookie({ state: 's1', verifier: 'v', nonce: 'n', next: null });
+    catatBatasAuthDb.mockResolvedValueOnce({ boleh: false, tungguDetik: 60 } as never);
+    expect(await panggil('code=abc&state=s1')).toBe('/masuk?galat=google-sering');
+    expect(catatBatasAuthDb).toHaveBeenCalledWith('google:203.0.113.9', undefined, expect.any(Date), { maks: 20, jendelaMs: 900_000 });
+    expect(google.tukar).not.toHaveBeenCalled();
   });
 
   it('akun admin atau token tidak sah tidak mendapat sesi', async () => {
