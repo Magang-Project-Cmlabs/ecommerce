@@ -28,6 +28,19 @@ export const LABEL_STATUS_PEMBAYARAN: Record<PaymentStatus, string> = {
   refunded: 'Dikembalikan',
 };
 
+export type MetodePembayaran = 'qris' | 'bank_bca' | 'bank_mandiri' | 'cod';
+
+export const LABEL_METODE_PEMBAYARAN: Record<MetodePembayaran, string> = {
+  qris: 'QRIS',
+  bank_bca: 'Transfer Bank BCA',
+  bank_mandiri: 'Transfer Bank Mandiri',
+  cod: 'Bayar di Tempat (COD)',
+};
+
+/** Label metode pembayaran untuk tampilan; kode tak dikenal tetap terbaca. */
+export const labelMetodePembayaran = (kode: string) =>
+  LABEL_METODE_PEMBAYARAN[kode as MetodePembayaran] ?? kode.replaceAll('_', ' ');
+
 /**
  * Validasi apakah transisi dari status asal ke status tujuan diizinkan untuk pelaku terkait (PRD §10.6).
  */

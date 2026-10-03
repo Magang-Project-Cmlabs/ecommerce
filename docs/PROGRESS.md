@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Uji produksi: hapus gambar dan bayar sandbox; perbaikan temuan
+- Uji produksi (Claude in Chrome, sesi yang di-login pemilik, tanpa mengetik password): (1) admin menambah foto ke "Kabel USB-C Anyaman 1 m", file Blob HTTP 200; foto dilepas dan disimpan, file Blob HTTP 404 (dengan/tanpa parameter), foto demo tetap 200, produk kembali 3 foto. (2) Pembeli checkout 1 Kabel USB-C + JNE Regular + BCA (Rp 64.000) → INV-202610-0001 → Snap sandbox → simulator BCA VA "Simulated payment is successful" → tanpa menekan Cek Pembayaran status menjadi Dikonfirmasi · Lunas (webhook produksi bekerja). Pesanan uji dibiarkan; stok kabel berkurang 1.
+- Temuan dan perbaikan: setelah "Buat Pesanan" layar sempat menampilkan "Keranjang masih kosong" sebelum pindah halaman → kini menampilkan "Pesanan berhasil dibuat… Membuka halaman pesanan"; detail pesanan pembeli dan admin menampilkan kode mentah "bank bca" → label dari satu sumber `LABEL_METODE_PEMBAYARAN` (`src/lib/pesanan/status.ts`). Catatan pemilik: nama merchant Snap "sijoki" (dashboard Midtrans).
+- Verifikasi: E2E commerce baru FAIL pada kode lama (layar kosong terdeteksi), PASS setelah perbaikan · E2E penuh PASS (87, 1 dilewati) · unit PASS (473 + 2 dilewati) · typecheck PASS · lint PASS.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Hapus file gambar lama dan tombol tampilkan password
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop`.
 - Perubahan: (1) foto yang dilepas saat edit produk, gambar banner/kategori yang diganti, dan gambar banner/kategori yang dihapus kini ikut dihapus dari penyimpanan (Vercel Blob `POST /delete`, S3 `DELETE` bertanda tangan, atau berkas lokal) lewat `after()` setelah data tersimpan. Hanya `uploads/<uuid>.webp` milik aplikasi dan hanya bila tidak lagi dirujuk produk, kategori, banner, atau `order_items`; foto demo tidak disentuh; kegagalan hanya dicatat. Produk yang diarsipkan tetap menyimpan fotonya (bisa diaktifkan lagi). (2) Tombol tampilkan/sembunyikan password di formulir masuk, daftar, dan reset password (komponen `KolomIsian`); tab akun sudah punya.
