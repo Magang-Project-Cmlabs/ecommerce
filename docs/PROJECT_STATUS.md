@@ -54,7 +54,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Layanan | Status | Catatan |
 |---|---|---|
 | Vercel + Aiven (TLS) | PASS | HTTP 200, `/admin` dialihkan ke masuk, deploy otomatis setiap merge |
-| Unggah gambar (Vercel Blob, D15) | PASS | E2E opt-in `unggah-blob.spec.ts`; uji di produksi 3 Okt lewat admin (Chrome, sesi admin pemilik): foto tersimpan di Blob, tampil di halaman publik (HTTP 200, WebP), lalu dihapus lagi dari produk |
+| Unggah gambar (Vercel Blob, D15) | PASS | File lama dihapus otomatis saat dilepas/diganti (E2E admin memeriksa berkas hilang); E2E opt-in `unggah-blob.spec.ts`; uji di produksi 3 Okt lewat admin (Chrome, sesi admin pemilik): foto tersimpan di Blob, tampil di halaman publik (HTTP 200, WebP), lalu dihapus lagi dari produk |
 | Email (Gmail SMTP) | PASS / NOT_RUN | Login SMTP + email uji terkirim; pengiriman dari situs (lupa password/invoice) belum diuji manusia |
 | Midtrans sandbox | PASS / FAIL | BCA & Mandiri sampai lunas (diulang 3 Okt di server uji lokal; webhook produksi menolak tanda tangan palsu); QRIS gagal di simulator |
 | Cron pesanan | PASS | Workflow `pesanan-otomatis.yml` tiap jam di repo pribadi; run pertama 3 Okt HTTP 200 (0 gagal); cron harian Vercel tetap sebagai cadangan |

@@ -40,6 +40,7 @@ data pribadi (alamat, telepon, email).
 - [ ] Tipe (JPG/PNG/WebP) dicek dari isi berkas, bukan hanya ekstensi
 - [ ] Maks. 2 MB, min. 800×800 px, maks. 8 gambar per produk
 - [ ] Nama berkas dibuat server (acak), bukan dari nama unggahan
+- [ ] File yang dilepas dari produk, diganti, atau ikut terhapus bersama banner/kategori dihapus dari penyimpanan setelah data tersimpan, hanya bila berbentuk `uploads/<uuid>.webp` milik aplikasi dan tidak lagi dirujuk produk, kategori, banner, atau `order_items` (riwayat pesanan); foto demo tidak pernah dihapus
 
 **Payment gateway (Midtrans)**
 - [ ] `MIDTRANS_SERVER_KEY` hanya dibaca di server, tanpa prefiks `NEXT_PUBLIC_`

@@ -1,11 +1,13 @@
 'use server';
 
 import { revalidatePath, updateTag } from 'next/cache';
+import { after } from 'next/server';
 import { requireAdmin } from '@/lib/auth/akses';
 import { prisma } from '@/lib/db';
 import { Prisma } from '@/generated/prisma/client';
 import { ubahStatus } from '@/lib/pesanan/transisi';
 import { verifikasiTokenGambar } from '@/lib/upload-token';
+import { hapusGambarTakTerpakai } from '@/lib/data/gambar';
 import { bannerAdminSchema, kategoriAdminSchema, produkAdminSchema, promoAdminSchema, statusAdminSchema, idAdminSchema, type AdminActionState } from '@/lib/validations/admin';
 import { z } from 'zod';
 
@@ -31,6 +33,10 @@ function failure(error: unknown): AdminActionState {
 function refresh() {
   updateTag('katalog-publik');
   revalidatePath('/admin', 'layout'); revalidatePath('/', 'layout');
+}
+/** File lama dibersihkan setelah respons terkirim; kegagalan tidak membatalkan simpanan. */
+function bersihkanGambar(urls: (string | null | undefined)[]) {
+  if (urls.some(Boolean)) after(() => hapusGambarTakTerpakai(urls).then(() => undefined));
 }
 function decode(form: FormData, key: string) {
   try { return JSON.parse(text(form, key) || '[]') as unknown; }
@@ -60,7 +66,7 @@ export async function simpanProdukAdmin(_prev: AdminActionState, form: FormData)
     if (!input.images.length && !uploads.length) return { errors: { images: ['Tambahkan setidaknya satu gambar.'] }, message: 'Produk harus memiliki gambar.' };
     const urls = [...input.images, ...uploads];
     if (new Set(urls).size !== urls.length) throw new Error('Gambar tidak boleh berulang.');
-    const id = await prisma.$transaction(async (tx) => {
+    const { id, dilepas } = await prisma.$transaction(async (tx) => {
       const { variants } = input;
       const productData = { name: input.name, slug: input.slug, description: input.description, brand: input.brand, categoryId: input.categoryId, price: input.price, compareAtPrice: input.compareAtPrice, specs: input.specs, tags: input.tags, weight: input.weight, isActive: input.isActive, isFeatured: input.isFeatured, isPreorder: input.isPreorder, variantLabel: input.variantLabel || null, stock: variants.length ? variants.reduce((sum, v) => sum + v.stock, 0) : input.stock };
       if (productData.stock > 2_000_000_000) throw new Error('Total stok varian terlalu besar.');
@@ -95,9 +101,10 @@ export async function simpanProdukAdmin(_prev: AdminActionState, form: FormData)
         if (variantId) await tx.productVariant.update({ where: { id: variantId, productId: product.id }, data: { ...value, sortOrder } });
         else await tx.productVariant.create({ data: { ...value, productId: product.id, sortOrder } });
       }
-      return product.id;
+      return { id: product.id, dilepas: existing.images.map((image) => image.url).filter((url) => !urls.includes(url)) };
     });
     refresh();
+    bersihkanGambar(dilepas);
     return { success: true, message: 'Produk berhasil disimpan.', id };
   } catch (error) { return failure(error); }
 }
@@ -116,7 +123,7 @@ export async function simpanKategoriAdmin(_prev: AdminActionState, form: FormDat
   try {
     const input = kategoriAdminSchema.parse(fields(form));
     const image = (await verifikasiTokenGambar(tokens(form), admin.id, 'category', 1))[0];
-    await prisma.$transaction(async (tx) => {
+    const gambarLama = await prisma.$transaction(async (tx) => {
       const categories = await tx.category.findMany({ select: { id: true, parentId: true } });
       let ancestor = input.parentId;
       const visited = new Set<number>();
@@ -128,17 +135,19 @@ export async function simpanKategoriAdmin(_prev: AdminActionState, form: FormDat
         ancestor = category.parentId;
       }
       const { id, ...data } = input;
-      if (id) await tx.category.update({ where: { id }, data: { ...data, ...(image ? { image } : {}) } });
-      else await tx.category.create({ data: { ...data, image } });
+      if (!id) { await tx.category.create({ data: { ...data, image } }); return null; }
+      const lama = image ? (await tx.category.findUnique({ where: { id }, select: { image: true } }))?.image : null;
+      await tx.category.update({ where: { id }, data: { ...data, ...(image ? { image } : {}) } });
+      return lama;
     }, { isolationLevel: 'Serializable' });
-    refresh(); return { success: true, message: 'Kategori berhasil disimpan.' };
+    refresh(); bersihkanGambar([gambarLama]); return { success: true, message: 'Kategori berhasil disimpan.' };
   } catch (error) { return failure(error); }
 }
 export async function hapusKategoriAdmin(_prev: AdminActionState, form: FormData): Promise<AdminActionState> {
   await requireAdmin('/admin/kategori');
   try {
-    await prisma.category.delete({ where: { id: idAdminSchema.parse(form.get('id')) } });
-    refresh(); return { success: true, message: 'Kategori berhasil dihapus.' };
+    const terhapus = await prisma.category.delete({ where: { id: idAdminSchema.parse(form.get('id')) }, select: { image: true } });
+    refresh(); bersihkanGambar([terhapus.image]); return { success: true, message: 'Kategori berhasil dihapus.' };
   } catch (error) { return failure(error); }
 }
 
@@ -174,16 +183,19 @@ export async function simpanBannerAdmin(_prev: AdminActionState, form: FormData)
     const image = (await verifikasiTokenGambar(tokens(form), admin.id, 'banner', 1))[0];
     if (!input.id && !image) return { message: 'Tambahkan gambar banner.', errors: { images: ['Gambar banner wajib diisi.'] } };
     const { id, ...data } = input;
-    if (id) await prisma.banner.update({ where: { id }, data: { ...data, ...(image ? { image } : {}) } });
-    else await prisma.banner.create({ data: { ...data, image: image! } });
-    refresh(); return { success: true, message: 'Banner berhasil disimpan.' };
+    let gambarLama: string | null = null;
+    if (id) {
+      gambarLama = image ? (await prisma.banner.findUnique({ where: { id }, select: { image: true } }))?.image ?? null : null;
+      await prisma.banner.update({ where: { id }, data: { ...data, ...(image ? { image } : {}) } });
+    } else await prisma.banner.create({ data: { ...data, image: image! } });
+    refresh(); bersihkanGambar([gambarLama]); return { success: true, message: 'Banner berhasil disimpan.' };
   } catch (error) { return failure(error); }
 }
 export async function hapusBannerAdmin(_prev: AdminActionState, form: FormData): Promise<AdminActionState> {
   await requireAdmin('/admin/banner');
   try {
-    await prisma.banner.delete({ where: { id: idAdminSchema.parse(form.get('id')) } });
-    refresh(); return { success: true, message: 'Banner berhasil dihapus.' };
+    const terhapus = await prisma.banner.delete({ where: { id: idAdminSchema.parse(form.get('id')) }, select: { image: true } });
+    refresh(); bersihkanGambar([terhapus.image]); return { success: true, message: 'Banner berhasil dihapus.' };
   } catch (error) { return failure(error); }
 }
 

@@ -44,7 +44,7 @@ export async function performLogin(page: Page, peran: Peran): Promise<void> {
   await page.setExtraHTTPHeaders({ 'x-real-ip': `10.211.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
   await page.goto('/masuk', { waitUntil: 'load' });
   await page.getByLabel(/email/i).fill(process.env[cfg.userEnv]!);
-  await page.getByLabel(/password|kata sandi/i).fill(process.env[cfg.passEnv]!);
+  await page.getByLabel('Password', { exact: true }).fill(process.env[cfg.passEnv]!);
   await page.getByRole('button', { name: /^masuk$/i }).click();
   await page.waitForURL((url) => !POLA_MASUK.test(url.pathname + url.search), { timeout: 30_000 });
 }

@@ -18,6 +18,21 @@ test.describe('Akun', () => {
   test.beforeEach(async ({ page }) => {
     await page.setExtraHTTPHeaders({ 'x-real-ip': `10.212.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
   });
+  test('tombol mata menampilkan dan menyembunyikan password di masuk dan daftar', async ({ page }) => {
+    for (const path of ['/masuk', '/daftar']) {
+      await page.goto(path, { waitUntil: 'load' });
+      const kolom = page.getByLabel('Password', { exact: true });
+      await kolom.fill('rahasia123');
+      await expect(kolom).toHaveAttribute('type', 'password');
+      const tombol = page.getByRole('button', { name: 'Tampilkan password' }).first();
+      await tombol.click();
+      await expect(kolom).toHaveAttribute('type', 'text');
+      await expect(kolom).toHaveValue('rahasia123');
+      await page.getByRole('button', { name: 'Sembunyikan password' }).click();
+      await expect(kolom).toHaveAttribute('type', 'password');
+    }
+  });
+
   test('daftar akun baru, langsung masuk, lalu keluar', async ({ page, context }) => {
     const errors = tangkapError(page);
     const email = `e2e-${Date.now()}@example.com`;
