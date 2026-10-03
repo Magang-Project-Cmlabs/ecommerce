@@ -14,15 +14,16 @@ export function hashKunciBatasAuth(kunci: string): string {
 }
 
 /** UPSERT obtains the row lock even for a new key; competing clients serialize. */
-export async function catatBatasAuthDb(kunci: string, client: PrismaClient = prisma, sekarang = new Date()): Promise<HasilBatasAuth> {
+/** `opsi` mengganti batas bawaan (5 kali / 15 menit), mis. untuk asisten AI. */
+export async function catatBatasAuthDb(kunci: string, client: PrismaClient = prisma, sekarang = new Date(), opsi = { maks: MAKS, jendelaMs: JENDELA_MS }): Promise<HasilBatasAuth> {
   const keyHash = hashKunciBatasAuth(kunci);
-  const expiresAt = new Date(sekarang.getTime() + JENDELA_MS);
+  const expiresAt = new Date(sekarang.getTime() + opsi.jendelaMs);
   const { hasil, bersihkan } = await client.$transaction(async tx => {
     await tx.$executeRaw`INSERT INTO auth_rate_limits (key_hash, attempts, expires_at)
       VALUES (${keyHash}, 0, ${expiresAt}) ON DUPLICATE KEY UPDATE key_hash = key_hash`;
     const catatan = await tx.authRateLimit.findUniqueOrThrow({ where: { keyHash } });
     const kedaluwarsa = catatan.expiresAt <= sekarang;
-    if (!kedaluwarsa && catatan.attempts >= MAKS) {
+    if (!kedaluwarsa && catatan.attempts >= opsi.maks) {
       return { hasil: { boleh: false, tungguDetik: Math.max(1, Math.ceil((catatan.expiresAt.getTime() - sekarang.getTime()) / 1000)) } as HasilBatasAuth, bersihkan: false };
     }
     await tx.authRateLimit.update({ where: { keyHash }, data: kedaluwarsa ? { attempts: 1, expiresAt } : { attempts: { increment: 1 } } });

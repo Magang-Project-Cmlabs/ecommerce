@@ -11,6 +11,15 @@ import type { BannerKatalog } from '@/lib/katalog-types';
 export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
   const [index, setIndex] = useState(0);
   const jalur = useRef<HTMLDivElement>(null);
+  // Foto slide berikutnya baru dimuat setelah halaman selesai dimuat, supaya tidak berebut
+  // bandwidth dengan foto pertama (elemen LCP). Sebelum itu ubin gelap tetap tampil di belakang judul.
+  const [muatSemua, setMuatSemua] = useState(false);
+  useEffect(() => {
+    const mulai = () => setMuatSemua(true);
+    if (document.readyState === 'complete') { const t = setTimeout(mulai, 300); return () => clearTimeout(t); }
+    window.addEventListener('load', mulai, { once: true });
+    return () => window.removeEventListener('load', mulai);
+  }, []);
 
   useEffect(() => {
     const el = jalur.current;
@@ -35,7 +44,7 @@ export default function HeroBanner({ slides }: { slides: BannerKatalog[] }) {
         const href = slide.href?.startsWith('/') && !slide.href.startsWith('//') ? slide.href : '/produk';
         const Judul = i === 0 ? 'h1' : 'h2';
         return <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`Promo ${i + 1} dari ${slides.length}`} inert={i !== index} className="relative h-[min(78svh,720px)] min-h-[480px] w-full shrink-0 snap-start overflow-hidden">
-          <div className="paralaks absolute inset-0"><Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={75} sizes="(max-width: 1400px) 100vw, 1400px" className="object-cover" /></div>
+          <div className="paralaks absolute inset-0">{(i === 0 || muatSemua) && <Image src={slide.image} alt="" fill loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} quality={75} sizes="(max-width: 1400px) 100vw, 1400px" className="object-cover" />}</div>
           <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.72),rgb(0_0_0/0.25)_45%,transparent_70%)] md:bg-[linear-gradient(to_top_right,rgb(0_0_0/0.7),rgb(0_0_0/0.2)_50%,transparent_75%)]" />
           <div className="absolute inset-x-0 bottom-0 px-6 pb-24 text-white md:px-14 md:pb-16 lg:px-16">
             <Judul className="hero-masuk max-w-[14ch] text-balance text-[2.75rem] font-medium leading-[0.98] tracking-[-0.045em] md:text-7xl lg:text-[5.5rem]">{slide.title}</Judul>

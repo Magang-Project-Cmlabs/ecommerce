@@ -48,3 +48,20 @@ test('wishlist tersimpan di DB dan bisa dihapus setelah refresh', async ({ page 
   await page.getByRole('button', { name: 'Hapus Speaker Bluetooth Mini dari wishlist' }).click();
   await expect(page.getByRole('link', { name: 'Speaker Bluetooth Mini', exact: true })).toHaveCount(0);
 });
+
+test('pilihan kategori bisa dicari dengan ketik dan dipilih dengan keyboard', async ({ page }) => {
+  await page.goto('/produk');
+  const pemicu = page.locator('#filter-kategori-desktop');
+  await pemicu.click();
+  const cari = page.getByRole('combobox', { name: 'Cari pilihan' });
+  await expect(cari).toBeFocused();
+  await cari.fill('elek');
+  const daftar = page.getByRole('listbox');
+  await expect(daftar.getByRole('option', { name: 'Elektronik', exact: true })).toBeVisible();
+  await expect(daftar.getByRole('option', { name: 'Fashion Pria', exact: true })).toHaveCount(0);
+  await cari.fill('zzzz'); await expect(daftar).toContainText('Tidak ada yang cocok');
+  await cari.fill('elektronik'); await cari.press('Enter');
+  await expect(daftar).toBeHidden(); await expect(pemicu).toHaveText('Elektronik');
+  await page.getByRole('button', { name: 'Terapkan Filter' }).first().click();
+  await expect(page).toHaveURL(/kategori=elektronik/);
+});

@@ -3,6 +3,7 @@ import { Albert_Sans, Inter } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import SembunyiDiAdmin from '@/components/layout/SembunyiDiAdmin';
+import TombolAsisten from '@/components/asisten/TombolAsisten';
 import { Toaster } from '@/components/ui/sonner';
 import { SKRIP_TEMA } from '@/components/layout/TemaToggle';
 import { WishlistProvider } from '@/components/product/WishlistProvider';
@@ -22,5 +23,5 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const pengguna = await ambilPenggunaSaatIni();
   const ids = pengguna ? await ambilIdWishlist(pengguna.id) : [];
-  return <html lang="id" suppressHydrationWarning className={`${inter.variable} ${albert.variable} min-h-full antialiased`}><head><script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} /></head><body className="flex min-h-screen flex-col bg-background font-sans text-foreground"><WishlistProvider key={`${pengguna?.id ?? 'tamu'}`} ids={ids} login={!!pengguna}><SembunyiDiAdmin><Navbar /></SembunyiDiAdmin><div id="konten-utama" className="flex flex-1 flex-col">{children}</div><SembunyiDiAdmin><Footer /></SembunyiDiAdmin><Toaster position="top-center" richColors closeButton /></WishlistProvider></body></html>;
+  return <html lang="id" suppressHydrationWarning className={`${inter.variable} ${albert.variable} min-h-full antialiased`}><head><script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} /></head><body className="flex min-h-screen flex-col bg-background font-sans text-foreground"><WishlistProvider key={`${pengguna?.id ?? 'tamu'}`} ids={ids} login={!!pengguna}><SembunyiDiAdmin><Navbar /></SembunyiDiAdmin><div id="konten-utama" className="flex flex-1 flex-col">{children}</div><SembunyiDiAdmin><Footer /><TombolAsisten aktif={!!process.env.ASISTEN_API_KEY?.trim()} /></SembunyiDiAdmin><Toaster position="top-center" richColors closeButton /></WishlistProvider></body></html>;
 }

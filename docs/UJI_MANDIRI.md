@@ -50,6 +50,8 @@ Untuk perubahan yang terlihat pengguna:
 - [ ] Tidak ada `<select>` bawaan browser; daftar pilihan memakai komponen `Pilihan`
 - [ ] Admin: tambah/edit terbuka sebagai modal, simpan menutup modal dan daftar ikut berubah
 - [ ] Keluar (toko dan admin) meminta konfirmasi; "Batal" tidak mengeluarkan
+- [ ] Pilihan panjang (kategori, merek) bisa dicari dengan mengetik
+- [ ] "Tanya AI": jawaban sesuai data toko, menolak nomor kartu/password (dan menyamarkannya), tidak tampil di admin/checkout
 
 ## 4. Tes E2E (Playwright)
 
