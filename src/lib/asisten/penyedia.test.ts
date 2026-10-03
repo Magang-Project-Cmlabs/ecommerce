@@ -17,7 +17,7 @@ describe('daftarPenyedia', () => {
   it('utama Gemini lalu cadangan Groq, masing-masing dengan bawaan', () => {
     expect(daftarPenyedia({ ASISTEN_API_KEY: 'g', ASISTEN_CADANGAN_API_KEY: 'q' })).toEqual([
       { nama: 'utama', kunci: 'g', url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', models: ['gemini-flash-lite-latest', 'gemini-flash-latest'] },
-      { nama: 'cadangan', kunci: 'q', url: 'https://api.groq.com/openai/v1/chat/completions', models: ['llama-3.3-70b-versatile'] },
+      { nama: 'cadangan', kunci: 'q', url: 'https://api.groq.com/openai/v1/chat/completions', models: ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b'] },
     ]);
   });
 

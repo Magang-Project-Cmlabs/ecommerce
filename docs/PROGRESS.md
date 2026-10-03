@@ -19,7 +19,7 @@ Format entri:
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: `daftarPenyedia` (utama Gemini + cadangan Groq dari `ASISTEN_CADANGAN_*`), `mintaJawaban` berpindah penyedia saat kunci ditolak/kuota habis dengan batas 4 panggilan & 30 detik; tombol tampil bila salah satu kunci ada; `pasang-env-vercel.mjs` menerima kunci cadangan dan menolak kunci berspasi; `.env.example`, D18, SERAH_TERIMA diperbarui.
 - Insiden kecil: saat menguji validasi skrip, sebuah nilai uji (bukan kunci asli) sempat terpasang sebagai `ASISTEN_CADANGAN_API_KEY` di Vercel Preview + Production karena pemeriksaan spasi salah tulis; nilai itu langsung dihapus (`vercel env rm`, dicek dengan `vercel env ls`), tidak ada deploy yang memakainya, dan pemeriksaannya diperbaiki serta diuji tanpa memanggil Vercel.
-- Verifikasi: typecheck PASS · lint PASS · test asisten PASS (28) · jawaban Groq langsung NOT_RUN (menunggu kunci pemilik).
+- Verifikasi: typecheck PASS · lint PASS · test asisten PASS (28) · kunci Groq pemilik diuji langsung: `llama-3.3-70b-versatile` sudah tidak tersedia (404), bawaan diganti `openai/gpt-oss-120b` + `qwen/qwen3.8-27b`; keduanya menjawab dengan instruksi asisten asli (0,5–1,1 s), menolak permintaan kode promo rahasia/.env · tautan markdown dari model kini dirender aman (hanya halaman toko yang bisa diklik).
 
 ### 2026-10-03 — Kevin Ilham / Claude Code — Pilihan bisa dicari, lencana status, asisten AI, performa
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).

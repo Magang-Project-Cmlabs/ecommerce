@@ -14,14 +14,33 @@ const SARAN = ['Metode pembayaran apa saja?', 'Bagaimana ongkir dihitung?', 'Rek
 // Tautan internal yang boleh dijadikan link di jawaban (hanya halaman toko).
 const POLA_TAUTAN = /(\/(?:produk|kategori|akun|bantuan|wishlist|kebijakan-privasi|syarat-ketentuan|masuk|daftar)(?:\/[a-z0-9-]+)*(?:\?[a-z0-9=&-]+)?)/g;
 
+const kelasTautan = 'font-medium underline underline-offset-4 hover:no-underline';
+// Tautan markdown [teks](/halaman) dari model; hanya halaman toko yang dijadikan link.
+const POLA_TAUTAN_MD = /\[([^\]\n]+)\]\(([^)\s]+)\)/g;
+
 function tebalDanTautan(teks: string, kunci: string): ReactNode[] {
   // Kode sebaris (`...`) dan *miring* dari model ditampilkan sebagai teks biasa tanpa tandanya.
   const bersih = teks.replace(/`([^`]+)`/g, '$1').replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, '$1$2');
+  // split dengan dua grup tangkap: pola [teks, label, href] berulang tiap 3 bagian.
+  const bagianMd = bersih.split(POLA_TAUTAN_MD);
+  return bagianMd.flatMap((b, k) => {
+    if (k % 3 === 2) return [];
+    if (k % 3 === 1) {
+      const href = bagianMd[k + 1]!;
+      return new RegExp(`^${POLA_TAUTAN.source}$`).test(href)
+        ? [<Link key={`${kunci}-m${k}`} href={href} className={kelasTautan}>{b}</Link>]
+        : [<Fragment key={`${kunci}-m${k}`}>{b}</Fragment>];
+    }
+    return tebalDanTautanPolos(b, `${kunci}-${k}`);
+  });
+}
+
+function tebalDanTautanPolos(bersih: string, kunci: string): ReactNode[] {
   return bersih.split(/(\*\*[^*]+\*\*)/g).flatMap((bagian, i) => {
     if (/^\*\*[^*]+\*\*$/.test(bagian)) return [<strong key={`${kunci}-b${i}`} className="font-semibold">{bagian.slice(2, -2)}</strong>];
     // split dengan grup tangkap: bagian berindeks ganjil adalah tautan.
     return bagian.split(POLA_TAUTAN).map((p, j) => j % 2 === 1
-      ? <Link key={`${kunci}-l${i}-${j}`} href={p} className="font-medium underline underline-offset-4 hover:no-underline">{p}</Link>
+      ? <Link key={`${kunci}-l${i}-${j}`} href={p} className={kelasTautan}>{p}</Link>
       : <Fragment key={`${kunci}-t${i}-${j}`}>{p}</Fragment>);
   });
 }
