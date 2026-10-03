@@ -17,7 +17,7 @@ Tambahan di luar rencana awal: pembayaran **Midtrans Snap sandbox**, unggah gamb
 (D18, Gemini dengan cadangan Groq, pengaman berlapis).
 
 Yang masih terbuka: LCP seluler halaman katalog di simulasi Lighthouse (3,4 s),
-QRIS sandbox (simulator error 2603), eksekusi cron online pertama, jadwal backup Aiven,
+QRIS sandbox (simulator error 2603),
 dan uji manusia di produksi (lihat bagian 6).
 
 ## 2. Kemajuan per tahap
@@ -57,9 +57,9 @@ dan uji manusia di produksi (lihat bagian 6).
 | Unggah gambar (Vercel Blob, D15) | PASS | E2E opt-in `unggah-blob.spec.ts` ke store sungguhan |
 | Email (Gmail SMTP) | PASS / NOT_RUN | Login SMTP + email uji terkirim; pengiriman dari situs (lupa password/invoice) belum diuji manusia |
 | Midtrans sandbox | PASS / FAIL | BCA & Mandiri sampai lunas (diulang 3 Okt di server uji lokal; webhook produksi menolak tanda tangan palsu); QRIS gagal di simulator |
-| Cron pesanan | PASS (kode) / NOT_RUN (jadwal) | Cron harian Vercel terdaftar; workflow tiap jam + `CRON_SECRET` baru disiapkan (secret terpasang 3 Okt), menunggu workflow dikirim ke branch `sinkron` |
+| Cron pesanan | PASS | Workflow `pesanan-otomatis.yml` tiap jam di repo pribadi; run pertama 3 Okt HTTP 200 (0 gagal); cron harian Vercel tetap sebagai cadangan |
 | Asisten AI (Gemini + Groq) | PASS | Kunci gratis tanpa kartu; tombol darurat `ASISTEN_NONAKTIF=1` |
-| Backup Aiven | PASS (manual) / NOT_RUN (jadwal) | Dump + restore terpisah 1 Okt; backup harian terenkripsi + pengguna MySQL khusus baca disiapkan 3 Okt ([backup-restore](runbooks/backup-restore.md)), menunggu workflow dikirim |
+| Backup Aiven | PASS (jadwal) / NOT_RUN (pulih dari backup otomatis) | Backup harian terenkripsi `backup-db.yml`: run pertama 3 Okt, 17 tabel, 26 KB, simpan 30 hari ([backup-restore](runbooks/backup-restore.md)); restore manual 1 Okt PASS |
 
 ## 5. Kriteria sukses PRD §22
 
@@ -71,7 +71,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Keranjang/jumlah/promo | PASS | Harga dihitung ulang server; unit + E2E |
 | Auth/reset/guard | PASS | Unit, integrasi, E2E (keluar dengan konfirmasi) |
 | Checkout/ongkir/tanpa overselling | PASS | Race stok terakhir di MySQL; E2E empat langkah |
-| Pembatalan otomatis/stok/promo kembali | PASS (kode) / NOT_RUN (jadwal online) | Integrasi + latihan demo memicu cron; eksekusi terjadwal online belum terlihat |
+| Pembatalan otomatis/stok/promo kembali | PASS | Integrasi + latihan demo; cron online tiap jam berjalan (3 Okt) |
 | Admin produk/stok/pesanan | PASS | E2E admin lewat modal + transisi status |
 | Email perubahan status | NOT_RUN | Kode teruji (loopback); SMTP eksternal terpasang tetapi belum diuji dari situs |
 | Riwayat/detail/timeline | PASS | E2E pembeli/admin |
@@ -83,7 +83,7 @@ dan uji manusia di produksi (lihat bagian 6).
 
 **Menunggu pemilik** (langkah rinci di [SERAH_TERIMA](SERAH_TERIMA.md)):
 1. Uji manusia di produksi: daftar pembeli, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin, email lupa password.
-2. Kirim workflow pesanan tiap jam + backup harian ke branch `sinkron` repo pribadi (secret sudah terpasang).
+2. Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman; uji buka satu backup mengikuti runbook.
 3. Foto produk asli dan pembersihan data demo sebelum dipakai pelanggan nyata.
 
 **Terbuka di sisi kode:** LCP katalog seluler (simulasi) > 2,5 s; QRIS sandbox.
