@@ -82,7 +82,7 @@ dan uji manusia di produksi (lihat bagian 6).
 ## 6. Sisa pekerjaan
 
 **Menunggu pemilik** (langkah rinci di [SERAH_TERIMA](SERAH_TERIMA.md)):
-1. Uji manusia di produksi: email lupa password. Bayar sandbox BCA, unggah/hapus gambar admin, dan penjaga admin sudah diuji di produksi (3 Okt). Ganti password akun admin/pembeli produksi sebelum rilis penuh (sempat tertulis di percakapan). Nama merchant di halaman Snap masih "sijoki" (pengaturan dashboard Midtrans).
+1. Uji manusia di produksi: email lupa password. Bayar sandbox BCA, unggah/hapus gambar admin, dan penjaga admin sudah diuji di produksi (3 Okt). Ganti password akun admin/pembeli produksi sebelum rilis penuh (sempat tertulis di percakapan). Nama di halaman Snap sudah "TokoKita" (diubah pemilik di dashboard Midtrans, diperiksa 3 Okt).
 2. Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman; uji buka satu backup mengikuti runbook.
 3. Foto produk asli dan pembersihan data demo sebelum dipakai pelanggan nyata.
 

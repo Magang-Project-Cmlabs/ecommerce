@@ -15,6 +15,10 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Cek nama Snap dan layar pengalihan di produksi
+- Pemilik mengganti Display Name di menu Snap Checkout (dashboard Midtrans sandbox). Pesanan uji INV-202610-0002 (Kabel USB-C, BCA): selama pengalihan hanya tampil "Pesanan berhasil dibuat" (tanpa layar keranjang kosong) · halaman Snap menampilkan "TokoKita" · pesanan dibatalkan pembeli, status Dibatalkan, stok kembali ke 61 (62 − 1 pesanan lunas INV-202610-0001).
+- Catatan: pindah ke halaman sukses setelah "Buat Pesanan" memakan ±8–10 detik pada percobaan ini (±5 detik sebelumnya); belum diselidiki.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Uji produksi: hapus gambar dan bayar sandbox; perbaikan temuan
 - Uji produksi (Claude in Chrome, sesi yang di-login pemilik, tanpa mengetik password): (1) admin menambah foto ke "Kabel USB-C Anyaman 1 m", file Blob HTTP 200; foto dilepas dan disimpan, file Blob HTTP 404 (dengan/tanpa parameter), foto demo tetap 200, produk kembali 3 foto. (2) Pembeli checkout 1 Kabel USB-C + JNE Regular + BCA (Rp 64.000) → INV-202610-0001 → Snap sandbox → simulator BCA VA "Simulated payment is successful" → tanpa menekan Cek Pembayaran status menjadi Dikonfirmasi · Lunas (webhook produksi bekerja). Pesanan uji dibiarkan; stok kabel berkurang 1.
 - Temuan dan perbaikan: setelah "Buat Pesanan" layar sempat menampilkan "Keranjang masih kosong" sebelum pindah halaman → kini menampilkan "Pesanan berhasil dibuat… Membuka halaman pesanan"; detail pesanan pembeli dan admin menampilkan kode mentah "bank bca" → label dari satu sumber `LABEL_METODE_PEMBAYARAN` (`src/lib/pesanan/status.ts`). Catatan pemilik: nama merchant Snap "sijoki" (dashboard Midtrans).
