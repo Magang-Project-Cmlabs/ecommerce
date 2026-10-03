@@ -43,7 +43,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 
 ## Menunggu pemilik
 
-1. Uji manusia di produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar (HEMAT10 minimal belanja Rp 100.000), unggah gambar lewat admin, cek email "Lupa password".
+1. Uji manusia di produksi: bayar sandbox BCA sampai Dibayar (HEMAT10 minimal belanja Rp 100.000) dan cek email "Lupa password". Unggah gambar lewat admin sudah diuji di produksi 3 Okt (PASS); file uji 15 KB tertinggal di Vercel Blob karena aplikasi tidak menghapus file gambar.
 2. Tinjau isi PPT 22 slide dan sesuaikan nama/peran tim bila perlu.
 3. Pesanan otomatis tiap jam dan backup harian: secret sudah dipasang lewat `node scripts/pasang-otomasi-github.mjs` (3 Okt); workflow aktif di branch `sinkron` repo pribadi dan run pertama keduanya PASS (3 Okt). Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman. Panduan: [backup-restore](runbooks/backup-restore.md).
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
