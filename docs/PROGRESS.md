@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Penyedia AI cadangan (Groq)
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: `daftarPenyedia` (utama Gemini + cadangan Groq dari `ASISTEN_CADANGAN_*`), `mintaJawaban` berpindah penyedia saat kunci ditolak/kuota habis dengan batas 4 panggilan & 30 detik; tombol tampil bila salah satu kunci ada; `pasang-env-vercel.mjs` menerima kunci cadangan dan menolak kunci berspasi; `.env.example`, D18, SERAH_TERIMA diperbarui.
+- Insiden kecil: saat menguji validasi skrip, sebuah nilai uji (bukan kunci asli) sempat terpasang sebagai `ASISTEN_CADANGAN_API_KEY` di Vercel Preview + Production karena pemeriksaan spasi salah tulis; nilai itu langsung dihapus (`vercel env rm`, dicek dengan `vercel env ls`), tidak ada deploy yang memakainya, dan pemeriksaannya diperbaiki serta diuji tanpa memanggil Vercel.
+- Verifikasi: typecheck PASS · lint PASS · test asisten PASS (28) · jawaban Groq langsung NOT_RUN (menunggu kunci pemilik).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Pilihan bisa dicari, lencana status, asisten AI, performa
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: `Pilihan` dibangun ulang di atas Popover dengan kotak cari (pilihan > 6) dan pola ARIA combobox/listbox; `Lencana`/`LencanaStatus`/`LencanaPembayaran` menggantikan lencana berwarna penuh di admin dan pesanan pembeli; asisten "Tanya AI" (D18: Server Action `tanyaAsisten`, Gemini API lewat fetch, data publik saja, penyaring + penyamaran data sensitif, batas 15/10 menit per IP, panel dimuat saat dibuka); `catatBatasAuthDb` menerima batas khusus; foto slide hero tambahan ditunda; favicon kecil + icon.svg; label logo toko/admin sesuai teks terlihat; placeholder harga dipersingkat; `.env.example` + `pasang-env-vercel.mjs` mendukung `ASISTEN_*`.

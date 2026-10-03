@@ -8,7 +8,7 @@ import { headers } from 'next/headers';
 import { ipKlien } from '@/lib/auth/ip';
 import { driverBatasAuth } from '@/lib/auth/batas-percobaan';
 import { catatBatasAsisten } from '@/lib/asisten/pembatas';
-import { konfigurasiAsisten, mintaJawaban, type PesanChat } from '@/lib/asisten/penyedia';
+import { daftarPenyedia, mintaJawaban, type PesanChat } from '@/lib/asisten/penyedia';
 import { periksaPesanSensitif, susunInstruksi } from '@/lib/asisten/pengetahuan';
 import { ambilDataAsisten } from '@/lib/data/asisten';
 import { pesanAsistenSchema } from '@/lib/validations/asisten';
@@ -51,7 +51,7 @@ export async function tanyaAsisten(input: unknown): Promise<HasilAsisten> {
     { role: 'system', content: instruksi },
     ...riwayat.filter((m) => m.peran === 'asisten' || !periksaPesanSensitif(m.isi)).map((m): PesanChat => ({ role: m.peran === 'pengguna' ? 'user' : 'assistant', content: m.isi })),
   ];
-  const jawaban = await mintaJawaban(pesan, konfigurasiAsisten());
+  const jawaban = await mintaJawaban(pesan, daftarPenyedia());
   if (!jawaban.ok) {
     return {
       ok: false,
