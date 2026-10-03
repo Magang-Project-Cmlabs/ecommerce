@@ -1,4 +1,4 @@
-// Memasang isi berkas env lokal (mis. .env.r2, .env.smtp) ke Vercel Preview + Production
+// Memasang isi berkas env lokal (mis. .env.r2, .env.smtp, .env.asisten) ke Vercel Preview + Production
 // tanpa mencetak nilainya. Pakai: node scripts/pasang-env-vercel.mjs .env.r2
 // Butuh `npx vercel login` dan folder sudah ditautkan (`.vercel/`).
 import { readFileSync, existsSync } from 'node:fs';
@@ -17,9 +17,10 @@ const isi = Object.fromEntries(readFileSync(berkas, 'utf8').split(/\r?\n/)
 const KELOMPOK = {
   r2: { wajib: ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY', 'S3_PUBLIC_URL'], tambahan: { STORAGE_DRIVER: 's3' } },
   smtp: { wajib: ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM'], tambahan: {} },
+  asisten: { wajib: ['ASISTEN_API_KEY'], tambahan: {}, opsional: ['ASISTEN_BASE_URL', 'ASISTEN_MODEL'] },
 };
-const jenis = Object.keys(isi).some((k) => k.startsWith('S3_')) ? 'r2' : Object.keys(isi).some((k) => k.startsWith('SMTP_')) ? 'smtp' : null;
-if (!jenis) { console.error('Berkas tidak berisi S3_* atau SMTP_*.'); process.exit(1); }
+const jenis = Object.keys(isi).some((k) => k.startsWith('S3_')) ? 'r2' : Object.keys(isi).some((k) => k.startsWith('SMTP_')) ? 'smtp' : Object.keys(isi).some((k) => k.startsWith('ASISTEN_')) ? 'asisten' : null;
+if (!jenis) { console.error('Berkas tidak berisi S3_*, SMTP_*, atau ASISTEN_*.'); process.exit(1); }
 
 const kurang = KELOMPOK[jenis].wajib.filter((k) => !isi[k]);
 if (kurang.length) { console.error(`Belum diisi: ${kurang.join(', ')}`); process.exit(1); }
@@ -32,13 +33,14 @@ if (jenis === 'smtp') {
   if (!['465', '587'].includes(isi.SMTP_PORT)) salah.push('SMTP_PORT biasanya 587 atau 465');
   if (!/@/.test(isi.MAIL_FROM)) salah.push('MAIL_FROM harus memuat alamat email, mis. TokoKita <toko@gmail.com>');
 }
+if (jenis === 'asisten' && /s/.test(isi.ASISTEN_API_KEY)) salah.push('ASISTEN_API_KEY tidak boleh berisi spasi; salin ulang kuncinya dari Google AI Studio');
 if (salah.length) { console.error(salah.join('\n')); process.exit(1); }
 
 // Google menampilkan sandi aplikasi dalam empat kelompok berspasi; spasinya tidak bagian dari sandi.
 if (isi.SMTP_PASS) isi.SMTP_PASS = isi.SMTP_PASS.replace(/\s+/g, '');
 
-const RAHASIA = new Set(['S3_ACCESS_KEY', 'S3_SECRET_KEY', 'SMTP_PASS', 'SMTP_USER']);
-const pasangan = { ...Object.fromEntries(KELOMPOK[jenis].wajib.map((k) => [k, isi[k]])), ...KELOMPOK[jenis].tambahan };
+const RAHASIA = new Set(['S3_ACCESS_KEY', 'S3_SECRET_KEY', 'SMTP_PASS', 'SMTP_USER', 'ASISTEN_API_KEY']);
+const pasangan = { ...Object.fromEntries([...KELOMPOK[jenis].wajib, ...(KELOMPOK[jenis].opsional ?? []).filter((k) => isi[k])].map((k) => [k, isi[k]])), ...KELOMPOK[jenis].tambahan };
 const vercel = (args, input) => spawnSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vercel', ...args], { input, encoding: 'utf8', shell: process.platform === 'win32' });
 
 let gagal = 0;
