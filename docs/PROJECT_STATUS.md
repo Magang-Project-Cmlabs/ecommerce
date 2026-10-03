@@ -63,7 +63,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Cron pesanan | PASS | Workflow `pesanan-otomatis.yml` tiap jam di repo pribadi; run pertama 3 Okt HTTP 200 (0 gagal); cron harian Vercel tetap sebagai cadangan |
 | Asisten AI (Gemini + Groq) | PASS | Kunci gratis tanpa kartu; tombol darurat `ASISTEN_NONAKTIF=1` |
 | Login Google (D21) | PASS | OAuth Client "TokoKita Web" (project `tokokita-510509`) *In production*; uji akun asli di localhost PASS; produksi: 307 ke Google dengan PKCE/state/nonce, cookie `Secure; HttpOnly`, callback palsu ditolak; migration `google_sub` diterapkan sebelum merge |
-| Tombol cek resi kurir | PASS | Admin produksi: "Cek di situs SiCepat"; JNE meminta 5 digit telepon penerima (dicek manual) |
+| Tombol cek resi kurir | PASS | Admin produksi: "Cek di situs SiCepat" membuka situs resmi dan menyalin resi; JNE meminta 5 digit telepon penerima (dicek manual). Hasil lacak paket sungguhan NOT_RUN: resi pesanan seed acak (mis. `SCP108158466` → "Nomor resi tidak ditemukan" di sicepat.com, dicek pemilik 3 Okt), belum ada pengiriman nyata |
 | Lacak resi otomatis (D20) | NOT_RUN | Binderbyte berbayar (Rp 15/hit); kunci tidak dipasang atas keputusan pemilik |
 | Backup Aiven | PASS (jadwal) / NOT_RUN (pulih dari backup otomatis) | Backup harian terenkripsi `backup-db.yml`: run pertama 3 Okt, 17 tabel, 26 KB, simpan 30 hari ([backup-restore](runbooks/backup-restore.md)); restore manual 1 Okt PASS |
 

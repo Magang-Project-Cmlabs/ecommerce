@@ -48,6 +48,8 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 - **Login Google** (D21): aktif untuk semua akun Google; admin tetap email + password. Kunci di Vercel;
   project Google Cloud `tokokita-510509`. Penautan akun lama mengganti password lamanya (keamanan).
 - **Tombol "Cek di situs kurir"**: gratis, membuka halaman lacak resmi JNE/SiCepat dan menyalin resi.
+  Resi pesanan contoh (seed) dibuat acak, jadi situs kurir menjawab "Nomor resi tidak ditemukan"; hasil lacak
+  hanya muncul untuk resi asli.
 - **Lacak resi otomatis** (D20): kode siap tetapi nonaktif; Binderbyte berbayar (Rp 15/hit, isi minimal Rp 5.000).
   Aktifkan cukup dengan mengisi saldo lalu memasang `LACAK_RESI_API_KEY` ([runbook](runbooks/login-google-dan-lacak-resi.md)).
 - Migration `20261003150000_login_google` sudah diterapkan ke DB produksi. DB Preview belum (Preview bisa galat saat login).
@@ -57,7 +59,8 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 1. Uji manusia di produksi: selesai 3 Okt. Bayar sandbox BCA sampai Dibayar PASS (pesanan uji INV-202610-0001 kemudian dibatalkan admin dengan status pembayaran Dikembalikan; stok Kabel USB-C kembali 62), email "Lupa password" diuji pemilik (aman), password akun admin/pembeli demo produksi sudah diganti pemilik, nama di halaman Midtrans "TokoKita". Berkas lokal `.env.akun-produksi` masih berisi password lama: perbarui atau hapus.
 2. Tinjau isi PPT 22 slide dan sesuaikan nama/peran tim bila perlu.
 3. Pesanan otomatis tiap jam dan backup harian: secret sudah dipasang lewat `node scripts/pasang-otomasi-github.mjs` (3 Okt); workflow aktif di branch `sinkron` repo pribadi dan run pertama keduanya PASS (3 Okt). Simpan salinan `.env.otomasi` (kunci pembuka backup) di tempat aman. Panduan: [backup-restore](runbooks/backup-restore.md).
-4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
+4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata (termasuk pesanan contoh
+   dengan resi acak yang tidak terdaftar di kurir).
 5. Nilai tampilan baru (toko dan admin, terang dan gelap) di situs online; sebutkan bagian yang masih kurang.
 
 Pembayaran uang asli butuh akun Midtrans produksi atas nama badan usaha; di

@@ -121,7 +121,7 @@ kolomCakupan.forEach(([j, bg, fg, butir], i) => {
   teks(s, j, { x: x + 0.35, y: 2.32, w: 3.2, h: 0.36, fontFace: H, fontSize: 15, color: fg });
   teks(s, butir.map((b, k) => ({ text: b, options: { bullet: { code: i === 2 ? '2013' : '2713' }, breakLine: k < butir.length - 1 } })), { x: x + 0.35, y: 2.85, w: 3.3, h: 3.6, fontSize: 12.5, color: fg, paraSpaceAfter: 5 });
 });
-s.addNotes('Seluruh fitur MVP dan fitur lanjutan sudah jalan. Tambahan dari rencana awal: pembayaran sandbox, mode gelap, asisten AI, ongkir per zona provinsi, Login Google, dan tombol cek resi di situs kurir. Lacak resi otomatis sudah dikodekan tetapi belum diaktifkan karena API-nya berbayar sekitar Rp 15 per pengecekan.');
+s.addNotes('Seluruh fitur MVP dan fitur lanjutan sudah jalan. Tambahan dari rencana awal: pembayaran sandbox, mode gelap, asisten AI, ongkir per zona provinsi, Login Google, dan tombol cek resi di situs kurir. Lacak resi otomatis sudah dikodekan tetapi belum diaktifkan karena API-nya berbayar sekitar Rp 15 per pengecekan. Resi di data demo dibuat acak, jadi situs kurir menjawab tidak ditemukan; hasil lacak muncul untuk resi kiriman asli.');
 
 // ---------- 6. Teknologi ----------
 pres.addSection({ title: 'Teknologi' });
