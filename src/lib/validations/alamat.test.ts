@@ -72,4 +72,12 @@ describe('alamatSchema (KONTRAK_CHECKOUT §3)', () => {
       expect(hasil.data.isDefault).toBe(false);
     }
   });
+
+  it('menyimpan nama provinsi baku dan menolak provinsi yang tidak dikenal (D19)', () => {
+    const singkatan = alamatSchema.safeParse({ ...dataValid, province: 'jabar' });
+    expect(singkatan.success && singkatan.data.province).toBe('Jawa Barat');
+    const asing = alamatSchema.safeParse({ ...dataValid, province: 'Narnia' });
+    expect(asing.success).toBe(false);
+    if (!asing.success) expect(asing.error.issues[0]?.message).toBe('Pilih provinsi dari daftar');
+  });
 });

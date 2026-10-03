@@ -66,6 +66,11 @@ test('belanja nyata: alamat → checkout → admin konfirmasi/kirim → pembeli 
     }
     await page.goto(`/akun/pesanan/${number}`);
     await expect(page.getByText('JNE-E2E-123456', { exact: true })).toBeVisible();
+    // Tautan gratis ke halaman lacak resmi kurir, tab baru tanpa akses ke halaman toko.
+    const cekKurir = page.getByRole('link', { name: /Cek di situs JNE/ });
+    await expect(cekKurir).toHaveAttribute('href', 'https://www.jne.co.id/tracking-package');
+    await expect(cekKurir).toHaveAttribute('target', '_blank');
+    await expect(cekKurir).toHaveAttribute('rel', 'noopener noreferrer');
     await page.getByRole('button', { name: 'Pesanan Diterima', exact: true }).click();
     await page.getByRole('button', { name: 'Ya, Pesanan Diterima', exact: true }).click();
     await expect(page.getByRole('link', { name: 'Beri Ulasan' })).toBeVisible();
@@ -99,4 +104,35 @@ test('pembatalan pembeli tersimpan dan pesanan tidak bocor kepada akun lain', as
   await page.getByRole('button', { name: 'Ya, Batalkan Pesanan', exact: true }).click();
   await expect(page.getByText('Dibatalkan', { exact: true }).first()).toBeVisible();
   await page.reload(); await expect(page.getByText('Dibatalkan', { exact: true }).first()).toBeVisible();
+});
+
+test('ongkir mengikuti zona provinsi tujuan (D19)', async ({ page }) => {
+  await page.setExtraHTTPHeaders({ 'x-real-ip': `10.222.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250) + 1}` });
+  await page.goto('/daftar');
+  await page.getByLabel('Nama lengkap').fill('Pembeli Bali');
+  await page.getByLabel('Email').fill(`zona-${Date.now()}-${Math.random().toString(16).slice(2)}@example.test`);
+  await page.getByLabel('Password', { exact: true }).fill('Transaksi123');
+  await page.getByLabel('Ulangi password').fill('Transaksi123');
+  await page.getByRole('checkbox', { name: /Syarat & Ketentuan/ }).check();
+  await page.getByRole('button', { name: /^daftar$/i }).click();
+  await page.waitForURL(u => u.pathname === '/');
+  await page.goto('/produk/kaos-polos-premium');
+  await page.getByRole('radio', { name: 'M', exact: true }).click();
+  await page.getByRole('button', { name: 'Masukkan Keranjang' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: /Checkout/ }).click();
+  await page.getByRole('button', { name: 'Tambah Alamat Baru' }).click();
+  await page.getByLabel('Nama Penerima').fill('Pembeli Bali');
+  await page.getByLabel('Nomor Telepon').fill('081234567890');
+  await page.getByLabel(/Alamat Lengkap/).fill('Jalan Pantai nomor 5');
+  await page.getByLabel('Kecamatan').fill('Kuta');
+  await page.getByLabel(/Kota/).fill('Denpasar');
+  await pilihOpsi(page, /Provinsi/, 'Bali');
+  await page.getByLabel(/Kode Pos/).fill('80361');
+  await page.getByRole('button', { name: 'Simpan Alamat' }).click();
+  await expect(page.getByText('Jalan Pantai nomor 5').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Lanjutkan', exact: true }).click();
+  // Zona Bali & Nusa Tenggara: JNE Rp 24.000/kg, SiCepat Rp 21.000/kg; GoSend hanya sekota toko.
+  await expect(page.getByRole('button', { name: /JNE Regular/ })).toContainText('Rp 24.000');
+  await expect(page.getByRole('button', { name: /SiCepat REG/ })).toContainText('Rp 21.000');
+  await expect(page.getByRole('button', { name: /GoSend Instant/ })).toBeDisabled();
 });

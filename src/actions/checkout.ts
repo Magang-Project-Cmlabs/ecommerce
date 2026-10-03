@@ -50,7 +50,7 @@ export async function pratinjauCheckout(raw: PratinjauInput): Promise<Pratinjau>
   if (input.addressId && user) {
     const address = await ambilAlamatById(input.addressId, user.id);
     if (!address) throw new BusinessValidationError('Alamat pengiriman tidak ditemukan.');
-    shippingOptions = hitungOpsiPengiriman(totalWeight, address.city);
+    shippingOptions = hitungOpsiPengiriman(totalWeight, { kota: address.city, provinsi: address.province });
   }
   const selected = shippingOptions.find(o => o.method === input.shippingMethod && o.available);
   const shippingCost = selected?.cost ?? null;
@@ -83,7 +83,7 @@ export async function buatPesanan(rawInput: CheckoutInput): Promise<HasilBuatPes
       const invalid = items.find(i => i.masalah);
       if (invalid) throw new BusinessValidationError(invalid.masalah === 'varian_wajib' ? `Pilih varian untuk produk "${invalid.name}".` : `Produk "${invalid.name}" tidak tersedia atau stok tidak mencukupi. Perbarui keranjang Anda.`);
       const { subtotal, totalWeight } = totals(items);
-      const shipping = hitungOpsiPengiriman(totalWeight, address.city).find(o => o.method === input.shippingMethod);
+      const shipping = hitungOpsiPengiriman(totalWeight, { kota: address.city, provinsi: address.province }).find(o => o.method === input.shippingMethod);
       if (!shipping?.available) throw new BusinessValidationError(shipping?.reason ?? 'Kurir tidak tersedia untuk alamat ini.');
       let discount = 0;
       if (input.promoCode) {

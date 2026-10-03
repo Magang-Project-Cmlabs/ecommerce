@@ -4,6 +4,8 @@ import { FormMasuk } from '@/components/auth/form-masuk';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
 import { amanNext } from '@/lib/validations/auth';
+import { konfigGoogle } from '@/lib/auth/google';
+import { PESAN_GALAT_GOOGLE, TombolGoogle } from '@/components/auth/tombol-google';
 
 export const metadata: Metadata = {
   title: 'Masuk',
@@ -11,7 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HalamanMasuk({ searchParams }: PageProps<'/masuk'>) {
-  const { next, reset } = await searchParams;
+  const { next, reset, galat } = await searchParams;
+  const pesanGalat = typeof galat === 'string' ? PESAN_GALAT_GOOGLE[galat] : undefined;
   const tujuan = amanNext(typeof next === 'string' ? next : null);
   if (await ambilPenggunaSaatIni()) redirect(tujuan ?? '/');
 
@@ -32,7 +35,13 @@ export default async function HalamanMasuk({ searchParams }: PageProps<'/masuk'>
               Password berhasil diganti. Silakan masuk dengan password baru.
             </p>
           )}
+          {pesanGalat && (
+            <p role="alert" className="border-destructive/30 bg-destructive/10 text-destructive rounded-md border px-3 py-2 text-sm">
+              {pesanGalat}
+            </p>
+          )}
           <FormMasuk next={tujuan} />
+          {konfigGoogle() && <TombolGoogle next={tujuan} />}
         </CardContent>
       </Card>
     </main>

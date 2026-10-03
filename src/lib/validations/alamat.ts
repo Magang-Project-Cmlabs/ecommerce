@@ -2,6 +2,7 @@
 // Dipakai bersama oleh form (client) dan Server Action (server).
 
 import { z } from 'zod';
+import { provinsiBaku } from '@/lib/pesanan/wilayah';
 
 export const alamatSchema = z.object({
   label: z
@@ -48,7 +49,10 @@ export const alamatSchema = z.object({
     .string({ error: 'Provinsi wajib diisi' })
     .trim()
     .min(1, { error: 'Provinsi wajib diisi' })
-    .max(100, { error: 'Provinsi maksimal 100 karakter' }),
+    .max(100, { error: 'Provinsi maksimal 100 karakter' })
+    // D19: simpan nama baku agar ongkir per zona selalu dikenali.
+    .transform((p) => provinsiBaku(p) ?? p)
+    .refine((p) => provinsiBaku(p) !== null, { error: 'Pilih provinsi dari daftar' }),
 
   postalCode: z
     .string({ error: 'Kode pos wajib diisi' })

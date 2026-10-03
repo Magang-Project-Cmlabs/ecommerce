@@ -27,15 +27,20 @@ import BatalkanDialog from "./BatalkanDialog";
 import TerimaPesananDialog from "./TerimaPesananDialog";
 import PaymentControls from '@/components/checkout/PaymentControls';
 import { LencanaPembayaran, LencanaStatus } from '@/components/pesanan/Lencana';
+import LacakPaket from './LacakPaket';
+import TautanLacakKurir from './TautanLacakKurir';
+import { TARIF_KURIR, type KurirKode } from '@/lib/pesanan/ongkir';
 
 type Props = {
   order: DetailPesananLengkap;
   gatewayEnabled: boolean;
   sandbox: boolean;
   simulationEnabled: boolean;
+  /** Pelacakan otomatis tersedia untuk pesanan ini (D20). */
+  lacakAktif?: boolean;
 };
 
-export default function DetailPesananClient({ order, gatewayEnabled, sandbox, simulationEnabled }: Props) {
+export default function DetailPesananClient({ order, gatewayEnabled, sandbox, simulationEnabled, lacakAktif = false }: Props) {
   const router = useRouter();
 
   // State Dialog Aksi
@@ -167,8 +172,10 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
                   <SalinTeksButton textToCopy={order.trackingNumber} label="Salin Resi" />
                 </div>
                 <p className="mt-1 text-[11px] text-blue-700 dark:text-blue-300">
-                  Layanan: <strong className="uppercase">{order.shippingMethod.replace('_', ' ')}</strong>
+                  Layanan: <strong>{TARIF_KURIR[order.shippingMethod as KurirKode]?.label ?? order.shippingMethod.replaceAll('_', ' ')}</strong>
                 </p>
+                <TautanLacakKurir kurir={order.shippingMethod} resi={order.trackingNumber} />
+                {lacakAktif && <LacakPaket orderNumber={order.orderNumber} />}
               </div>
             ) : (
               <div className="rounded-xl border border-border bg-muted/60 p-3.5 text-xs text-muted-foreground">

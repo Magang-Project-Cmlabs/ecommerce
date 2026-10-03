@@ -70,8 +70,8 @@ Mengganti atau menambah kode = migration baru. Label UI tetap dari
 
 | Kode | Label UI | Aturan |
 |---|---|---|
-| `jne_reg` | JNE Regular | Rp 15.000/kg, 2-3 hari |
-| `sicepat_reg` | SiCepat REG | Rp 13.000/kg, 1-2 hari |
+| `jne_reg` | JNE Regular | Per kg menurut zona provinsi tujuan (D19): Jawa Rp 15.000 (2-3 hari) s.d. Maluku & Papua Rp 58.000 (5-9 hari); tabel di `TARIF_ZONA` |
+| `sicepat_reg` | SiCepat REG | Per kg menurut zona (D19): Jawa Rp 13.000 (1-2 hari) s.d. Maluku & Papua Rp 52.000 (5-8 hari) |
 | `gosend_instant` | GoSend Instant | Rp 30.000 flat, kota sama dengan `STORE_CITY`, berat ≤ 20 kg |
 | `qris` | QRIS (GoPay, OVO, DANA) | Batas bayar 24 jam |
 | `bank_bca` | Transfer Bank BCA | Batas bayar 24 jam |

@@ -63,9 +63,9 @@ user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
    Berkas `"use client"` tidak pernah mengimpor Prisma. Hindari query di dalam
    loop — pakai `include`/`select`/`in`.
 5. **Mutasi hanya lewat Server Actions.** Route handler hanya
-   `GET /api/search`, `GET /api/cron/orders` (dijaga `CRON_SECRET`), dan
-   webhook `POST /api/payment/midtrans` (dijaga signature, usulan
-   `docs/OPEN_DECISIONS.md` D9).
+   `GET /api/search`, `GET /api/cron/orders` (dijaga `CRON_SECRET`),
+   webhook `POST /api/payment/midtrans` (dijaga signature, D9), dan
+   `GET /api/auth/google` + `/callback` (Login Google, dijaga state/PKCE/nonce, D21).
 6. **Validasi Zod di server** untuk setiap input, skema di `src/lib/validations/`
    dipakai bersama oleh form dan action.
 7. **Authz di setiap aksi.** Cek sesi, kepemilikan (`userId`), dan role `admin`

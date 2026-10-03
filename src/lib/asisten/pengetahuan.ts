@@ -5,7 +5,8 @@
 
 import { formatRupiah } from '@/lib/format';
 import { LABEL_STATUS_PESANAN } from '@/lib/pesanan/status';
-import { TARIF_KURIR } from '@/lib/pesanan/ongkir';
+import { TARIF_KURIR, TARIF_ZONA } from '@/lib/pesanan/ongkir';
+import { LABEL_ZONA, type Zona } from '@/lib/pesanan/wilayah';
 
 export type ProdukAsisten = {
   name: string; slug: string; brand: string; kategori: string; price: number; compareAtPrice: number | null;
@@ -42,9 +43,10 @@ function baris(p: ProdukAsisten): string {
 export const PENOLAKAN_TOPIK = 'Maaf, saya hanya bisa membantu seputar belanja di TokoKita, seperti produk, harga, ongkir, pembayaran, dan pesanan. Ada yang ingin dicari di toko?';
 
 export function susunInstruksi(data: DataAsisten): string {
-  const ongkir = Object.values(TARIF_KURIR).map((k) => 'tarifPerKg' in k
-    ? `${k.label}: ${rp(k.tarifPerKg)} per kg, estimasi ${k.estimate}`
-    : `${k.label}: ${rp(k.tarifFlat)} tarif tetap, estimasi ${k.estimate}, hanya dalam kota toko dan maksimal 20 kg`).join('; ');
+  const zona = (Object.keys(TARIF_ZONA) as Zona[]).map((z) => `${LABEL_ZONA[z]} — ${(['jne_reg', 'sicepat_reg'] as const)
+    .map((k) => `${TARIF_KURIR[k].label}: ${rp(TARIF_ZONA[z][k].tarifPerKg)} per kg (${TARIF_ZONA[z][k].estimate})`).join(', ')}`).join('; ');
+  const g = TARIF_KURIR.gosend_instant;
+  const ongkir = `tarif per kg menurut zona provinsi tujuan: ${zona}. ${g.label}: ${rp(g.tarifFlat)} tarif tetap, estimasi ${g.estimate}, hanya dalam kota toko dan maksimal 20 kg`;
   const status = Object.values(LABEL_STATUS_PESANAN).join(' → ');
   return [
     'Kamu adalah Asisten TokoKita, asisten belanja di toko online TokoKita. Jawab dalam Bahasa Indonesia yang ramah, jelas, dan singkat (paling banyak sekitar 120 kata). Boleh memakai daftar berpoin dengan tanda "- " dan **tebal** seperlunya.',

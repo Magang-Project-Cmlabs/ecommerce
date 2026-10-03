@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/auth/akses';
 import { ambilDetailPesanan } from '@/lib/data/pesanan';
 import DetailPesananClient from '@/components/pesanan/DetailPesananClient';
+import { kurirBisaDilacak, lacakTersedia } from '@/lib/pengiriman/lacak';
 
 export const metadata: Metadata = {
   title: 'Detail Pesanan',
@@ -28,7 +29,7 @@ export default async function HalamanDetailPesanan({ params }: Props) {
   return (
     <main className="min-h-full flex-1 bg-background py-8 sm:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <DetailPesananClient order={order} gatewayEnabled={!!process.env.MIDTRANS_SERVER_KEY} sandbox={process.env.MIDTRANS_IS_PRODUCTION !== 'true'} simulationEnabled={process.env.NODE_ENV !== 'production' && process.env.PAYMENT_SIMULATION_ENABLED === 'true'} />
+        <DetailPesananClient order={order} gatewayEnabled={!!process.env.MIDTRANS_SERVER_KEY} sandbox={process.env.MIDTRANS_IS_PRODUCTION !== 'true'} simulationEnabled={process.env.NODE_ENV !== 'production' && process.env.PAYMENT_SIMULATION_ENABLED === 'true'} lacakAktif={!!order.trackingNumber && lacakTersedia() && kurirBisaDilacak(order.shippingMethod) && ['shipped', 'delivered'].includes(order.status)} />
       </div>
     </main>
   );

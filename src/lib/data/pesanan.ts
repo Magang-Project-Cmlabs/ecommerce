@@ -25,3 +25,7 @@ export function ambilPesananUntukCron(now: Date) {
 export function ambilEmailPesanan(id: number) {
   return prisma.order.findUnique({ where: { id }, select: { orderNumber: true, status: true, grandTotal: true, trackingNumber: true, user: { select: { email: true, name: true, deletedAt: true } } } });
 }
+/** Resi, kurir, dan status pesanan untuk lacak paket. userId null = admin (tanpa filter pemilik). */
+export function ambilResiPesanan(orderNumber: string, userId: number | null) {
+  return prisma.order.findFirst({ where: { orderNumber, ...(userId === null ? {} : { userId }) }, select: { trackingNumber: true, shippingMethod: true, status: true } });
+}
