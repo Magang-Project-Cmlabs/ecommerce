@@ -15,6 +15,10 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Google OAuth dipublikasikan; Binderbyte ternyata berbayar
+- Google Cloud (via Chrome, akses pemilik): Branding dilengkapi (beranda, kebijakan privasi, syarat, domain) lalu **Publish app → In production** (tanpa logo, izin dasar; tidak perlu verifikasi).
+- BinderHub (akun pemilik sudah login): API Cek Resi 15 kredit/hit (Rp 15), isi ulang minimal Rp 5.000, hanya Production; saldo 0. Kunci tidak dibuat dan saldo tidak diisi (aturan pemilik: tanpa pembayaran uang asli). Lacak resi tetap nonaktif sampai pemilik memutuskan.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Google Cloud OAuth disiapkan; uji Login Google sungguhan (lokal)
 - Lewat Claude in Chrome (akses dari pemilik): project Google Cloud TokoKita (`tokokita-510509`), layar persetujuan External (centang User Data Policy oleh pemilik), OAuth Client Web "TokoKita Web" dengan redirect URI produksi + localhost:3000, test user email pemilik. Client secret tidak dibaca Claude; pemilik menempelnya di `.env.google` dan memasang ke Vercel (OK semua).
 - Uji sungguhan di localhost:3000 (izin eksplisit pemilik): Masuk dengan Google → pilih akun → layar izin (nama, foto, email) → Lanjutkan → kembali ke TokoKita dengan sapaan "Halo, Kevin Ilham". DB lokal: akun pembeli lama dengan email yang sama ditautkan (`google_sub` terisi) dan password lamanya diganti hash Argon2id acak sesuai perbaikan keamanan. PASS.

@@ -45,13 +45,19 @@ Aturan yang perlu diketahui:
 
 Status 3 Okt 2026: project Google Cloud **TokoKita** (`tokokita-510509`), OAuth Client **TokoKita Web**
 dengan kedua redirect URI di atas sudah dibuat; kunci sudah terpasang di Vercel Preview + Production.
-Aplikasi masih **Testing** dengan test user email pemilik. Sebelum **Publish app**, lengkapi halaman
-**Branding** (beranda, kebijakan privasi `/kebijakan-privasi`, syarat `/syarat-ketentuan`, domain
-`ecommerce-peach-seven-47.vercel.app`).
+Branding sudah dilengkapi (beranda, `/kebijakan-privasi`, `/syarat-ketentuan`, domain
+`ecommerce-peach-seven-47.vercel.app`) dan aplikasi sudah **Publish app → In production**: semua
+pemilik akun Google bisa masuk begitu kodenya dirilis. Tanpa logo dan hanya izin dasar, jadi tidak perlu verifikasi Google.
 
 ## B. Lacak resi (Binderbyte)
 
-1. Daftar di https://binderbyte.com, lalu buka dashboard dan salin **API key**.
+> **Temuan 3 Okt 2026:** Binderbyte kini lewat BinderHub (`hub.binderbyte.com`) dan **berbayar per kredit**:
+> API Cek Resi 15 kredit/hit, 1 kredit = Rp 1, isi ulang minimal 5.000 kredit (Rp 5.000); hanya environment
+> Production, tanpa sandbox gratis. Saldo pemilik 0, jadi kunci **belum dibuat**. Tanpa kunci, tombol
+> "Lacak paket" tidak tampil dan pembeli tetap bisa menyalin resi. Mengisi saldo adalah keputusan pemilik
+> (uang asli).
+
+1. Masuk ke https://hub.binderbyte.com, buat key di **API Keys** (produk API Cek Resi), salin **API key**.
    Periksa kuota paket gratisnya. **Kalau diminta pembayaran, berhenti dan kabari
    pengembang.**
 2. Buat berkas **`.env.lacak`**:
