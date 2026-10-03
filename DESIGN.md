@@ -106,11 +106,13 @@ Tombol di atas foto (CTA hero, panah carousel) memakai putih / kaca
 | Saran pencarian | `Popover` (id unik per instans, `useId`) |
 | Mode gelap | `TemaToggle` (`src/components/layout/TemaToggle.tsx`) |
 | Pilihan varian produk | `ToggleGroup` |
-| Daftar pilihan (kategori, merek, rating, urutan, status, jenis promo) | `Pilihan` (`src/components/ui/pilihan.tsx`) — **jangan pernah `<select>` bawaan**. Pemicu setinggi 44 px `rounded-xl`, daftar melayang `rounded-2xl`, subkategori menjorok di bawah induknya, nilai dikirim lewat input tersembunyi |
+| Daftar pilihan (kategori, merek, rating, urutan, status, jenis promo) | `Pilihan` (`src/components/ui/pilihan.tsx`) — **jangan pernah `<select>` bawaan**. Pemicu setinggi 44 px `rounded-xl`, daftar melayang `rounded-2xl`, **kotak cari otomatis bila pilihan > 6** (abaikan huruf besar/aksen, "Tidak ada yang cocok"), panah/Home/End/Enter/Esc dan ketik huruf awal, subkategori menjorok di bawah induknya, nilai dikirim lewat input tersembunyi |
 | Kolom isian | `Input` (44 px, `rounded-xl`) dan textarea dengan gaya yang sama |
 | Form tambah/edit admin | `ModalAdmin` di atas `Dialog` (`src/components/ui/dialog.tsx`) |
 | Konfirmasi hapus, arsip, batal, keluar | `AlertDialog` (`rounded-3xl`, judul besar, tombol Batal + aksi). Keluar selalu dikonfirmasi ("Keluar dari akun?") lewat `TombolKeluar` |
 | Tabel admin | `Table` |
+| Status pesanan, pembayaran, stok, promo, produk | `Lencana`, `LencanaStatus`, `LencanaPembayaran` (`src/components/pesanan/Lencana.tsx`): pil abu `bg-foreground/[0.06]` + titik warna kecil (kuning menunggu, biru dikonfirmasi, ungu dikemas, biru langit dikirim, hijau selesai/lunas, merah dibatalkan/habis, abu netral). Teks selalu warna teks biasa, warna hanya di titik |
+| Asisten AI | `TombolAsisten` (pil hitam "Tanya AI" melayang kanan bawah, di atas navigasi bawah HP) + `PanelAsisten` (dimuat saat dibuka): gelembung pengguna hitam, gelembung asisten ubin abu, saran pertanyaan, catatan privasi. Tidak tampil di admin dan checkout (D18) |
 
 ## 5. Interaksi
 

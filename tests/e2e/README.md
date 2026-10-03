@@ -20,6 +20,7 @@ ketahuan lebih dulu, sebelum pembeli yang menemukannya.
 | `specs/responsive.spec.ts` | Layar 360 px: tidak melebar, tombol minimal 44×44 px |
 | `specs/katalog.spec.ts` | Saran keyboard, filter/list/pagination, varian, zoom, wishlist dan metadata |
 | `specs/commerce.spec.ts` | Checkout nyata, admin konfirmasi/kirim, pembeli terima/ulasan, batal dan IDOR |
+| `specs/asisten.spec.ts` | Panel "Tanya AI": terbuka/tertutup, data sensitif ditolak dan disamarkan, jawaban atau pesan jelas bila AI belum aktif, tidak tampil di checkout |
 | `specs/admin.spec.ts` | Produk delapan foto, stok/arsip, kategori/promo/banner (tambah/edit lewat modal) dan transisi pesanan. Daftar pilihan dipilih lewat `helpers/pilihan.ts` (`pilihOpsi`), bukan `selectOption` |
 | `specs/review-upload.spec.ts` | Tiga foto hampir 2 MB/file, token unggah dan batas request |
 

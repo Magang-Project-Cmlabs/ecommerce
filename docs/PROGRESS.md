@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Pilihan bisa dicari, lencana status, asisten AI, performa
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: `Pilihan` dibangun ulang di atas Popover dengan kotak cari (pilihan > 6) dan pola ARIA combobox/listbox; `Lencana`/`LencanaStatus`/`LencanaPembayaran` menggantikan lencana berwarna penuh di admin dan pesanan pembeli; asisten "Tanya AI" (D18: Server Action `tanyaAsisten`, Gemini API lewat fetch, data publik saja, penyaring + penyamaran data sensitif, batas 15/10 menit per IP, panel dimuat saat dibuka); `catatBatasAuthDb` menerima batas khusus; foto slide hero tambahan ditunda; favicon kecil + icon.svg; label logo toko/admin sesuai teks terlihat; placeholder harga dipersingkat; `.env.example` + `pasang-env-vercel.mjs` mendukung `ASISTEN_*`.
+- Verifikasi: typecheck PASS · lint PASS · test PASS (447 + 2 dilewati) · build PASS · e2e Chrome PASS (86, 1 dilewati) · axe terang/gelap (pilihan + asisten terbuka) PASS · Lighthouse lokal sebelum/sesudah dicatat di PROJECT_STATUS · jawaban AI sungguhan NOT_RUN (kunci belum dipasang; AI Gateway HTTP 403 wajib kartu) · lintas browser NOT_RUN.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Admin bergaya toko, modal tambah/edit, Pilihan kustom, konfirmasi keluar, Argon2id
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: komponen `Pilihan` menggantikan 12 `<select>` bawaan (filter katalog, urutan, ulasan, form dan filter admin; subkategori menjorok di bawah induk); `Input` 44 px `rounded-xl`; dialog bersama (`Dialog`, `AlertDialog`) bergaya baru; `TombolKeluar` meminta konfirmasi di toko dan admin; admin: sidebar terang/gelap dengan menu pil, judul besar, kartu ubin, tabel lega, tambah/edit produk/kategori/promo/banner lewat `ModalAdmin` (`?tambah=1`/`?edit=ID`, rute lama dialihkan); password Argon2id `@node-rs/argon2` (D17) dengan migrasi diam-diam hash bcrypt saat login, batas 128 byte, seed Argon2id; dokumen (CLAUDE.md, DESIGN.md, OPEN_DECISIONS D17, PRD catatan, runbook, panduan agent/skill, UJI_MANDIRI, SERAH_TERIMA, README E2E) dan PPT (slide 10, 11, 12, 13, 17) diperbarui.
