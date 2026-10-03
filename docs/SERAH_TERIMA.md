@@ -36,7 +36,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 - Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
 - Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md): gaya template Framer, monokrom, mode terang + gelap (D16); admin satu bahasa visual dengan toko, tambah/edit lewat modal, semua daftar pilihan memakai komponen `Pilihan` (tanpa `<select>` bawaan), keluar selalu dikonfirmasi.
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
-- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini, kunci milik pemilik) terpasang di Vercel Preview + Production sejak 3 Okt 2026. Cadangan Groq aktif bila `ASISTEN_CADANGAN_API_KEY` dipasang (tambahkan baris itu di `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`).
+- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini, kunci milik pemilik) terpasang di Vercel Preview + Production sejak 3 Okt 2026. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Cadangan Groq aktif bila `ASISTEN_CADANGAN_API_KEY` dipasang (tambahkan baris itu di `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`).
 
 ## Menunggu pemilik
 

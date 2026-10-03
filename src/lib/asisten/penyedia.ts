@@ -44,7 +44,8 @@ export async function mintaJawaban(pesan: PesanChat[], penyedia: Penyedia[], amb
         const res = await ambil(p.url, {
           method: 'POST',
           headers: { authorization: `Bearer ${p.kunci}`, 'content-type': 'application/json' },
-          body: JSON.stringify({ model, messages: pesan, max_tokens: 1000, temperature: 0.3 }),
+          // Sengaja tanpa `tools`/`functions`: model hanya bisa membalas teks, tidak bisa menjalankan apa pun.
+          body: JSON.stringify({ model, messages: pesan, max_tokens: 800, temperature: 0.3 }),
           signal: AbortSignal.timeout(BATAS_WAKTU_PER_PANGGILAN),
           cache: 'no-store',
         });

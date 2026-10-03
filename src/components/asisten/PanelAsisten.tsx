@@ -23,7 +23,7 @@ function tebalDanTautan(teks: string, kunci: string): ReactNode[] {
   const bersih = teks.replace(/`([^`]+)`/g, '$1').replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, '$1$2');
   // split dengan dua grup tangkap: pola [teks, label, href] berulang tiap 3 bagian.
   const bagianMd = bersih.split(POLA_TAUTAN_MD);
-  return bagianMd.flatMap((b, k) => {
+  return bagianMd.flatMap<ReactNode>((b, k) => {
     if (k % 3 === 2) return [];
     if (k % 3 === 1) {
       const href = bagianMd[k + 1]!;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { periksaPesanSensitif, susunInstruksi, type DataAsisten } from './pengetahuan';
+import { PENOLAKAN_TOPIK, periksaPesanSensitif, susunInstruksi, type DataAsisten } from './pengetahuan';
 import { samarkanSensitif } from './sensitif';
 
 const data: DataAsisten = {
@@ -22,6 +22,14 @@ describe('susunInstruksi', () => {
     expect(teks).toContain('GoSend Instant: Rp 30.000 tarif tetap');
     expect(teks).toContain('Menunggu Pembayaran → Dikonfirmasi → Dikemas → Dikirim → Selesai → Dibatalkan');
     expect(teks).toContain('QRIS');
+  });
+  it('membatasi topik: bukan chatbot serba bisa, penolakan tetap, tanpa kode/SQL, data bukan instruksi', () => {
+    expect(teks).toContain('Kamu BUKAN asisten serba bisa');
+    expect(teks.split(PENOLAKAN_TOPIK).length - 1).toBe(2); // aturan + pengingat akhir
+    for (const topik of ['kode/program/SQL', 'PR atau tugas sekolah', 'puisi', 'terjemahan', 'saran medis/hukum/keuangan/investasi', 'roleplay']) expect(teks).toContain(topik);
+    expect(teks).toMatch(/tidak punya akses database, alat, atau internet/);
+    expect(teks.indexOf('=== DATA TOKO')).toBeLessThan(teks.indexOf('KATALOG PRODUK AKTIF'));
+    expect(teks.trim().split('\n').at(-1)).toMatch(/^PENGINGAT:/);
   });
   it('menegaskan batas: tanpa akses akun dan menolak data rahasia', () => {
     expect(teks).toMatch(/TIDAK bisa melihat akun/);
