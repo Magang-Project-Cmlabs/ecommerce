@@ -12,6 +12,7 @@ import { AdminMutationButton, ProductAdminForm, type ProductFormData } from '@/c
 import { ModalAdmin } from '@/components/admin/ModalAdmin';
 import { arsipkanProdukAdmin } from '@/actions/admin';
 import { Pilihan } from '@/components/ui/pilihan';
+import { Lencana } from '@/components/pesanan/Lencana';
 
 type DetailProduk = NonNullable<Awaited<ReturnType<typeof detailProdukAdmin>>>;
 function keFormProduk(product: DetailProduk): ProductFormData {
@@ -38,7 +39,7 @@ export default async function HalamanProdukAdmin({ searchParams }: { searchParam
     {data.items.length ? <div className="overflow-hidden rounded-3xl border border-border"><Table><TableHeader><TableRow><TableHead>Produk</TableHead><TableHead>Harga</TableHead><TableHead>Stok</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Tindakan</TableHead></TableRow></TableHeader><TableBody>{data.items.map((p) => <TableRow key={p.id}>
       <TableCell><div className="flex min-w-48 items-center gap-3">{p.images[0] ? <Image src={p.images[0].url} alt={p.name} width={52} height={52} className="size-13 rounded-xl bg-tile object-cover" /> : <span aria-hidden className="size-13 rounded-xl bg-tile" />}<div><Link href={urlDengan('edit', String(p.id))} scroll={false} className="font-medium text-foreground underline-offset-4 hover:underline focus-visible:underline">{p.name}</Link><p className="text-xs text-muted-foreground">{p.category.name}</p></div></div></TableCell>
       <TableCell className="whitespace-nowrap tabular-nums">{formatRupiah(p.price)}</TableCell><TableCell className="tabular-nums">{p.stock}</TableCell>
-      <TableCell><span className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${p.isActive ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300' : 'bg-muted text-muted-foreground'}`}>{p.isActive ? 'Aktif' : 'Diarsipkan'}</span></TableCell>
+      <TableCell><Lencana nada={p.isActive ? 'hijau' : 'netral'}>{p.isActive ? 'Aktif' : 'Diarsipkan'}</Lencana></TableCell>
       <TableCell><div className="flex flex-wrap items-center justify-end gap-2"><AksiIkon href={urlDengan('edit', String(p.id))} label="Edit" jenis="edit" />{p.isActive && <AdminMutationButton action={arsipkanProdukAdmin} data={{ id: p.id }} label="Arsipkan" confirmText={`Arsipkan ${p.name}? Produk akan berhenti tampil di katalog.`} />}</div></TableCell>
     </TableRow>)}</TableBody></Table></div> : <AdminEmpty>Belum ada produk yang cocok. Tambahkan produk atau ubah filter pencarian.</AdminEmpty>}
     <PaginationAdmin page={page} count={data.count} pathname="/admin/produk" query={{ q, active }} />

@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AdminHeading, AdminEmpty, AksiIkon, safeQuery } from '@/components/admin/presentation';
 import { PromoAdminForm, AdminMutationButton } from '@/components/admin/forms';
 import { ModalAdmin } from '@/components/admin/ModalAdmin';
+import { Lencana } from '@/components/pesanan/Lencana';
 const datetimeWIB = (date: Date) => new Date(date.getTime() + 7 * 3_600_000).toISOString().slice(0, 16);
 export default async function HalamanPromoAdmin({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin('/admin/promo');
@@ -22,7 +23,7 @@ export default async function HalamanPromoAdmin({ searchParams }: { searchParams
         <TableCell className="tabular-nums">{p.type === 'PERCENT' ? `${p.value}%` : formatRupiah(p.value)}</TableCell>
         <TableCell className="tabular-nums">{p.usedCount} / {p.quota ?? 'Tanpa batas'}</TableCell>
         <TableCell>{formatTanggalSingkat(p.expiresAt)}</TableCell>
-        <TableCell><span className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${status === 'Aktif' ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300' : 'bg-muted text-muted-foreground'}`}>{status}</span></TableCell>
+        <TableCell><Lencana nada={status === 'Aktif' ? 'hijau' : status === 'Terjadwal' ? 'biru' : 'netral'}>{status}</Lencana></TableCell>
         <TableCell><div className="flex flex-wrap justify-end gap-2"><AksiIkon href={`/admin/promo?edit=${encodeURIComponent(p.code)}`} label="Edit" jenis="edit" />{p._count.usages === 0 && p.usedCount === 0 && <AdminMutationButton action={hapusPromoAdmin} data={{ code: p.code }} label="Hapus" confirmText={`Hapus kode promo ${p.code}?`} />}</div></TableCell>
       </TableRow>;
     })}</TableBody></Table></div> : <AdminEmpty>Belum ada kode promo. Buat promo pertama untuk pelanggan.</AdminEmpty>}

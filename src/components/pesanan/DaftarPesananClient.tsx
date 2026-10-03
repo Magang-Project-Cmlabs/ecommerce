@@ -18,14 +18,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatRupiah, formatTanggalWIB } from "@/lib/format";
-import {
-  LABEL_STATUS_PESANAN,
-  LABEL_STATUS_PEMBAYARAN,
-  type OrderStatus,
-} from "@/lib/pesanan/status";
+import type { OrderStatus } from "@/lib/pesanan/status";
 import type { PesananRingkas } from "@/lib/data/pesanan";
 import BatalkanDialog from "./BatalkanDialog";
 import TerimaPesananDialog from "./TerimaPesananDialog";
+import { LencanaPembayaran, LencanaStatus } from '@/components/pesanan/Lencana';
 
 type Props = {
   orders: PesananRingkas[];
@@ -66,33 +63,6 @@ export default function DaftarPesananClient({ orders }: Props) {
     return orders.filter((o) => o.status === tabId).length;
   };
 
-  const getStatusBadgeClass = (status: OrderStatus) => {
-    switch (status) {
-      case "pending":
-        return "bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/30";
-      case "confirmed":
-        return "bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-500/30";
-      case "packed":
-        return "bg-purple-100 text-purple-800 border-purple-200";
-      case "shipped":
-        return "bg-indigo-100 text-indigo-800 border-indigo-200";
-      case "delivered":
-        return "bg-green-100 dark:bg-green-500/15 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
-      case "cancelled":
-        return "bg-muted text-foreground/80 border-border";
-    }
-  };
-
-  const getPaymentBadgeClass = (paymentStatus: string) => {
-    switch (paymentStatus) {
-      case "paid":
-        return "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30";
-      case "refunded":
-        return "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300 border-red-200 dark:border-red-500/30";
-      default:
-        return "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30";
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -177,21 +147,9 @@ export default function DaftarPesananClient({ orders }: Props) {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${getStatusBadgeClass(
-                        order.status
-                      )}`}
-                    >
-                      {LABEL_STATUS_PESANAN[order.status]}
-                    </span>
+                    <LencanaStatus status={order.status} />
 
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${getPaymentBadgeClass(
-                        order.paymentStatus
-                      )}`}
-                    >
-                      {LABEL_STATUS_PEMBAYARAN[order.paymentStatus]}
-                    </span>
+                    <LencanaPembayaran status={order.paymentStatus} />
                   </div>
                 </div>
 
