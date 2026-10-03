@@ -54,7 +54,7 @@ luar cakupan magang.
 
 ## Terbuka di sisi kode
 
-- LCP seluler (simulasi Lighthouse, Chrome bersih) beranda 1,7 s (skor 98) sudah di bawah target; katalog 3,4 s dan detail 3,3 s masih di atas 2,5 s.
+- LCP seluler (simulasi Lighthouse, Chrome bersih): beranda 1,7 s (98), katalog 2,5 s (96); detail 3,1 s (91) masih di atas 2,5 s, sedangkan dengan throttling devtools 2,4 s.
 - QRIS sandbox: simulator resmi error 2603.
 - Verifikasi baca ulang akun produksi (kata sandi seed tidak berlaku) belum dijalankan.
 

@@ -13,7 +13,8 @@ import { urlAplikasi } from '@/lib/url-aplikasi';
 import './globals.css';
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
-const albert = Albert_Sans({ variable: '--font-albert', subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
+// Font judul tidak dipreload: di jaringan seluler ia berebut bandwidth dengan foto LCP.
+const albert = Albert_Sans({ variable: '--font-albert', subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap', preload: false });
 export const metadata: Metadata = {
   metadataBase: new URL(urlAplikasi(process.env)),
   title: { default: 'TokoKita — Belanja Nyaman untuk Kebutuhan Harian', template: '%s — TokoKita' },
