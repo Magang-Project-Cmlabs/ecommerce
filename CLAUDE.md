@@ -94,7 +94,8 @@ user dulu. Jangan menulis perintah yang tidak dijalankan sebagai PASS.
 - Kartu Trello: [`docs/trello-board-plan.md`](docs/trello-board-plan.md). Kerjakan
   sesuai kartu; fitur di luar kartu masuk Lanjutan, bukan diselipkan.
 - Setelah pekerjaan selesai: perbarui `docs/PROJECT_STATUS.md` + `docs/PROGRESS.md`
-  (skill `tokokita-perbarui-status`).
+  (skill `tokokita-perbarui-status`). **Setiap akhir sesi** perbarui juga semua dokumen
+  terkait dan PPT presentasi lewat generator [`scripts/ppt/`](scripts/ppt/README.md).
 
 ## Verifikasi
 

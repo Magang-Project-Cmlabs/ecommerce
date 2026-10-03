@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Generator PPT masuk repo; PPT diperbarui akhir sesi
+- Aturan baru pemilik: setiap akhir sesi perbarui semua dokumentasi **dan PPT** (CLAUDE.md, skill `tokokita-perbarui-status`).
+- Generator PPT dipindah dari folder sementara ke `scripts/ppt/` (bangun.cjs, aset/, skrip tangkapan layar, render.ps1, README; `pptxgenjs` dipasang di folder itu saja, bukan dependensi aplikasi; `applyTheme` dari skill lokal opsional lewat `PPTX_APPLY_THEME`).
+- PPT diperbarui: slide 7 (cron tiap jam + backup harian), 18 (475 unit, 87 E2E, LCP katalog 2,3 / detail 2,2 dtk), 20 (backup otomatis berjalan), 21 (bayar sandbox diuji di produksi, email di latar, gambar lama ikut terhapus).
+- Verifikasi: validator PPTX PASS · render PowerPoint 22 slide, slide 7/18/20/21 diperiksa · lint PASS (scripts/ppt diabaikan ESLint).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Merapikan pesanan uji produksi
 - Lewat sesi admin yang di-login pemilik: INV-202610-0001 "Batalkan dan kembalikan pembayaran" → Dibatalkan · Dikembalikan (sandbox); stok Kabel USB-C kembali 62 (HTML publik). Admin juga menampilkan "Metode: Transfer Bank BCA".
 - Setelah email dijadwalkan lewat `after()`: log Vercel produksi untuk aksi itu tanpa galat. Durasi respons persis NOT_RUN (log CLI tidak memuat durasi; pengukur di browser tidak menangkap karena tombol dirender ulang); bukti perbaikan ada di tes unit/integrasi.

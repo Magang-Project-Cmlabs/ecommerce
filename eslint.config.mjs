@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
     ".sandbox/**",
     // Perkakas AI (skrip Node CommonJS), bukan kode aplikasi
     ".claude/**",
+    // Generator PPT (CommonJS, alat dokumentasi)
+    "scripts/ppt/**",
   ]),
   {
     rules: {
