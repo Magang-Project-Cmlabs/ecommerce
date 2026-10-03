@@ -1,7 +1,7 @@
 # Status Proyek — TokoKita
 
 **Repo:** `Magang-Project-Cmlabs/ecommerce` (private) · cermin `kvnlhm/ecommerce` (sumber deploy Vercel)
-**Branch integrasi:** `develop` (terakhir PR #48); pekerjaan lanjutan di `feat/penyelesaian-tokokita` lewat PR
+**Branch integrasi:** `develop` (terakhir PR #62, fitur lanjutan D19–D21); pekerjaan lanjutan lewat PR
 **Diperbarui:** 3 Oktober 2026 · riwayat per sesi ada di [PROGRESS](PROGRESS.md)
 
 ## 1. Ringkasan
@@ -14,7 +14,9 @@ sesuai berat, promo, akun, pesanan, ulasan terverifikasi, wishlist, dan panel ad
 Tambahan di luar rencana awal: pembayaran **Midtrans Snap sandbox**, unggah gambar
 **Vercel Blob**, email **Gmail SMTP**, tampilan bergaya template Framer dengan
 **mode terang/gelap** (D16), password **Argon2id** (D17), dan asisten **"Tanya AI"**
-(D18, Gemini dengan cadangan Groq, pengaman berlapis).
+(D18, Gemini dengan cadangan Groq, pengaman berlapis). Rilis 3 Okt malam: **ongkir per zona provinsi** (D19),
+**Login Google** (D21), dan tombol gratis **"Cek di situs kurir"**; lacak resi otomatis (D20) siap tetapi
+nonaktif karena API Binderbyte berbayar.
 
 Yang masih terbuka: LCP seluler halaman detail di simulasi Lighthouse (3,1 s; throttling devtools 2,4 s),
 QRIS sandbox (simulator error 2603),
@@ -29,6 +31,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Keranjang & checkout | Empat langkah, buku alamat, ongkir, promo, stok atomik, invoice, Snap sandbox, COD — selesai |
 | Akun & admin | Profil/password/alamat/hapus akun, riwayat + timeline, admin CRUD lewat modal, stok, arsip, proses pesanan — selesai |
 | Pelengkap | Wishlist, ulasan + foto, promo/banner, metadata, sitemap, bantuan, mode gelap, asisten AI — selesai |
+| Lanjutan (D19–D21) | Ongkir per zona 38 provinsi, Login Google (OAuth PKCE), tombol cek resi di situs kurir — online; lacak resi otomatis — kode siap, nonaktif (berbayar) |
 | Rilis | Produksi online dan teruji; sisa tindakan pemilik di bagian 6 |
 
 ## 3. Verifikasi terbaru (3 Oktober 2026)
@@ -37,11 +40,11 @@ dan uji manusia di produksi (lihat bagian 6).
 |---|---|---|
 | `npm run typecheck` | PASS | Next typegen + TypeScript |
 | `npm run lint` (seluruh repo) | PASS | Tanpa error ESLint |
-| `npm run test` | PASS | 475 lulus, 2 dilewati (sesi 3 Okt sore) |
-| `npm run test:integration` | PASS | 30 tes MySQL nyata (7 berkas): transaksi, race stok, auth, batas percobaan, settlement |
+| `npm run test` | PASS | 551 lulus, 2 dilewati (3 Okt malam, termasuk tes ongkir zona, Google, lacak) |
+| `npm run test:integration` | PASS | 34 tes MySQL nyata (8 berkas; + penautan akun Google): transaksi, race stok, auth, batas percobaan, settlement |
 | `npx prisma validate` | PASS | 15 tabel bisnis + `auth_rate_limits` |
 | `npm run build` | PASS | Build production Next.js 16.3.6 |
-| `npm run e2e` (Chrome desktop + HP 360 px) | PASS | 87 lulus, 1 dilewati: aksesibilitas, navigasi, katalog, akun, admin (modal), transaksi, ulasan, lupa password, asisten, responsif |
+| `npm run e2e` (Chrome desktop + HP 360 px) | PASS | 88 lulus, 1 dilewati (+ ongkir zona Bali, tautan cek resi JNE): aksesibilitas, navigasi, katalog, akun, admin (modal), transaksi, ulasan, lupa password, asisten, responsif |
 | `npm audit --omit=dev` | PASS | 0 kerentanan setelah `shadcn` (alat CLI) dipindah ke devDependencies; advisori `braces` hanya menyentuh alat pengembangan |
 | axe (WCAG 2.2 AA) terang + gelap | PASS | 0 pelanggaran serius/kritis di halaman publik, admin, modal, pilihan terbuka, panel asisten |
 | Lighthouse produksi seluler (Chrome bersih) | PASS / FAIL | Beranda **98**, LCP 1,7 s · katalog 96, LCP 2,5 s · detail 91, LCP 3,1 s (simulasi; render delay dari streaming). Throttling devtools: katalog 2,5 s, detail 2,4 s. Font judul tidak lagi dipreload: build lokal LCP katalog 2,33 → 2,17 s, detail 2,21 → 2,10 s (median 3 run), CLS 0 |
@@ -59,6 +62,9 @@ dan uji manusia di produksi (lihat bagian 6).
 | Midtrans sandbox | PASS / FAIL | **Produksi 3 Okt:** pesanan INV-202610-0001 dibayar BCA VA di simulator resmi, webhook mengubah status otomatis menjadi Dikonfirmasi · Lunas tanpa "Cek Pembayaran". Lokal: BCA & Mandiri PASS; QRIS gagal di simulator |
 | Cron pesanan | PASS | Workflow `pesanan-otomatis.yml` tiap jam di repo pribadi; run pertama 3 Okt HTTP 200 (0 gagal); cron harian Vercel tetap sebagai cadangan |
 | Asisten AI (Gemini + Groq) | PASS | Kunci gratis tanpa kartu; tombol darurat `ASISTEN_NONAKTIF=1` |
+| Login Google (D21) | PASS | OAuth Client "TokoKita Web" (project `tokokita-510509`) *In production*; uji akun asli di localhost PASS; produksi: 307 ke Google dengan PKCE/state/nonce, cookie `Secure; HttpOnly`, callback palsu ditolak; migration `google_sub` diterapkan sebelum merge |
+| Tombol cek resi kurir | PASS | Admin produksi: "Cek di situs SiCepat"; JNE meminta 5 digit telepon penerima (dicek manual) |
+| Lacak resi otomatis (D20) | NOT_RUN | Binderbyte berbayar (Rp 15/hit); kunci tidak dipasang atas keputusan pemilik |
 | Backup Aiven | PASS (jadwal) / NOT_RUN (pulih dari backup otomatis) | Backup harian terenkripsi `backup-db.yml`: run pertama 3 Okt, 17 tabel, 26 KB, simpan 30 hari ([backup-restore](runbooks/backup-restore.md)); restore manual 1 Okt PASS |
 
 ## 5. Kriteria sukses PRD §22

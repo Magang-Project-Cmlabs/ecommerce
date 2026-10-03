@@ -112,8 +112,8 @@ s.addNotes('Pembeli fokus pada kecepatan dan rasa percaya. Admin toko bukan oran
 s = isi('Latar & cakupan', 'Ruang lingkup', 'Semua fitur MVP dan lanjutan sudah selesai');
 const kolomCakupan = [
   ['MVP · selesai', W.tinta, W.putih, ['Katalog, cari & filter', 'Detail produk & varian', 'Keranjang & kode promo', 'Checkout 4 langkah', 'Ongkir sesuai berat', 'Akun & lupa password', 'Riwayat & status pesanan', 'Admin pesanan & produk', 'Email notifikasi', 'Batal otomatis 24 jam']],
-  ['Lanjutan · selesai', W.ubin, W.tinta, ['Wishlist', 'Ulasan terverifikasi + foto', 'Admin promo & banner', 'Dashboard omzet & stok', 'Pembayaran Midtrans sandbox', 'Mode terang & gelap', 'Asisten AI "Tanya AI"', 'Pilihan bisa dicari', 'Konfirmasi keluar']],
-  ['Di luar cakupan', W.putih, W.redup, ['Pembayaran uang asli (butuh badan usaha)', 'Ongkir per kota tujuan', 'Lacak resi otomatis', 'Login Google', 'Aplikasi mobile']],
+  ['Lanjutan · selesai', W.ubin, W.tinta, ['Wishlist', 'Ulasan terverifikasi + foto', 'Admin promo & banner', 'Dashboard omzet & stok', 'Pembayaran Midtrans sandbox', 'Mode terang & gelap', 'Asisten AI "Tanya AI"', 'Ongkir per zona provinsi', 'Login Google', 'Cek resi di situs kurir']],
+  ['Di luar cakupan', W.putih, W.redup, ['Pembayaran uang asli (butuh badan usaha)', 'Lacak resi otomatis (API berbayar, kode siap)', 'Tarif ongkir resmi ekspedisi', 'Aplikasi mobile']],
 ];
 kolomCakupan.forEach(([j, bg, fg, butir], i) => {
   const x = 0.6 + i * 4.15;
@@ -121,7 +121,7 @@ kolomCakupan.forEach(([j, bg, fg, butir], i) => {
   teks(s, j, { x: x + 0.35, y: 2.32, w: 3.2, h: 0.36, fontFace: H, fontSize: 15, color: fg });
   teks(s, butir.map((b, k) => ({ text: b, options: { bullet: { code: i === 2 ? '2013' : '2713' }, breakLine: k < butir.length - 1 } })), { x: x + 0.35, y: 2.85, w: 3.3, h: 3.6, fontSize: 12.5, color: fg, paraSpaceAfter: 5 });
 });
-s.addNotes('Seluruh fitur MVP dan fitur lanjutan sudah jalan. Tambahan dari rencana awal: pembayaran sandbox, mode gelap, asisten AI, pilihan yang bisa dicari. Yang di luar cakupan sengaja tidak dikerjakan.');
+s.addNotes('Seluruh fitur MVP dan fitur lanjutan sudah jalan. Tambahan dari rencana awal: pembayaran sandbox, mode gelap, asisten AI, ongkir per zona provinsi, Login Google, dan tombol cek resi di situs kurir. Lacak resi otomatis sudah dikodekan tetapi belum diaktifkan karena API-nya berbayar sekitar Rp 15 per pengecekan.');
 
 // ---------- 6. Teknologi ----------
 pres.addSection({ title: 'Teknologi' });
@@ -186,7 +186,7 @@ function tampilan(eyebrow, judul, img, butir, kiri, catatan, gelapImg = false) {
 tampilan('Tampilan · beranda', 'Beranda bergaya modern, nyaman di HP', 'beranda', [['Hero foto penuh', 'Promo geser yang dikelola admin.'], ['Pencarian cerdas', 'Saran produk muncul setelah 2 huruf.'], ['Ubin kategori berfoto', 'Besar dan mudah disentuh.'], ['Mode terang & gelap', 'Tombol bulan/matahari, tanpa kedip.']], true, 'Desain mengikuti template Framer pilihan pemilik: monokrom, foto besar, tipografi tegas. Skor Lighthouse beranda di HP 98.');
 tampilan('Tampilan · katalog', 'Katalog dengan filter yang bisa dicari', 'katalog', [['Filter lengkap', 'Kategori, harga, rating, merek, urutan.'], ['Pilihan bisa dicari', 'Ketik "fa" → Fashion Pria/Wanita.'], ['Kartu produk bersih', 'Label diskon, rating, harga coret.'], ['Grid atau daftar', 'Dengan pagination dan hasil kosong.']], false, 'Semua pilihan bawaan browser diganti komponen sendiri yang bisa dicari dan dipakai dengan keyboard.');
 tampilan('Tampilan · detail produk', 'Detail produk yang transparan', 'detail', [['Galeri zoom', 'Foto dari beberapa sudut, bisa diperbesar.'], ['Varian interaktif', 'Stok ikut berubah; varian habis terkunci.'], ['Harga jelas', 'Harga coret, persentase hemat, PPN 11%.'], ['Ulasan terverifikasi', 'Hanya dari pembeli yang pesanannya selesai.']], true, 'Detail produk menjawab kekhawatiran pembeli: harga, stok, dan ulasan yang jujur.');
-tampilan('Tampilan · checkout', 'Checkout 4 langkah, ongkir sesuai berat', 'checkout', [['Pelacak langkah', 'Alamat → Pengiriman → Pembayaran → Konfirmasi.'], ['Buku alamat', 'Pilih alamat tersimpan atau tambah baru.'], ['Ongkir otomatis', 'JNE, SiCepat, GoSend dari total berat.'], ['Ringkasan jelas', 'Promo dan total akhir sebelum memesan.']], false, 'Checkout dipandu empat langkah. Harga dan ongkir dihitung ulang di server, angka dari browser hanya dipakai sebagai id dan jumlah.');
+tampilan('Tampilan · checkout', 'Checkout 4 langkah, ongkir sesuai berat', 'checkout', [['Pelacak langkah', 'Alamat → Pengiriman → Pembayaran → Konfirmasi.'], ['Buku alamat', 'Pilih alamat tersimpan atau tambah baru.'], ['Ongkir otomatis', 'Dari total berat dan zona provinsi tujuan.'], ['Ringkasan jelas', 'Promo dan total akhir sebelum memesan.']], false, 'Checkout dipandu empat langkah. Harga dan ongkir dihitung ulang di server, angka dari browser hanya dipakai sebagai id dan jumlah.');
 s = isi('Tampilan aplikasi', 'Tampilan · panel admin', 'Panel admin satu gaya dengan toko');
 gambar(s, 'admin-gelap', 0.6, 2.05, 7.85);
 gambar(s, 'admin-modal-potong', 5.35, 3.3, 3.25);
@@ -224,7 +224,7 @@ s.addNotes('Alur Git berbasis branch per fitur dan Pull Request dengan CI otomat
 // ---------- 18. Kualitas ----------
 pres.addSection({ title: 'Kualitas & demo' });
 s = isi('Kualitas & demo', 'Standar kualitas', 'Hasil uji yang terukur, 3 Oktober 2026');
-[['98', 'Lighthouse beranda HP', 'Situs online, LCP 1,7 dtk'], ['475', 'Unit test lulus', '+ 30 tes integrasi MySQL'], ['87', 'Tes E2E browser lulus', 'Alur pembeli & admin nyata'], ['0', 'Pelanggaran aksesibilitas serius', 'axe, mode terang & gelap']]
+[['98', 'Lighthouse beranda HP', 'Situs online, LCP 1,7 dtk'], ['551', 'Unit test lulus', '+ 34 tes integrasi MySQL'], ['88', 'Tes E2E browser lulus', 'Alur pembeli & admin nyata'], ['0', 'Pelanggaran aksesibilitas serius', 'axe, mode terang & gelap']]
   .forEach(([n, j, k], i) => { const x = 0.6 + i * 3.1, gelap = i === 0; ubin(s, x, 2.05, 2.9, 2.3, gelap ? W.tinta : W.ubin); teks(s, n, { x: x + 0.3, y: 2.25, w: 2.4, h: 0.95, fontFace: H, fontSize: 48, color: gelap ? W.putih : W.tinta }); teks(s, j, { x: x + 0.3, y: 3.28, w: 2.4, h: 0.55, fontFace: H, fontSize: 13, color: gelap ? W.putih : W.tinta }); teks(s, k, { x: x + 0.3, y: 3.82, w: 2.4, h: 0.35, fontSize: 11, color: gelap ? W.abuGelap : W.redup }); });
 teks(s, 'TARGET PRD', { x: 0.6, y: 4.7, w: 4, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
 [['Muat halaman < 2,5 dtk di 4G', 'Beranda 1,7 · katalog 2,3 · detail 2,2 dtk (HP diperlambat) ✓'], ['Checkout < 3 menit', 'Empat langkah; latihan demo otomatis 30 dtk ✓'], ['Tanpa overselling', 'Dua pembeli berebut stok terakhir: hanya satu berhasil ✓'], ['Layar mulai 360 px', 'Tanpa gulir mendatar, tombol ≥ 44 px ✓']]
@@ -233,9 +233,9 @@ s.addNotes('Semua angka hasil pengujian nyata pada 3 Oktober 2026. Kecepatan diu
 
 // ---------- 19. Keamanan ----------
 s = isi('Kualitas & demo', 'Keamanan & regulasi', 'Melindungi data pembeli dan transaksi toko');
-[['ShieldCheck', 'Privasi data', 'UU PDP No. 27/2022', ['Data pembeli hanya untuk pengiriman', 'Persetujuan privasi saat daftar', 'Pengguna bisa menghapus akun']], ['Lock', 'Akun & hak akses', 'Login dan peran', ['Password di-hash Argon2id', 'Login maks. 5 percobaan / 15 menit', 'Panel admin khusus peran admin']], ['Scale', 'Transaksi adil', 'Stok & pembayaran', ['Batas bayar 24 jam', 'Stok kembali saat batal', 'Webhook Midtrans dicek tanda tangannya']], ['Bot', 'Asisten AI aman', 'Pengaman berlapis', ['Topik ketat, tolak di luar toko', 'Tanpa akses database/alat', 'Rate limit + data sensitif disamarkan']]]
+[['ShieldCheck', 'Privasi data', 'UU PDP No. 27/2022', ['Data pembeli hanya untuk pengiriman', 'Persetujuan privasi saat daftar', 'Pengguna bisa menghapus akun']], ['Lock', 'Akun & hak akses', 'Login dan peran', ['Argon2id + Login Google (PKCE)', 'Login maks. 5 percobaan / 15 menit', 'Panel admin khusus peran admin']], ['Scale', 'Transaksi adil', 'Stok & pembayaran', ['Batas bayar 24 jam', 'Stok kembali saat batal', 'Webhook Midtrans dicek tanda tangannya']], ['Bot', 'Asisten AI aman', 'Pengaman berlapis', ['Topik ketat, tolak di luar toko', 'Tanpa akses database/alat', 'Rate limit + data sensitif disamarkan']]]
   .forEach(([ik, j, sub, butir], i) => { const x = 0.6 + i * 3.1, gelap = i === 3; ubin(s, x, 2.05, 2.9, 4.5, gelap ? W.tinta : W.ubin); lingkaranIkon(s, x + 0.3, 2.35, 0.6, ik, !gelap); teks(s, j, { x: x + 0.3, y: 3.15, w: 2.4, h: 0.36, fontFace: H, fontSize: 15, color: gelap ? W.putih : W.tinta }); teks(s, sub, { x: x + 0.3, y: 3.5, w: 2.4, h: 0.3, fontSize: 11, color: gelap ? W.abuGelap : W.redup }); teks(s, butir.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < butir.length - 1 } })), { x: x + 0.3, y: 4.0, w: 2.4, h: 2.4, fontSize: 11.5, color: gelap ? 'D4D4D4' : W.tinta, paraSpaceAfter: 6 }); });
-s.addNotes('Kepatuhan UU PDP, keamanan akun dengan Argon2id dan pembatasan percobaan, aturan transaksi yang adil, dan pengaman asisten AI.');
+s.addNotes('Kepatuhan UU PDP, keamanan akun dengan Argon2id dan pembatasan percobaan, Login Google dengan OAuth + PKCE (admin tetap wajib password), aturan transaksi yang adil, dan pengaman asisten AI.');
 
 // ---------- 20. Risiko ----------
 s = isi('Kualitas & demo', 'Manajemen risiko', 'Risiko yang diantisipasi dan hasilnya');

@@ -8,7 +8,7 @@ panel admin. Proyek magang kelompok (5 anggota, ± 1 minggu).
 shadcn/ui · Midtrans Snap (sandbox) · Vercel Blob · asisten AI (Gemini, cadangan Groq)
 
 > Katalog, checkout, akun dan admin sudah terhubung ke MySQL dan berjalan online di
-> **Vercel + Aiven**, dengan mode terang/gelap dan tombol "Tanya AI". Bukti verifikasi dan konfigurasi yang masih diperlukan
+> **Vercel + Aiven**, dengan mode terang/gelap, tombol "Tanya AI", Login Google, dan ongkir per zona provinsi. Bukti verifikasi dan konfigurasi yang masih diperlukan
 > ada di [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) dan
 > [`deployment.md`](docs/runbooks/deployment.md).
 
