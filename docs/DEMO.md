@@ -56,7 +56,7 @@ $env:E2E_BASE_URL = 'http://localhost:3002'; $env:E2E_DEMO = '1'
 npx playwright test --config tests/e2e/playwright.config.ts demo-ppt.spec.ts --project=desktop
 ```
 
-Hasil 1 Okt 2026: **PASS** (30 dtk); belum diulang setelah admin pindah ke modal (3 Okt, `NOT_RUN`). Pendaftaran pembeli baru, saran pencarian, pilih
+Hasil 1 Okt 2026: **PASS** (30 dtk); diulang 3 Okt setelah admin pindah ke modal: **PASS**. Pendaftaran pembeli baru, saran pencarian, pilih
 varian, HEMAT10 (diskon Rp 17.800 dari Rp 178.000), 4 langkah checkout, admin
 Dikonfirmasi → Dikemas → Dikirim dengan resi, pembeli terima + ulasan, dan pesanan
 lewat batas dibatalkan oleh `/api/cron/orders`. Tangkapan layar tiap langkah

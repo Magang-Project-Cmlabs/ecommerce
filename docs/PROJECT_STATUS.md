@@ -56,10 +56,10 @@ dan uji manusia di produksi (lihat bagian 6).
 | Vercel + Aiven (TLS) | PASS | HTTP 200, `/admin` dialihkan ke masuk, deploy otomatis setiap merge |
 | Unggah gambar (Vercel Blob, D15) | PASS | E2E opt-in `unggah-blob.spec.ts` ke store sungguhan |
 | Email (Gmail SMTP) | PASS / NOT_RUN | Login SMTP + email uji terkirim; pengiriman dari situs (lupa password/invoice) belum diuji manusia |
-| Midtrans sandbox | PASS / FAIL | BCA & Mandiri sampai lunas (lokal + webhook produksi menolak tanda tangan palsu); QRIS gagal di simulator (2603) |
-| Cron `0 17 * * *` | NOT_RUN | Terdaftar; jadwal 15 menit butuh Vercel Pro atau GitHub Actions |
+| Midtrans sandbox | PASS / FAIL | BCA & Mandiri sampai lunas (diulang 3 Okt di server uji lokal; webhook produksi menolak tanda tangan palsu); QRIS gagal di simulator |
+| Cron pesanan | PASS (kode) / NOT_RUN (jadwal) | Cron harian Vercel terdaftar; workflow tiap jam + `CRON_SECRET` baru disiapkan (secret terpasang 3 Okt), menunggu workflow dikirim ke branch `sinkron` |
 | Asisten AI (Gemini + Groq) | PASS | Kunci gratis tanpa kartu; tombol darurat `ASISTEN_NONAKTIF=1` |
-| Backup Aiven | PASS (manual) / NOT_RUN (jadwal) | Dump + restore terpisah 1 Okt; jadwal otomatis belum diatur |
+| Backup Aiven | PASS (manual) / NOT_RUN (jadwal) | Dump + restore terpisah 1 Okt; backup harian terenkripsi + pengguna MySQL khusus baca disiapkan 3 Okt ([backup-restore](runbooks/backup-restore.md)), menunggu workflow dikirim |
 
 ## 5. Kriteria sukses PRD §22
 
@@ -83,7 +83,7 @@ dan uji manusia di produksi (lihat bagian 6).
 
 **Menunggu pemilik** (langkah rinci di [SERAH_TERIMA](SERAH_TERIMA.md)):
 1. Uji manusia di produksi: daftar pembeli, bayar sandbox BCA sampai Dibayar, unggah gambar lewat admin, email lupa password.
-2. Penjadwal cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven.
+2. Kirim workflow pesanan tiap jam + backup harian ke branch `sinkron` repo pribadi (secret sudah terpasang).
 3. Foto produk asli dan pembersihan data demo sebelum dipakai pelanggan nyata.
 
 **Terbuka di sisi kode:** LCP katalog seluler (simulasi) > 2,5 s; QRIS sandbox.
