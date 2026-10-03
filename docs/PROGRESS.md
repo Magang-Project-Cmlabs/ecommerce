@@ -15,6 +15,10 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Email pesanan tidak lagi menahan respons
+- Penyebab halaman sukses lambat (±5–10 detik di produksi): `buatPesanan` dan `ubahStatus` menunggu `kirimNotifikasiPesanan` (Gmail SMTP) sebelum menjawab. Kini lewat `jadwalkanNotifikasiPesanan` (`src/lib/pesanan/jadwal-notifikasi.ts`, `after()` dari Next) seperti email lupa password; berlaku juga untuk webhook Midtrans, cron, dan aksi admin. Di luar request (tes/skrip) email dijalankan tanpa ditunggu.
+- Verifikasi: unit PASS (475 + 2 dilewati; tes baru jadwal email) · integrasi MySQL PASS (30; tes SMTP loopback kini menunggu email tiba dan tetap memastikan pesanan sudah commit saat email dikirim) · E2E commerce + admin PASS (6) · typecheck PASS · lint PASS · waktu pengalihan di produksi: lihat entri berikutnya.
+
 ### 2026-10-03 — Pemilik — Ganti password akun demo dan uji email lupa password
 - Pemilik mengganti password akun admin dan pembeli demo di produksi (sempat tertulis di percakapan) dan menguji email "Lupa password" dari situs produksi: aman (dilaporkan pemilik, tidak diulang Claude).
 

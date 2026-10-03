@@ -10,7 +10,7 @@ import { Prisma } from '@/generated/prisma/client';
 import { hitungOpsiPengiriman, type KurirKode, type OpsiPengiriman } from '@/lib/pesanan/ongkir';
 import { evaluasiPromo } from '@/lib/pesanan/promo';
 import { BusinessValidationError, cobaUlangTransaksi, pesanGalat } from '@/lib/pesanan/galat';
-import { kirimNotifikasiPesanan } from '@/lib/pesanan/notifikasi';
+import { jadwalkanNotifikasiPesanan } from '@/lib/pesanan/jadwal-notifikasi';
 import { ubahStatus } from '@/lib/pesanan/transisi';
 import { cekKodePromo } from '@/actions/promo';
 import { checkoutSchema, pratinjauCheckoutSchema, type CheckoutInput } from '@/lib/validations/checkout';
@@ -129,7 +129,7 @@ export async function buatPesanan(rawInput: CheckoutInput): Promise<HasilBuatPes
       return { id: order.id, orderNumber: order.orderNumber };
     }, { isolationLevel: 'ReadCommitted', timeout: 15000, maxWait: 10000 }));
     revalidatePath('/checkout'); revalidatePath('/akun/pesanan'); revalidatePath('/admin'); revalidatePath('/');
-    await kirimNotifikasiPesanan(result.id);
+    jadwalkanNotifikasiPesanan(result.id);
     return { ok: true, orderNumber: result.orderNumber };
   } catch (error) {
     console.error('[checkout] Pesanan gagal:', error instanceof BusinessValidationError ? error.message : 'Galat penyimpanan');
