@@ -48,6 +48,18 @@ data pribadi (alamat, telepon, email).
 - [ ] Konfirmasi/pembatalan lewat `ubahStatus()` bersyarat (notifikasi ganda aman)
 - [ ] "Bayar Sekarang" hanya untuk pesanan milik pembeli sendiri yang masih pending
 
+**Asisten AI "Tanya AI" (D18)**
+- [ ] `ASISTEN_*` hanya dibaca di server; kunci tidak muncul di bundle client atau log
+- [ ] Model tanpa `tools`, tanpa akses database/internet; data toko diambil dari query Prisma tetap
+      (`src/lib/data/asisten.ts`) yang hanya memuat produk/kategori/promo publik
+- [ ] Instruksi sistem membatasi topik ke belanja di TokoKita dan menolak dengan `PENOLAKAN_TOPIK`
+      (kode/SQL, PR, esai, terjemahan, pengetahuan umum, roleplay/jailbreak)
+- [ ] Pesan berisi nomor kartu, password, OTP, atau PIN ditolak di server dan disamarkan di browser
+- [ ] Pembatas berlapis di `auth_rate_limits`: 20/10 menit dan 100/hari per pengguna atau IP, 1.500/hari global
+- [ ] Batas ukuran: pertanyaan 600 karakter, riwayat 6.000 karakter, jawaban 800 token
+- [ ] Tombol darurat `ASISTEN_NONAKTIF=1` menyembunyikan tombol dan menolak semua permintaan
+- [ ] Tautan di jawaban hanya path internal toko; markdown dirender tanpa HTML mentah
+
 **Rahasia & privasi**
 - [ ] Tidak ada rahasia di kode, log, atau pesan error
 - [ ] `.env` dan dump database tidak ter-commit

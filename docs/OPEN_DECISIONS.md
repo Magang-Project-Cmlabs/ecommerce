@@ -50,7 +50,7 @@ Terakhir diperbarui: **1 Oktober 2026**
 
 ## D9. Payment gateway Midtrans
 
-- **Konteks awal:** PRD §21/slide 19 menempatkan payment gateway di luar cakupan.
+- **Konteks awal:** PRD §21/slide 19 (PPT versi awal) menempatkan payment gateway di luar cakupan.
   Pemilik sebelumnya memilih sandbox; pada 1 Oktober 2026 pemilik meminta
   seluruh aplikasi diselesaikan tanpa menunggu bagian anggota lain.
 - **Implementasi:** Server Actions pembayaran pemilik pesanan dan webhook
@@ -87,5 +87,5 @@ Terakhir diperbarui: **1 Oktober 2026**
 | 27 Sep 2026 | **D10 — tetap GitHub Free, repo private.** Proteksi branch/ruleset tidak tersedia untuk kombinasi ini (HTTP 403 dari GitHub). Aturan 2 persetujuan dijaga disiplin tim (hanya A1 yang merge) dan penjaga gratis: hook `pre-push` (aktif), CI Actions dan workflow pendeteksi pelanggaran (aktif sejak 27 Sep 2026; hasilnya terlihat di PR tetapi tidak bisa memblokir merge, jadi penggabung wajib mengecek ✓ sebelum merge). Opsi yang ditolak: upgrade ke GitHub Team (berbayar), repo public (PRD terbuka). Pengecualian: pemilik proyek (`kvnlhm`) boleh merge tanpa persetujuan anggota lain. Default branch `develop` masih menunggu admin `azridalimunthe7`. | Pemilik proyek, `CONTRIBUTING.md` bagian 3 |
 | 27 Sep 2026 | Test runner unit: **Vitest** (`vitest.config.mts`, test di `src/**/*.test.ts`); E2E tetap Playwright | Dipakai pertama kali oleh modul pembayaran (D3 lama) |
 | — | Package manager: **npm** | PRD §22 memakai `npm run db:reset` |
-| — | Alur Git: branch fitur → `develop` → `main`, PR 2 reviewer | Presentasi slide 15 |
-| — | Baseline awal tanpa gateway; diperbarui D9 dengan integrasi sandbox, produksi menunggu akun merchant | PRD §21, slide 19 |
+| — | Alur Git: branch fitur → `develop` → `main`, PR 2 reviewer | Presentasi slide 17 |
+| — | Baseline awal tanpa gateway; diperbarui D9 dengan integrasi sandbox, produksi menunggu akun merchant | PRD §21, slide 19 PPT versi awal |

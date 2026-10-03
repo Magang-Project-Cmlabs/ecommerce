@@ -12,7 +12,7 @@ Satu board, setiap anggota punya 5 kolom sendiri. Urutan kolom dari kiri:
 ```
 
 Sumber: `docs/PRD - E-Commerce.md` + `docs/Presentasi_ECommerce_TokoKita.pptx`
-(slide 14 pembagian peran, slide 15 alur kerja). Durasi: **1 minggu** (Hari 1–6).
+(slide 16 pembagian peran, slide 17 alur kerja; versi 3 Okt 2026). Durasi: **1 minggu** (Hari 1–6).
 
 Versi ini sengaja ditulis sederhana untuk anggota pemula: satu kartu = satu fitur,
 judul memakai bahasa sehari-hari, detail teknis secukupnya di checklist.
@@ -34,7 +34,7 @@ Ditambah kolom 👥 Semua (Rencana, Selesai) dan 💤 Lanjutan (Backlog).
 | Oranye | Blocker | Harus selesai duluan, anggota lain menunggu | — |
 
 Pemetaan disepakati 27 Sep 2026, mengikuti anggota organisasi GitHub (sama
-dengan repo `article-website/news-times`). Presentasi slide 14 menyebut
+dengan repo `article-website/news-times`). Presentasi versi awal (slide 14) menyebut
 "Anggota 1 = Ketua Tim"; kenyataannya ketua tim adalah A2.
 
 ## Cara pakai

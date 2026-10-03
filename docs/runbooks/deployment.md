@@ -27,11 +27,15 @@ Nilai rahasia dimasukkan lewat Vercel Environment Variables, bukan Git.
 | `AUTH_SECRET` | Acak ≥32 karakter; tetap sama antar instance/deployment agar sesi konsisten |
 | `CRON_SECRET` | Rahasia untuk header Bearer pemanggil cron |
 | `STORE_CITY` | Kota asal toko, default Jakarta |
-| `SMTP_HOST/PORT/USER/PASS`, `MAIL_FROM` | SMTP nyata untuk reset password dan notifikasi |
-| `STORAGE_DRIVER` | `s3` wajib untuk production |
-| `S3_ENDPOINT/BUCKET/ACCESS_KEY/SECRET_KEY/PUBLIC_URL` | Bucket S3/R2, endpoint HTTPS dan URL publik gambar |
+| `SMTP_HOST/PORT/USER/PASS`, `MAIL_FROM` | SMTP nyata untuk reset password dan notifikasi (produksi: Gmail SMTP + App Password) |
+| `STORAGE_DRIVER` | `blob` (dipakai produksi, D15) atau `s3`; `local` ditolak di production |
+| `BLOB_READ_WRITE_TOKEN` | Token Vercel Blob; terisi otomatis saat store Blob dihubungkan ke proyek |
+| `S3_ENDPOINT/BUCKET/ACCESS_KEY/SECRET_KEY/PUBLIC_URL` | Hanya bila `STORAGE_DRIVER=s3` (bucket S3/R2) |
 | `MIDTRANS_SERVER_KEY`, `MIDTRANS_IS_PRODUCTION` | Sandbox untuk demo; production hanya jika akun merchant siap |
 | `PAYMENT_SIMULATION_ENABLED` | `false`; production selalu menolak simulasi |
+| `ASISTEN_API_KEY` (+ `ASISTEN_BASE_URL`, `ASISTEN_MODEL` opsional) | Kunci gratis Google AI Studio (Gemini) untuk "Tanya AI"; tanpa kunci tombol tidak tampil (D18) |
+| `ASISTEN_CADANGAN_API_KEY` (+ `_BASE_URL`, `_MODEL` opsional) | Kunci gratis Groq sebagai cadangan bila Gemini penuh |
+| `ASISTEN_NONAKTIF` | `1` mematikan asisten seketika setelah deploy ulang (tombol darurat) |
 
 Koneksi Aiven memverifikasi CA; jangan menonaktifkan verifikasi sertifikat.
 Environment build juga memerlukan `DATABASE_URL`, karena Next memuat modul
@@ -101,9 +105,11 @@ DB lokal terpisah: 26 produk, 14 pengguna, 79 pesanan, 188 ulasan dan tiga
 migration. Dump hanya lokal dan diabaikan Git; jadwal/retensi backup cloud
 belum dikonfigurasi.
 
-Status online baru `PASS` setelah domain/build, query TLS, upload S3, email
-eksternal, pemanggil cron dan restore sungguhan dibuktikan. Tes lokal tidak
-membuktikan konfigurasi akun hosting sudah aktif.
+Status online per 3 Oktober 2026: domain/build, query TLS, unggah Vercel Blob,
+login SMTP, webhook Midtrans dan asisten AI `PASS`; restore manual `PASS`;
+pemanggil cron terjadwal dan jadwal backup `NOT_RUN`. Tes lokal tidak
+membuktikan konfigurasi akun hosting sudah aktif. Untuk memasang variabel dari
+berkas lokal tanpa mencetak nilainya: `node scripts/pasang-env-vercel.mjs <berkas>`.
 
 Sumber platform: [Vercel request headers](https://vercel.com/docs/headers/request-headers),
 [batas Functions](https://vercel.com/docs/functions/limitations),

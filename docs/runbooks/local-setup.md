@@ -103,7 +103,8 @@ harus menampilkan `.githooks`.
    mysql -u root -e "CREATE DATABASE IF NOT EXISTS ecommerce CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
    ```
 2. **Isi `.env`.** Minimal `DATABASE_URL` dan `AUTH_SECRET` (cara membuatnya
-   tertulis di `.env.example`).
+   tertulis di `.env.example`). Opsional: `ASISTEN_API_KEY` (kunci gratis Google
+   AI Studio) agar tombol "Tanya AI" tampil; tanpa kunci aplikasi tetap jalan.
 3. **Buat tabel dan data demo:**
    ```bash
    npm run db:reset
