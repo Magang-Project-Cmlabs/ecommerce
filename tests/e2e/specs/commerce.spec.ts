@@ -32,10 +32,19 @@ async function checkoutBaru(page: Page) {
   await page.getByRole('radio', { name: /Transfer Bank BCA/ }).check();
   await page.getByRole('button', { name: 'Lanjutkan', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Buat Pesanan', exact: true })).toBeEnabled();
+  // Navigasi klien mempertahankan window: catat bila layar "keranjang kosong" sempat tampil.
+  await page.evaluate(() => {
+    const w = window as unknown as { keranjangKosongTampil?: boolean };
+    new MutationObserver(() => { if (document.body.innerText.includes('Keranjang masih kosong')) w.keranjangKosongTampil = true; })
+      .observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
   await page.getByRole('button', { name: 'Buat Pesanan', exact: true }).click();
   await page.waitForURL(/\/checkout\/berhasil\/INV-/);
   const number = new URL(page.url()).pathname.split('/').pop()!;
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  expect(await page.evaluate(() => (window as unknown as { keranjangKosongTampil?: boolean }).keranjangKosongTampil ?? false)).toBe(false);
+  await page.goto(`/akun/pesanan/${number}`);
+  await expect(page.getByText('Transfer Bank BCA', { exact: true })).toBeVisible();
   return number;
 }
 

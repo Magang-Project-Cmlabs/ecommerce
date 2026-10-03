@@ -26,6 +26,8 @@ export default function CheckoutWizard({ initialAddresses }: { initialAddresses:
   const [shipping, setShipping] = useState<KurirKode | null>(null);
   const [payment, setPayment] = useState<MetodePembayaran | null>(null);
   const [notes, setNotes] = useState('');
+  // Nomor pesanan yang baru dibuat: tampilkan status pengalihan, bukan layar keranjang kosong.
+  const [pesananBaru, setPesananBaru] = useState<string | null>(null);
   const [previewState, setPreview] = useState<{ key: string; data: Pratinjau } | null>(null);
   const [previewError, setPreviewError] = useState<{ key: string; message: string } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -53,11 +55,12 @@ export default function CheckoutWizard({ initialAddresses }: { initialAddresses:
     startSave(async () => {
       try {
         const result = await buatPesanan({ addressId, shippingMethod: shipping, paymentMethod: payment, notes, promoCode: appliedPromo?.code, items: items.map(i => ({ productId: i.productId, variantId: i.variantId, quantity: i.quantity })) });
-        if (result.ok) { useCartStore.getState().kosongkanKeranjang(); router.push(`/checkout/berhasil/${result.orderNumber}`); }
+        if (result.ok) { setPesananBaru(result.orderNumber); router.push(`/checkout/berhasil/${result.orderNumber}`); useCartStore.getState().kosongkanKeranjang(); }
         else setSubmitError(result.message ?? Object.values(result.errors ?? {}).flat().join(' ') ?? 'Pesanan belum dapat dibuat.');
       } catch { setSubmitError('Pesanan belum dapat dibuat. Coba lagi.'); }
     });
   };
+  if (pesananBaru) return <div role="status" className="mx-auto max-w-[1400px] px-4 md:px-6 py-12 text-center"><h1 className="mb-4 text-4xl font-medium leading-none md:text-5xl">Pesanan berhasil dibuat</h1><p className="text-muted-foreground">Nomor pesanan {pesananBaru}. Membuka halaman pesanan…</p></div>;
   if (items.length === 0) return <div className="mx-auto max-w-[1400px] px-4 md:px-6 py-12 text-center"><h1 className="mb-4 text-4xl font-medium leading-none md:text-5xl">Checkout</h1><p className="mb-6">Keranjang masih kosong. Yuk belanja!</p><Button asChild><Link href="/produk">Mulai Belanja</Link></Button></div>;
   return <div className="mx-auto max-w-[1400px] px-4 md:px-6 py-8">
     <h1 className="mb-6 text-4xl font-medium leading-none md:text-5xl">Checkout</h1>

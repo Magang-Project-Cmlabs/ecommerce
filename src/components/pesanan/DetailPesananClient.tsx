@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatRupiah, formatTanggalWIB } from "@/lib/format";
-import { LABEL_STATUS_PESANAN } from "@/lib/pesanan/status";
+import { LABEL_STATUS_PESANAN, labelMetodePembayaran } from "@/lib/pesanan/status";
 import type { DetailPesananLengkap } from "@/lib/data/pesanan";
 import SalinTeksButton from "@/components/checkout/SalinTeksButton";
 import CountdownTimer from "@/components/checkout/CountdownTimer";
@@ -308,8 +308,8 @@ export default function DetailPesananClient({ order, gatewayEnabled, sandbox, si
             <div className="mt-3 space-y-2 text-xs">
               <div className="flex justify-between text-muted-foreground">
                 <span>Metode Pembayaran</span>
-                <span className="font-semibold text-foreground uppercase">
-                  {order.paymentMethod.replace('_', ' ')}
+                <span className="font-semibold text-foreground">
+                  {labelMetodePembayaran(order.paymentMethod)}
                 </span>
               </div>
 
