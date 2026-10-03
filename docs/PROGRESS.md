@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Dokumentasi akhir dan PPT baru
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
+- Perubahan: PPT dibangun ulang (22 slide, tema monokrom "TokoKita Monokrom" sesuai web, tangkapan layar terang/gelap/admin modal/Tanya AI, catatan pembicara, angka verifikasi terbaru); `PROJECT_STATUS` ditulis ulang sebagai potret 3 Okt; MULAI_DI_SINI, SERAH_TERIMA, DEMO, runbook deployment (variabel Blob/asisten), audit keamanan (bagian asisten AI), indeks dokumentasi, README diperbarui; `shadcn` (CLI) dipindah ke devDependencies karena advisori `braces` tanpa versi tambalan.
+- Verifikasi: typecheck PASS · lint PASS · unit PASS (459 + 2 dilewati) · integrasi PASS (30) · prisma validate PASS · build PASS · E2E PASS (86 + 1 dilewati) · `npm audit --omit=dev` PASS (0) · PPT: validator PASS, render PowerPoint 22/22 diperiksa · latihan demo `E2E_DEMO` NOT_RUN (opt-in, menulis data).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Pengaman asisten AI
 - Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop` (di-merge sendiri atas instruksi pemilik).
 - Perubahan: instruksi sistem membatasi topik (daftar topik ditolak, kalimat penolakan tetap `PENOLAKAN_TOPIK`, larangan kode/SQL, data toko ditandai bukan instruksi, pengingat di akhir); pembatas berlapis per pengguna/IP + harian + global; batas total riwayat 6.000 karakter; jawaban maks. 800 token tanpa `tools`; cache jawaban pertanyaan pembuka 1 jam; tombol darurat `ASISTEN_NONAKTIF`.

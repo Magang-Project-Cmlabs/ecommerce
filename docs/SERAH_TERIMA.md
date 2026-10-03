@@ -1,8 +1,8 @@
 # Serah Terima — TokoKita
 
 **Tanggal:** 3 Oktober 2026
-**Branch:** `develop` sudah memuat PR #23 dan #25. Pekerjaan lanjutan ada di
-`feat/penyelesaian-tokokita` (dikirim lewat PR ke `develop`).
+**Branch:** `develop` memuat seluruh fitur (PR terakhir #48 ditambah PR dokumentasi ini).
+Pekerjaan lanjutan ada di `feat/penyelesaian-tokokita` (dikirim lewat PR ke `develop`).
 **Status lengkap:** [PROJECT_STATUS](PROJECT_STATUS.md) · log: [PROGRESS](PROGRESS.md)
 
 ## Lingkungan
@@ -21,7 +21,8 @@ Menyalin `develop` organisasi ke cermin dilakukan hanya setelah PR di-merge:
 
 Berkas lokal Git-ignored (jangan dicetak/di-commit): `.env`, `.env.aiven`,
 `.env.local`, `tests/e2e/.env.e2e`, `.env.akun-preview` (akun admin/pembeli
-Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
+Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
+`.env.smtp` dan `.env.asisten` (kunci Gmail SMTP dan kunci AI).
 
 ## Sudah aktif
 
@@ -33,15 +34,16 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 - Foto produk demo CC0 sesuai produk ([KREDIT_FOTO](KREDIT_FOTO.md)); banner dan
   ubin kategori juga foto CC0 (kredit di berkas yang sama).
 - Latihan demo PPT otomatis dan rekaman cadangan: [DEMO](DEMO.md).
-- Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
+- Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15) dan email Gmail SMTP terpasang di Vercel.
+- PPT `docs/Presentasi_ECommerce_TokoKita.pptx` dibangun ulang 3 Okt 2026: 22 slide, tema monokrom sesuai tampilan web, tangkapan layar terbaru (terang, gelap, admin modal, Tanya AI), catatan pembicara di setiap slide; sudah dirender di PowerPoint dan diperiksa.
 - Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md): gaya template Framer, monokrom, mode terang + gelap (D16); admin satu bahasa visual dengan toko, tambah/edit lewat modal, semua daftar pilihan memakai komponen `Pilihan` (tanpa `<select>` bawaan), keluar selalu dikonfirmasi.
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
-- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini, kunci milik pemilik) terpasang di Vercel Preview + Production sejak 3 Okt 2026. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Cadangan Groq aktif bila `ASISTEN_CADANGAN_API_KEY` dipasang (tambahkan baris itu di `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`).
+- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini) dan `ASISTEN_CADANGAN_API_KEY` (Groq), keduanya kunci gratis milik pemilik, terpasang di Vercel Preview + Production sejak 3 Okt 2026. Pengaman: topik dibatasi ke belanja di toko, tanpa tools/SQL, batas 20 pertanyaan/10 menit dan 100/hari per pengguna atau IP, 1.500/hari untuk seluruh toko; uji penyalahgunaan 16/16 ditolak. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Mengganti kunci: ubah `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`.
 
 ## Menunggu pemilik
 
 1. Uji manusia di produksi: daftar pembeli baru, bayar sandbox BCA sampai Dibayar (HEMAT10 minimal belanja Rp 100.000), unggah gambar lewat admin, cek email "Lupa password".
-2. Tinjau PPT di PowerPoint (render slide tidak diuji di mesin pengembang).
+2. Tinjau isi PPT 22 slide dan sesuaikan nama/peran tim bila perlu.
 3. Cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven; cadangan manual 1 Okt ada di luar repo.
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
 5. Nilai tampilan baru (toko dan admin, terang dan gelap) di situs online; sebutkan bagian yang masih kurang.
@@ -51,7 +53,7 @@ luar cakupan magang.
 
 ## Terbuka di sisi kode
 
-- LCP seluler produksi 2,9–3,7 s (target < 2,5 s); FCP sekitar 2,8 s di jaringan nyata.
+- LCP seluler (simulasi Lighthouse, Chrome bersih) beranda 1,7 s (skor 98) sudah di bawah target; katalog 3,4 s dan detail 3,3 s masih di atas 2,5 s.
 - QRIS sandbox: simulator resmi error 2603.
 - Verifikasi baca ulang akun produksi (kata sandi seed tidak berlaku) belum dijalankan.
 

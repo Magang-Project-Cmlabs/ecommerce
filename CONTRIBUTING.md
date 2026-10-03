@@ -1,7 +1,7 @@
 # Cara Berkontribusi — TokoKita
 
 Aturan ini dibuat supaya 5 orang bisa bekerja bersamaan tanpa kode bertabrakan
-(Presentasi slide 15). Singkatnya: **satu kartu Trello = satu branch = satu Pull
+(Presentasi slide 17). Singkatnya: **satu kartu Trello = satu branch = satu Pull
 Request.**
 
 ## 1. Branch

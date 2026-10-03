@@ -5,10 +5,10 @@ Toko online mandiri untuk brand/UMKM Indonesia: katalog, keranjang, checkout
 panel admin. Proyek magang kelompok (5 anggota, ± 1 minggu).
 
 **Stack:** Next.js (App Router, TypeScript) · Prisma · MySQL · Tailwind CSS ·
-shadcn/ui
+shadcn/ui · Midtrans Snap (sandbox) · Vercel Blob · asisten AI (Gemini, cadangan Groq)
 
-> Katalog, checkout, akun dan admin sudah terhubung ke MySQL. Target rilis:
-> **Vercel + Aiven**. Bukti verifikasi dan konfigurasi yang masih diperlukan
+> Katalog, checkout, akun dan admin sudah terhubung ke MySQL dan berjalan online di
+> **Vercel + Aiven**, dengan mode terang/gelap dan tombol "Tanya AI". Bukti verifikasi dan konfigurasi yang masih diperlukan
 > ada di [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) dan
 > [`deployment.md`](docs/runbooks/deployment.md).
 
@@ -19,8 +19,8 @@ shadcn/ui
 | Produksi (cabang `develop`) | **https://ecommerce-peach-seven-47.vercel.app** | Publik. Database Aiven `tokokita`. |
 | Preview (cabang fitur) | https://ecommerce-git-feat-penyelesaian-tokokita-tes-2254s-projects.vercel.app | Perlu login Vercel. Database uji `tokokita_preview`. |
 
-Arah visual ada di [`DESIGN.md`](DESIGN.md); PPT (`docs/Presentasi_ECommerce_TokoKita.pptx`) memuat
-tangkapan layar aplikasi yang berjalan.
+Arah visual ada di [`DESIGN.md`](DESIGN.md); PPT 22 slide (`docs/Presentasi_ECommerce_TokoKita.pptx`) memuat
+tangkapan layar aplikasi yang berjalan (diperbarui 3 Okt 2026).
 
 Vercel membangun ulang otomatis setiap ada push ke repo `kvnlhm/ecommerce`
 (cermin repo organisasi). Akun admin/pembeli online tidak dicantumkan di sini;
