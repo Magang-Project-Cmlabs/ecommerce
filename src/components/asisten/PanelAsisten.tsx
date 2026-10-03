@@ -15,7 +15,9 @@ const SARAN = ['Metode pembayaran apa saja?', 'Bagaimana ongkir dihitung?', 'Rek
 const POLA_TAUTAN = /(\/(?:produk|kategori|akun|bantuan|wishlist|kebijakan-privasi|syarat-ketentuan|masuk|daftar)(?:\/[a-z0-9-]+)*(?:\?[a-z0-9=&-]+)?)/g;
 
 function tebalDanTautan(teks: string, kunci: string): ReactNode[] {
-  return teks.split(/(\*\*[^*]+\*\*)/g).flatMap((bagian, i) => {
+  // Kode sebaris (`...`) dan *miring* dari model ditampilkan sebagai teks biasa tanpa tandanya.
+  const bersih = teks.replace(/`([^`]+)`/g, '$1').replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, '$1$2');
+  return bersih.split(/(\*\*[^*]+\*\*)/g).flatMap((bagian, i) => {
     if (/^\*\*[^*]+\*\*$/.test(bagian)) return [<strong key={`${kunci}-b${i}`} className="font-semibold">{bagian.slice(2, -2)}</strong>];
     // split dengan grup tangkap: bagian berindeks ganjil adalah tautan.
     return bagian.split(POLA_TAUTAN).map((p, j) => j % 2 === 1
@@ -51,7 +53,8 @@ export default function PanelAsisten({ buka, tutup }: { buka: boolean; tutup: ()
 
   useEffect(() => { try { sessionStorage.setItem(KUNCI_SIMPAN, JSON.stringify(riwayat.slice(-20))); } catch { /* mode privat: riwayat cukup di memori */ } }, [riwayat]);
   useEffect(() => { if (buka) inputRef.current?.focus(); }, [buka]);
-  useEffect(() => { bawahRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' }); }, [riwayat, menunggu, galat]);
+  // Gulir langsung (bukan halus) agar jawaban terbaru selalu terlihat penuh, juga saat jawaban panjang.
+  useEffect(() => { bawahRef.current?.scrollIntoView({ block: 'end' }); }, [riwayat, menunggu, galat]);
   useEffect(() => {
     if (!buka) return;
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') tutup(); };
@@ -64,9 +67,10 @@ export default function PanelAsisten({ buka, tutup }: { buka: boolean; tutup: ()
     if (!pertanyaan || menunggu || pertanyaan.length > BATAS_PESAN_ASISTEN) return;
     // Data sensitif tidak dikirim ke server dan hanya ditampilkan dalam bentuk tersamar.
     const tolak = periksaPesanSensitif(pertanyaan);
-    if (tolak) { setRiwayat([...dasar, { peran: 'pengguna', isi: samarkanSensitif(pertanyaan) }, { peran: 'asisten', isi: tolak }]); setTeks(''); setGalat(null); return; }
+    if (tolak) { setRiwayat([...dasar, { peran: 'pengguna', isi: samarkanSensitif(pertanyaan) }, { peran: 'asisten', isi: tolak }]); setTeks(''); setGalat(null); if (inputRef.current) inputRef.current.style.height = 'auto'; return; }
     const baru: Pesan[] = [...dasar, { peran: 'pengguna', isi: pertanyaan }];
     setRiwayat(baru); setTeks(''); setGalat(null);
+    if (inputRef.current) inputRef.current.style.height = 'auto';
     mulai(async () => {
       try {
         const hasil = await tanyaAsisten({ riwayat: baru.slice(-8) });
