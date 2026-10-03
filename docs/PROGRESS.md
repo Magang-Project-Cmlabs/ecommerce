@@ -15,6 +15,10 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Catatan resi demo
+- Pemilik mengecek resi `SCP108158466` (pesanan seed INV-202609-0014) di sicepat.com: "Nomor resi tidak ditemukan". Penyebab: `prisma/seed.ts` membuat resi acak, bukan resi kiriman nyata; tombol "Cek di situs kurir" tetap bekerja (membuka situs resmi + menyalin resi).
+- Dokumen diperjelas: PROJECT_STATUS (hasil lacak paket sungguhan NOT_RUN), SERAH_TERIMA, runbook login-google-dan-lacak-resi, catatan pembicara PPT slide 5. Kode tidak berubah.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Rilis fitur lanjutan D19–D21 ke produksi
 - Atas permintaan pemilik (sebelum akhir sesi): migration `20261003150000_login_google` diterapkan ke Aiven produksi lebih dulu, lalu PR #62 di-merge ke `develop` dan dicerminkan; deploy produksi Ready.
 - Verifikasi produksi: halaman utama/katalog/masuk/daftar/kebijakan/syarat 200 · tombol "Masuk dengan Google" tampil · `/api/auth/google` 307 ke Google dengan redirect produksi, PKCE S256, state, nonce, cookie `Secure; HttpOnly; SameSite=lax` · callback state palsu → `/masuk?galat=google` · cron tanpa kunci 401 · admin pesanan Dikirim menampilkan "Cek di situs SiCepat". Login Google penuh di produksi NOT_RUN (sudah PASS di localhost dengan akun asli; tidak membuat akun produksi baru tanpa perlu).

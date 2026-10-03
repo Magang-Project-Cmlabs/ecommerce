@@ -60,6 +60,9 @@ pemilik akun Google bisa masuk begitu kodenya dirilis. Tanpa logo dan hanya izin
 Tanpa kunci pun pembeli dan admin mendapat tombol gratis **"Cek di situs JNE/SiCepat"** yang membuka
 halaman lacak resmi kurir dan menyalin resi otomatis (tempel di kolom cek resi kurir).
 
+> Resi pada pesanan contoh (seed) dibuat acak oleh `prisma/seed.ts`, misalnya `SCP108158466`, sehingga situs kurir
+> menjawab "Nomor resi tidak ditemukan". Itu wajar: hasil lacak baru muncul untuk resi asli dari paket yang benar-benar dikirim.
+
 1. Masuk ke https://hub.binderbyte.com, buat key di **API Keys** (produk API Cek Resi), salin **API key**.
    Periksa kuota paket gratisnya. **Kalau diminta pembayaran, berhenti dan kabari
    pengembang.**
