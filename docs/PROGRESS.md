@@ -15,6 +15,9 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Pemilik — Ganti password akun demo dan uji email lupa password
+- Pemilik mengganti password akun admin dan pembeli demo di produksi (sempat tertulis di percakapan) dan menguji email "Lupa password" dari situs produksi: aman (dilaporkan pemilik, tidak diulang Claude).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Cek nama Snap dan layar pengalihan di produksi
 - Pemilik mengganti Display Name di menu Snap Checkout (dashboard Midtrans sandbox). Pesanan uji INV-202610-0002 (Kabel USB-C, BCA): selama pengalihan hanya tampil "Pesanan berhasil dibuat" (tanpa layar keranjang kosong) · halaman Snap menampilkan "TokoKita" · pesanan dibatalkan pembeli, status Dibatalkan, stok kembali ke 61 (62 − 1 pesanan lunas INV-202610-0001).
 - Catatan: pindah ke halaman sukses setelah "Buat Pesanan" memakan ±8–10 detik pada percobaan ini (±5 detik sebelumnya); belum diselidiki.
