@@ -36,7 +36,7 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 - Unggah gambar online lewat Vercel Blob (`STORAGE_DRIVER=blob`, D15), email Gmail terpasang di Vercel, PPT diperbarui (slide 1, 5–7, 10–13, 16, 19, 20).
 - Tampilan toko dan admin mengikuti [DESIGN.md](../DESIGN.md): gaya template Framer, monokrom, mode terang + gelap (D16); admin satu bahasa visual dengan toko, tambah/edit lewat modal, semua daftar pilihan memakai komponen `Pilihan` (tanpa `<select>` bawaan), keluar selalu dikonfirmasi.
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
-- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) siap; asisten aktif setelah `ASISTEN_API_KEY` dipasang.
+- Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini, kunci milik pemilik) terpasang di Vercel Preview + Production sejak 3 Okt 2026.
 
 ## Menunggu pemilik
 
@@ -45,7 +45,6 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak).
 3. Cron 15 menit (Vercel Pro atau secret GitHub Actions) dan jadwal backup Aiven; cadangan manual 1 Okt ada di luar repo.
 4. Foto produk asli dan pembersihan data demo produksi sebelum dipakai pelanggan nyata.
 5. Nilai tampilan baru (toko dan admin, terang dan gelap) di situs online; sebutkan bagian yang masih kurang.
-6. Aktifkan asisten AI: buat kunci gratis di https://aistudio.google.com/apikey (akun Google, tanpa kartu), tulis `ASISTEN_API_KEY=<kunci>` di berkas `.env.asisten`, jalankan `node scripts/pasang-env-vercel.mjs .env.asisten`, lalu minta deploy ulang.
 
 Pembayaran uang asli butuh akun Midtrans produksi atas nama badan usaha; di
 luar cakupan magang.

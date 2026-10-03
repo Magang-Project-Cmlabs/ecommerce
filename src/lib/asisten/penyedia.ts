@@ -29,7 +29,7 @@ export async function mintaJawaban(pesan: PesanChat[], konfigurasi: KonfigurasiA
       const res = await ambil(konfigurasi.url, {
         method: 'POST',
         headers: { authorization: `Bearer ${konfigurasi.kunci}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ model, messages: pesan, max_tokens: 600, temperature: 0.3 }),
+        body: JSON.stringify({ model, messages: pesan, max_tokens: 1000, temperature: 0.3 }),
         signal: AbortSignal.timeout(20_000),
         cache: 'no-store',
       });
