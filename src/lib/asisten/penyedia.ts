@@ -13,7 +13,7 @@ export type Penyedia = { nama: string; kunci: string; url: string; models: strin
 const BAWAAN = {
   utama: { nama: 'utama', awalan: 'ASISTEN_', base: 'https://generativelanguage.googleapis.com/v1beta/openai', models: ['gemini-flash-lite-latest', 'gemini-flash-latest'] },
   // Alias "latest" Gemini selalu menunjuk Flash terbaru; model Groq bisa diganti lewat ASISTEN_CADANGAN_MODEL.
-  cadangan: { nama: 'cadangan', awalan: 'ASISTEN_CADANGAN_', base: 'https://api.groq.com/openai/v1', models: ['llama-3.3-70b-versatile'] },
+  cadangan: { nama: 'cadangan', awalan: 'ASISTEN_CADANGAN_', base: 'https://api.groq.com/openai/v1', models: ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b'] },
 } as const;
 
 const BATAS_PERCOBAAN = 4;          // total panggilan per pertanyaan (semua penyedia)
