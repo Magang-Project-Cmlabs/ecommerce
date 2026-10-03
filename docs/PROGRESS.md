@@ -16,8 +16,8 @@ Format entri:
 ---
 
 ### 2026-10-03 — Kevin Ilham / Claude Code — LCP seluler: font judul tanpa preload
-- Branch / PR:  / PR ke .
-- Perubahan:  (judul) ; font isi Inter tetap dipreload. Di jaringan seluler kedua font (80 KB) berebut bandwidth dengan foto LCP.
+- Branch / PR: `feat/penyelesaian-tokokita` / PR #52 ke `develop`.
+- Perubahan: `Albert_Sans` (judul) `preload: false`; font isi Inter tetap dipreload. Di jaringan seluler kedua font (80 KB) berebut bandwidth dengan foto LCP.
 - Verifikasi: Lighthouse lokal throttling devtools, median 3 run: katalog LCP 2.327 → 2.165 ms, detail 2.205 → 2.102 ms, CLS 0 → 0 · typecheck PASS · lint PASS · unit PASS (459 + 2 dilewati) · build PASS · E2E NOT_RUN (perubahan hanya pemuatan font).
 
 ### 2026-10-03 — Kevin Ilham / Claude Code — Otomasi pesanan dan backup
