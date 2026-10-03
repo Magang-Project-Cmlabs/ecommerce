@@ -32,7 +32,9 @@ test.describe('Penjaga role admin', () => {
         // Next streaming mengirim status200 sebelum notFound: bukti penolakan
         // adalah tampilan404 dan ketiadaan navigasi/data admin.
         await expect(page.getByRole('heading', { name: /tidak ditemukan/ })).toBeVisible();
-        await expect(page.getByRole('navigation', { name: 'Menu admin' })).toHaveCount(0);
+        await expect(page.getByRole('navigation', { name: 'Navigasi admin' })).toHaveCount(0);
+        await expect(page.getByRole('button', { name: 'Menu admin' })).toHaveCount(0);
+        await expect(page.getByText('Selamat datang,')).toHaveCount(0);
       }
     } finally {
       await context.close();
