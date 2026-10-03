@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Kerangka admin tersembunyi bagi pembeli
+- Branch / PR: `feat/penyelesaian-tokokita` / PR ke `develop`.
+- Temuan (uji produksi lewat Chrome dengan sesi pembeli yang di-login pemilik): `/admin/*` menolak dengan 404 dan tanpa data, tetapi layout tetap menampilkan sidebar, sapaan, dan tombol admin. Tes E2E penjaga masih mencari nama navigasi lama "Menu admin" sehingga lulus tanpa memeriksa.
+- Perubahan: layout admin hanya merender kerangka untuk role admin (keputusan akses tetap `requireAdmin` di page); tes memeriksa "Navigasi admin", tombol "Menu admin", dan sapaan.
+- Verifikasi: tes baru FAIL pada layout lama, PASS setelah perbaikan · E2E auth-guard + admin + aksesibilitas PASS (21) · typecheck PASS · lint PASS · unit penjaga halaman PASS · unggah gambar online lewat browser NOT_RUN (sesi admin tidak ada; formulir ulasan mengunggah saat ulasan diterbitkan, jadi tidak dipakai).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — LCP seluler: font judul tanpa preload
 - Branch / PR: `feat/penyelesaian-tokokita` / PR #52 ke `develop`.
 - Perubahan: `Albert_Sans` (judul) `preload: false`; font isi Inter tetap dipreload. Di jaringan seluler kedua font (80 KB) berebut bandwidth dengan foto LCP.

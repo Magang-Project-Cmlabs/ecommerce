@@ -12,6 +12,8 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 // Layout hanya menampilkan nama; keputusan akses tetap di requireAdmin pada tiap page.tsx.
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const pengguna = await ambilPenggunaSaatIni();
+  // Bukan admin: jangan tampilkan kerangka panel; page.tsx tetap menolak lewat requireAdmin.
+  if (pengguna?.role !== 'admin') return <main className="mx-auto w-full max-w-xl flex-1 px-4 py-16">{children}</main>;
   const inisial = (pengguna?.name ?? 'A').trim().charAt(0).toUpperCase();
   return (
     <div className="ui-admin flex flex-1 bg-background">
