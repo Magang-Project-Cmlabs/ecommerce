@@ -78,6 +78,8 @@ model User {
   email        String    @unique @db.VarChar(191)
   phone        String?   @db.VarChar(20)
   passwordHash String    @map("password_hash") @db.VarChar(100)
+  // D21: ID akun Google (klaim `sub`) untuk Login Google; null bila belum ditautkan.
+  googleSub    String?   @unique @map("google_sub") @db.VarChar(255)
   role         Role      @default(customer)
   createdAt    DateTime  @default(now()) @map("created_at")
   deletedAt    DateTime? @map("deleted_at")

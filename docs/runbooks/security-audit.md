@@ -42,6 +42,16 @@ data pribadi (alamat, telepon, email).
 - [ ] Nama berkas dibuat server (acak), bukan dari nama unggahan
 - [ ] File yang dilepas dari produk, diganti, atau ikut terhapus bersama banner/kategori dihapus dari penyimpanan setelah data tersimpan, hanya bila berbentuk `uploads/<uuid>.webp` milik aplikasi dan tidak lagi dirujuk produk, kategori, banner, atau `order_items` (riwayat pesanan); foto demo tidak pernah dihapus
 
+**Login Google (D21)**
+- [ ] `state` dibandingkan waktu-konstan dengan cookie httpOnly; PKCE S256; `nonce` dicek di ID token
+- [ ] ID token diverifikasi tanda tangan (kunci publik Google), penerbit, audiens, kedaluwarsa, `email_verified`
+- [ ] Admin tidak bisa masuk lewat Google; akun dihapus ditolak; email yang tertaut akun Google lain ditolak
+- [ ] `next` setelah login tetap lewat `amanNext` (cegah open redirect); client secret hanya di server
+
+**Lacak resi (D20)**
+- [ ] Hanya pemilik pesanan atau admin, hanya pesanan Dikirim/Selesai; batas 20/10 menit per pengguna
+- [ ] Kunci Binderbyte hanya di server; resi divalidasi pola sebelum dikirim ke API
+
 **Payment gateway (Midtrans)**
 - [ ] `MIDTRANS_SERVER_KEY` hanya dibaca di server, tanpa prefiks `NEXT_PUBLIC_`
 - [ ] Webhook memverifikasi `signature_key` lalu mengambil ulang status lewat API

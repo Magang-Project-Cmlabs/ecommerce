@@ -4,6 +4,8 @@ import { FormDaftar } from '@/components/auth/form-daftar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
 import { amanNext } from '@/lib/validations/auth';
+import { konfigGoogle } from '@/lib/auth/google';
+import { TombolGoogle } from '@/components/auth/tombol-google';
 
 export const metadata: Metadata = {
   title: 'Daftar',
@@ -24,8 +26,16 @@ export default async function HalamanDaftar({ searchParams }: PageProps<'/daftar
           </CardTitle>
           <CardDescription>Daftar gratis untuk checkout, melacak pesanan, dan menyimpan wishlist.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid gap-4">
           <FormDaftar next={tujuan} />
+          {konfigGoogle() && (
+            <>
+              <TombolGoogle next={tujuan} label="Daftar dengan Google" />
+              <p className="text-muted-foreground text-center text-xs">
+                Dengan mendaftar lewat Google, Anda menyetujui <a href="/syarat-ketentuan" className="underline underline-offset-4">Syarat &amp; Ketentuan</a> dan <a href="/kebijakan-privasi" className="underline underline-offset-4">Kebijakan Privasi</a>.
+              </p>
+            </>
+          )}
         </CardContent>
       </Card>
     </main>

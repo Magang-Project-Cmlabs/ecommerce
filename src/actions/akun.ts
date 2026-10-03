@@ -46,7 +46,7 @@ export async function hapusAkun(raw: HapusAkunInput): Promise<HasilAksiAkun> {
     const blockedHash = await hashPassword(randomBytes(32).toString('hex'));
     await prisma.$transaction(async tx => {
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${user.id} FOR UPDATE`;
-      const changed = await tx.user.updateMany({ where: { id: user.id, deletedAt: null, passwordHash: current.passwordHash }, data: { name: 'Pengguna TokoKita (Dihapus)', email: `deleted-${user.id}@tokokita.invalid`, phone: null, passwordHash: blockedHash, deletedAt: new Date() } });
+      const changed = await tx.user.updateMany({ where: { id: user.id, deletedAt: null, passwordHash: current.passwordHash }, data: { name: 'Pengguna TokoKita (Dihapus)', email: `deleted-${user.id}@tokokita.invalid`, phone: null, passwordHash: blockedHash, googleSub: null, deletedAt: new Date() } });
       if (changed.count !== 1) throw new Error('Account changed');
       await tx.address.deleteMany({ where: { userId: user.id } });
       await tx.passwordResetToken.deleteMany({ where: { userId: user.id } });

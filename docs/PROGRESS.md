@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Fitur lanjutan: ongkir per zona, lacak resi, Login Google (branch, belum di-merge)
+- Branch / PR: `feat/lanjutan-ongkir-resi-google` / PR ke `develop` **ditahan sampai setelah presentasi** (keputusan pemilik). Ketiga fitur tercantum "Di Luar Cakupan" PRD §21; dibuka pemilik (D19–D21).
+- Perubahan: (D19) zona tarif per provinsi tujuan (`wilayah.ts`, `TARIF_ZONA`), pilihan 38 provinsi yang bisa dicari di formulir alamat, validasi nama baku, pengetahuan asisten AI ikut zona; (D20) lacak resi Binderbyte (`src/lib/pengiriman/lacak.ts`, aksi `lacakPesanan`, komponen `LacakPaket` di detail pesanan pembeli & admin, status kurir umum diterjemahkan); (D21) Login Google (route `/api/auth/google` + callback, `google.ts`, `masukAtauDaftarGoogle`, kolom `users.google_sub` lewat migration baru, tombol di masuk/daftar, pesan galat); `.env.example`, skrip pemasang env (grup google/lacak), runbook, audit keamanan, CLAUDE.md aturan 5.
+- Verifikasi: unit PASS (tes baru wilayah, ongkir zona, lacak, Google, callback, aksi lacak) · integrasi MySQL Google PASS (4) · migration lokal + DB uji PASS, `prisma migrate diff` tanpa selisih · E2E commerce + akun PASS (10, termasuk ongkir zona Bali) · lacak paket diuji di browser lokal dengan server tiruan Binderbyte (riwayat tampil) · Login Google lokal dengan konfigurasi tiruan: 307 ke Google dengan PKCE/state/nonce, cookie httpOnly, callback state palsu ditolak · login Google sungguhan dan lacak resi asli NOT_RUN (menunggu kunci pemilik) · migration produksi NOT_RUN (setelah presentasi).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Generator PPT masuk repo; PPT diperbarui akhir sesi
 - Aturan baru pemilik: setiap akhir sesi perbarui semua dokumentasi **dan PPT** (CLAUDE.md, skill `tokokita-perbarui-status`).
 - Generator PPT dipindah dari folder sementara ke `scripts/ppt/` (bangun.cjs, aset/, skrip tangkapan layar, render.ps1, README; `pptxgenjs` dipasang di folder itu saja, bukan dependensi aplikasi; `applyTheme` dari skill lokal opsional lewat `PPTX_APPLY_THEME`).

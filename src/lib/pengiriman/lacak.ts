@@ -18,6 +18,13 @@ const ALAMAT_BAWAAN = 'https://api.binderbyte.com/v1/track';
 export const lacakTersedia = () => !!process.env.LACAK_RESI_API_KEY?.trim();
 export const kurirBisaDilacak = (kurir: string) => kurir in KODE_KURIR;
 
+/** Status ringkasan kurir yang umum, dalam Bahasa Indonesia; selain ini ditampilkan apa adanya. */
+const STATUS_KURIR: Record<string, string> = {
+  'DELIVERED': 'Paket sudah diterima', 'ON PROCESS': 'Dalam pengiriman', 'ON DELIVERY': 'Sedang diantar kurir', 'IN TRANSIT': 'Dalam perjalanan',
+  'PICKED UP': 'Sudah diambil kurir', 'MANIFESTED': 'Data paket diterima kurir', 'RETURNED': 'Dikembalikan ke pengirim', 'CANCELLED': 'Pengiriman dibatalkan',
+};
+export const statusKurir = (status: string) => STATUS_KURIR[status.trim().toUpperCase()] ?? status;
+
 const teks = (nilai: unknown, maks = 300) => (typeof nilai === 'string' ? nilai.trim().slice(0, maks) : '');
 /** Binderbyte memakai "YYYY-MM-DD HH:mm:ss" waktu Indonesia Barat. */
 const waktuWib = (nilai: unknown) => {
@@ -49,5 +56,5 @@ export async function lacakResi(kurir: string, resi: string, ambil: typeof fetch
     .filter((h) => h.keterangan)
     .sort((a, b) => (b.waktu ?? '').localeCompare(a.waktu ?? ''));
   const ringkasan = isi.data.summary ?? {};
-  return { status: 'ok', ringkasan: { status: teks(ringkasan.status, 60) || 'Dalam pengiriman', keterangan: teks(ringkasan.desc) || null }, riwayat };
+  return { status: 'ok', ringkasan: { status: statusKurir(teks(ringkasan.status, 60) || 'ON PROCESS'), keterangan: teks(ringkasan.desc) || null }, riwayat };
 }

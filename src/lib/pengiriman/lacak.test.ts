@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 vi.mock('server-only', () => ({}));
-import { kurirBisaDilacak, lacakResi, lacakTersedia } from './lacak';
+import { kurirBisaDilacak, lacakResi, lacakTersedia, statusKurir } from './lacak';
 
 const sukses = {
   status: 200,
@@ -18,6 +18,12 @@ const balas = (isi: unknown, status = 200) => vi.fn().mockResolvedValue(new Resp
 afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
 
 describe('lacak resi (Binderbyte, D20)', () => {
+  it('status kurir umum diterjemahkan, status lain apa adanya', () => {
+    expect(statusKurir('on process')).toBe('Dalam pengiriman');
+    expect(statusKurir('DELIVERED')).toBe('Paket sudah diterima');
+    expect(statusKurir('WITH COURIER')).toBe('WITH COURIER');
+  });
+
   it('hanya JNE dan SiCepat yang bisa dilacak', () => {
     expect(kurirBisaDilacak('jne_reg')).toBe(true);
     expect(kurirBisaDilacak('sicepat_reg')).toBe(true);
@@ -38,7 +44,7 @@ describe('lacak resi (Binderbyte, D20)', () => {
     const hasil = await lacakResi('jne_reg', 'JNE123456789', ambil);
     expect(hasil).toEqual({
       status: 'ok',
-      ringkasan: { status: 'DELIVERED', keterangan: 'Diterima oleh: BUDI' },
+      ringkasan: { status: 'Paket sudah diterima', keterangan: 'Diterima oleh: BUDI' },
       riwayat: [
         { waktu: '2026-10-04T09:10:00+07:00', keterangan: 'DELIVERED TO [BUDI]', lokasi: 'BANDUNG' },
         { waktu: '2026-10-02T18:00:00+07:00', keterangan: 'SHIPMENT RECEIVED BY JNE COUNTER', lokasi: 'JAKARTA' },

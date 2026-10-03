@@ -41,6 +41,14 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
 - Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini) dan `ASISTEN_CADANGAN_API_KEY` (Groq), keduanya kunci gratis milik pemilik, terpasang di Vercel Preview + Production sejak 3 Okt 2026. Pengaman: topik dibatasi ke belanja di toko, tanpa tools/SQL, batas 20 pertanyaan/10 menit dan 100/hari per pengguna atau IP, 1.500/hari untuk seluruh toko; uji penyalahgunaan 16/16 ditolak. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Mengganti kunci: ubah `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`.
 
+## Fitur lanjutan menunggu rilis (setelah presentasi)
+
+Branch `feat/lanjutan-ongkir-resi-google`: ongkir per zona provinsi (D19), lacak resi Binderbyte (D20),
+Login Google (D21). Pemilik membuat OAuth Client Google dan akun Binderbyte lalu memasang kunci;
+langkah lengkap dan urutan rilis (migration produksi dulu, baru merge) di
+[runbook](runbooks/login-google-dan-lacak-resi.md). Setelah rilis: perbarui PPT dan contekan
+(ongkir luar Jawa berubah; Jawa tetap).
+
 ## Menunggu pemilik
 
 1. Uji manusia di produksi: selesai 3 Okt. Bayar sandbox BCA sampai Dibayar PASS (pesanan uji INV-202610-0001 kemudian dibatalkan admin dengan status pembayaran Dikembalikan; stok Kabel USB-C kembali 62), email "Lupa password" diuji pemilik (aman), password akun admin/pembeli demo produksi sudah diganti pemilik, nama di halaman Midtrans "TokoKita". Berkas lokal `.env.akun-produksi` masih berisi password lama: perbarui atau hapus.
