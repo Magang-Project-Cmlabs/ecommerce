@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-03 — Kevin Ilham / Claude Code — Google Cloud OAuth disiapkan; uji Login Google sungguhan (lokal)
+- Lewat Claude in Chrome (akses dari pemilik): project Google Cloud TokoKita (`tokokita-510509`), layar persetujuan External (centang User Data Policy oleh pemilik), OAuth Client Web "TokoKita Web" dengan redirect URI produksi + localhost:3000, test user email pemilik. Client secret tidak dibaca Claude; pemilik menempelnya di `.env.google` dan memasang ke Vercel (OK semua).
+- Uji sungguhan di localhost:3000 (izin eksplisit pemilik): Masuk dengan Google → pilih akun → layar izin (nama, foto, email) → Lanjutkan → kembali ke TokoKita dengan sapaan "Halo, Kevin Ilham". DB lokal: akun pembeli lama dengan email yang sama ditautkan (`google_sub` terisi) dan password lamanya diganti hash Argon2id acak sesuai perbaikan keamanan. PASS.
+- Catatan: peringatan hydration di mode dev berasal dari atribut sisipan ekstensi browser (`bis_register`, `bis_skin_checked`), bukan dari aplikasi. Publish app menunggu halaman Branding dilengkapi (saat rilis).
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Fitur lanjutan: ongkir per zona, lacak resi, Login Google (branch, belum di-merge)
 - Branch / PR: `feat/lanjutan-ongkir-resi-google` / PR ke `develop` **ditahan sampai setelah presentasi** (keputusan pemilik). Ketiga fitur tercantum "Di Luar Cakupan" PRD §21; dibuka pemilik (D19–D21).
 - Perubahan: (D19) zona tarif per provinsi tujuan (`wilayah.ts`, `TARIF_ZONA`), pilihan 38 provinsi yang bisa dicari di formulir alamat, validasi nama baku, pengetahuan asisten AI ikut zona; (D20) lacak resi Binderbyte (`src/lib/pengiriman/lacak.ts`, aksi `lacakPesanan`, komponen `LacakPaket` di detail pesanan pembeli & admin, status kurir umum diterjemahkan); (D21) Login Google (route `/api/auth/google` + callback, `google.ts`, `masukAtauDaftarGoogle`, kolom `users.google_sub` lewat migration baru, tombol di masuk/daftar, pesan galat); `.env.example`, skrip pemasang env (grup google/lacak), runbook, audit keamanan, CLAUDE.md aturan 5.

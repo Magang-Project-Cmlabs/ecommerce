@@ -43,6 +43,12 @@ Aturan yang perlu diketahui:
   password atau menghapus akun (keduanya meminta password lama), atur dulu password
   lewat **Lupa password**.
 
+Status 3 Okt 2026: project Google Cloud **TokoKita** (`tokokita-510509`), OAuth Client **TokoKita Web**
+dengan kedua redirect URI di atas sudah dibuat; kunci sudah terpasang di Vercel Preview + Production.
+Aplikasi masih **Testing** dengan test user email pemilik. Sebelum **Publish app**, lengkapi halaman
+**Branding** (beranda, kebijakan privasi `/kebijakan-privasi`, syarat `/syarat-ketentuan`, domain
+`ecommerce-peach-seven-47.vercel.app`).
+
 ## B. Lacak resi (Binderbyte)
 
 1. Daftar di https://binderbyte.com, lalu buka dashboard dan salin **API key**.
