@@ -14,9 +14,9 @@ const links = [
 ];
 
 function Merek() {
-  return <Link href="/admin" aria-label="TokoKita, ringkasan admin" className="flex items-baseline gap-2">
+  return <Link href="/admin" className="flex items-baseline gap-2">
     <span className="font-heading text-[1.45rem] font-semibold leading-none tracking-[-0.045em]">TokoKita<span className="text-sale">.</span></span>
-    <span className="rounded-full bg-foreground/[0.07] px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Admin</span>
+    <span className="rounded-full bg-foreground/[0.07] px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Admin</span><span className="sr-only">, ringkasan</span>
   </Link>;
 }
 

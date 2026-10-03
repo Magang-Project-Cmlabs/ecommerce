@@ -33,7 +33,7 @@ export default async function Navbar() {
     <PitaPengumuman />
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto] items-center gap-x-2 px-4 py-2 md:px-6 lg:grid-cols-[1fr_auto_1fr] lg:py-3">
-        <Link href="/" aria-label="TokoKita, beranda" className="justify-self-start font-heading text-[1.6rem] font-semibold leading-none tracking-[-0.045em]">TokoKita<span aria-hidden className="text-sale">.</span></Link>
+        <Link href="/" className="justify-self-start font-heading text-[1.6rem] font-semibold leading-none tracking-[-0.045em]">TokoKita<span aria-hidden className="text-sale">.</span><span className="sr-only">, beranda</span></Link>
 
         <nav aria-label="Katalog" className="hidden items-center gap-1 lg:flex">
           <Link href="/produk" className={tautanNav}>Semua Produk</Link>
