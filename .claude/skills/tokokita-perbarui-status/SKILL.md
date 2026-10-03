@@ -1,6 +1,6 @@
 ---
 name: tokokita-perbarui-status
-description: Memperbarui docs/PROJECT_STATUS.md, docs/PROGRESS.md, dan docs/SERAH_TERIMA.md setelah kartu selesai, bug diperbaiki, verifikasi dijalankan, atau keputusan diambil, agar dokumen status TokoKita selalu sesuai kenyataan kode. Pakai di akhir tugas atau akhir sesi.
+description: Memperbarui docs/PROJECT_STATUS.md, docs/PROGRESS.md, docs/SERAH_TERIMA.md, dan PPT presentasi setelah kartu selesai, bug diperbaiki, verifikasi dijalankan, atau keputusan diambil, agar dokumen status TokoKita selalu sesuai kenyataan kode. Pakai di akhir tugas atau akhir sesi.
 ---
 
 # Memperbarui Status TokoKita
@@ -24,6 +24,7 @@ salah lebih buruk daripada tidak ada status.
 | `docs/SERAH_TERIMA.md` | Timpa: branch aktif, perubahan belum di-commit, pekerjaan setengah jadi, langkah berikutnya | Menyalin isi PROGRESS |
 | `docs/OPEN_DECISIONS.md` | Pindahkan butir yang diputuskan ke "Sudah diputuskan" + tanggal | Menghapus konteks keputusan |
 | `docs/GLOSSARY.md` | Konstanta/label baru yang dikunci di `constants.ts` | — |
+| `docs/Presentasi_ECommerce_TokoKita.pptx` | **Setiap akhir sesi** (aturan pemilik, 3 Okt 2026): angka uji, fitur, status online, risiko lewat `scripts/ppt/bangun.cjs`; render dan periksa slide yang berubah (`scripts/ppt/README.md`) | Mengedit PPTX langsung di PowerPoint (perubahan hilang saat dibangun ulang) |
 
 ## 3. Aturan
 

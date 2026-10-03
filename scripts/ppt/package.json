@@ -1,0 +1,12 @@
+{
+  "name": "tokokita-ppt",
+  "private": true,
+  "description": "Generator PPT presentasi TokoKita (alat dokumentasi, bukan dependensi aplikasi)",
+  "type": "commonjs",
+  "scripts": {
+    "bangun": "node bangun.cjs ../../docs/Presentasi_ECommerce_TokoKita.pptx"
+  },
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}

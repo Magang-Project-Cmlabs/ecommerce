@@ -37,17 +37,17 @@ dan uji manusia di produksi (lihat bagian 6).
 |---|---|---|
 | `npm run typecheck` | PASS | Next typegen + TypeScript |
 | `npm run lint` (seluruh repo) | PASS | Tanpa error ESLint |
-| `npm run test` | PASS | 459 lulus, 2 dilewati (47 berkas) |
+| `npm run test` | PASS | 475 lulus, 2 dilewati (sesi 3 Okt sore) |
 | `npm run test:integration` | PASS | 30 tes MySQL nyata (7 berkas): transaksi, race stok, auth, batas percobaan, settlement |
 | `npx prisma validate` | PASS | 15 tabel bisnis + `auth_rate_limits` |
 | `npm run build` | PASS | Build production Next.js 16.3.6 |
-| `npm run e2e` (Chrome desktop + HP 360 px) | PASS | 86 lulus, 1 dilewati: aksesibilitas, navigasi, katalog, akun, admin (modal), transaksi, ulasan, lupa password, asisten, responsif |
+| `npm run e2e` (Chrome desktop + HP 360 px) | PASS | 87 lulus, 1 dilewati: aksesibilitas, navigasi, katalog, akun, admin (modal), transaksi, ulasan, lupa password, asisten, responsif |
 | `npm audit --omit=dev` | PASS | 0 kerentanan setelah `shadcn` (alat CLI) dipindah ke devDependencies; advisori `braces` hanya menyentuh alat pengembangan |
 | axe (WCAG 2.2 AA) terang + gelap | PASS | 0 pelanggaran serius/kritis di halaman publik, admin, modal, pilihan terbuka, panel asisten |
 | Lighthouse produksi seluler (Chrome bersih) | PASS / FAIL | Beranda **98**, LCP 1,7 s · katalog 96, LCP 2,5 s · detail 91, LCP 3,1 s (simulasi; render delay dari streaming). Throttling devtools: katalog 2,5 s, detail 2,4 s. Font judul tidak lagi dipreload: build lokal LCP katalog 2,33 → 2,17 s, detail 2,21 → 2,10 s (median 3 run), CLS 0 |
 | Asisten AI di produksi | PASS | Jawaban benar (metode bayar, rekomendasi produk + tautan, ongkir 2,5 kg = Rp 45.000); 16/16 upaya penyalahgunaan ditolak (Gemini dan Groq) |
 | Suite lintas browser penuh (Edge, Firefox, WebKit) | NOT_RUN hari ini | Terakhir 1 Okt: 299/310 lalu 28/28 setelah isi ulang stok DB uji; diulang bila ada perubahan lintas browser |
-| PPT diperbarui | PASS | 22 slide dibangun ulang dengan tema monokrom; validator PPTX PASS; dirender di PowerPoint dan diperiksa per slide |
+| PPT diperbarui | PASS | 22 slide dari generator `scripts/ppt/` (diperbarui tiap akhir sesi); versi terakhir 3 Okt: angka uji 475/87, LCP katalog 2,3 / detail 2,2 dtk, backup harian, uji bayar produksi; validator PPTX PASS; slide 7, 18, 20, 21 dirender dan diperiksa |
 
 ## 4. Layanan online (produksi)
 

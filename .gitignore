@@ -59,3 +59,9 @@ Thumbs.db
 /src/generated/prisma
 
 .vercel
+
+# Generator PPT: hasil sementara
+scripts/ppt/node_modules/
+scripts/ppt/img/
+scripts/ppt/render/
+scripts/ppt/*.pptx

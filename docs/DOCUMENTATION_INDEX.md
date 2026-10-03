@@ -25,7 +25,7 @@ dokumen berselisih, dokumen di kolom **Pemilik** yang benar.
 | [`PRD - E-Commerce.md`](PRD%20-%20E-Commerce.md) | Spesifikasi | Fitur, aturan bisnis, skema DB, keamanan, desain |
 | [`PRD_CHECKOUT_AKUN.md`](PRD_CHECKOUT_AKUN.md) | Spesifikasi | Detail fitur Checkout Langkah 3 & 4, Pesanan Berhasil, dan Halaman Akun |
 | [`runbooks/backup-restore.md`](runbooks/backup-restore.md) | Runbook | Backup harian terenkripsi database produksi, pesanan otomatis tiap jam, cara memulihkan |
-| [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | 22 slide (versi 3 Okt 2026, tema monokrom sesuai web, catatan pembicara di tiap slide): 6 tech stack, 7 arsitektur, 8 database, 9 alur status, 10–14 tangkapan layar (beranda, katalog, detail, checkout, admin), 15 mode gelap & Tanya AI, 16 pembagian peran, 17 alur kerja tim, 18 kualitas, 19 keamanan, 20 risiko, 21 demo & rilis |
+| [`Presentasi_ECommerce_TokoKita.pptx`](Presentasi_ECommerce_TokoKita.pptx) | Spesifikasi | 22 slide (dibangun dari [`scripts/ppt/`](../scripts/ppt/README.md), diperbarui tiap akhir sesi; versi 3 Okt 2026, tema monokrom sesuai web, catatan pembicara di tiap slide): 6 tech stack, 7 arsitektur, 8 database, 9 alur status, 10–14 tangkapan layar (beranda, katalog, detail, checkout, admin), 15 mode gelap & Tanya AI, 16 pembagian peran, 17 alur kerja tim, 18 kualitas, 19 keamanan, 20 risiko, 21 demo & rilis |
 | [`KREDIT_FOTO.md`](KREDIT_FOTO.md) | Referensi | Sumber dan lisensi foto produk demo |
 | [`DEMO.md`](DEMO.md) | Prosedur | Naskah demo 7 menit, status kesiapan, latihan otomatis |
 | [`trello-board-plan.md`](trello-board-plan.md) | Rencana | Kartu per anggota, urutan Blocker |
