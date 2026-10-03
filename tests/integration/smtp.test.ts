@@ -13,6 +13,7 @@ const sockets = new Set<Socket>();
 const messages: string[] = [];
 const committedAtSMTP: number[] = [];
 let rejectMessage = false;
+let rejectedCount = 0;
 let categoryId = 0;
 let productId = 0;
 let addressId = 0;
@@ -35,7 +36,7 @@ function startSMTP(socket: Socket) {
       if (dataMode) {
         if (line === '.') {
           dataMode = false;
-          if (rejectMessage) socket.write('552 Requested mail action aborted: test rejection\r\n');
+          if (rejectMessage) { rejectedCount++; socket.write('552 Requested mail action aborted: test rejection\r\n'); }
           else {
             const raw = message.join('\r\n');
             const invoice = raw.match(/INV-\d{6}-\d{4,9}/)?.[0];
@@ -92,7 +93,8 @@ describe('SMTP loopback dengan transaksi pesanan nyata', () => {
     const result = await buatPesanan(input());
     expect(result.ok, JSON.stringify(result)).toBe(true);
     if (!result.ok) throw new Error('Pesanan gagal');
-    expect(messages).toHaveLength(1);
+    // Email dikirim setelah respons (after/tanpa ditunggu): tunggu sampai SMTP menerimanya.
+    await vi.waitFor(() => expect(messages).toHaveLength(1), { timeout: 10_000 });
     expect(committedAtSMTP).toEqual([1]);
     expect(messages[0]).toContain(result.orderNumber);
     expect(messages[0]).toContain(`smtp-${stamp}@example.test`);
@@ -110,6 +112,7 @@ describe('SMTP loopback dengan transaksi pesanan nyata', () => {
     expect(persisted.status).toBe('confirmed'); expect(persisted.paymentStatus).toBe('unpaid');
     expect(persisted.items).toHaveLength(1); expect(persisted.statusLogs).toHaveLength(1);
     expect((await prisma.product.findUniqueOrThrow({ where: { id: productId } })).stock).toBe(before - 1);
+    await vi.waitFor(() => expect(rejectedCount).toBe(1), { timeout: 10_000 });
     expect(messages).toHaveLength(count);
   });
 });

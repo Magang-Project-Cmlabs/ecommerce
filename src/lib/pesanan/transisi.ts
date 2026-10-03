@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 import { Prisma } from '@/generated/prisma/client';
 import { transisiStatusBoleh, LABEL_STATUS_PESANAN, type OrderStatus, type PelakuTransisi } from './status';
 import { BusinessValidationError, cobaUlangTransaksi, PaymentAttemptChangedError } from './galat';
-import { kirimNotifikasiPesanan } from './notifikasi';
+import { jadwalkanNotifikasiPesanan } from './jadwal-notifikasi';
 export type DataTransisi = { alasan?: string; trackingNumber?: string; changedById?: number | null; paymentType?: string; paymentTransactionId?: string; gatewayVerified?: boolean; gatewayExpiredTransactionId?: string };
 export async function ubahStatus(orderId: number, ke: OrderStatus, pelaku: PelakuTransisi, data?: DataTransisi) {
   const result = await cobaUlangTransaksi(() => prisma.$transaction(async tx => {
@@ -87,6 +87,6 @@ export async function ubahStatus(orderId: number, ke: OrderStatus, pelaku: Pelak
     await tx.orderStatusLog.create({ data: { orderId, status: ke, note, changedById: pelaku === 'sistem' ? null : data?.changedById ?? null } });
     return tx.order.findUnique({ where: { id: orderId }, include: { items: true, statusLogs: { orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] } } });
   }, { isolationLevel: 'ReadCommitted', timeout: 15000, maxWait: 10000 }));
-  await kirimNotifikasiPesanan(orderId);
+  jadwalkanNotifikasiPesanan(orderId);
   return result;
 }
