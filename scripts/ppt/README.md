@@ -17,6 +17,7 @@ perubahan fitur, angka uji, atau status online.
 | `ambil.cjs` | Mengambil tangkapan layar baru dari server uji lokal `http://localhost:3002` ke `img/` (akun dari `tests/e2e/.env.e2e`, tidak dicetak). |
 | `ambil-asisten.cjs` | Tangkapan layar panel "Tanya AI" dari situs produksi (memakai kuota AI gratis). |
 | `aset.cjs` | Mengolah `img/*.png` menjadi `aset/` (sudut membulat, garis tipis) dan membuat ikon. |
+| `ambil-foto.cjs` | Mengunduh foto profil GitHub publik kelima anggota ke `aset/foto-<akun>.png` (bulat, 400 px) untuk slide 2. Jalankan ulang bila ada yang mengganti foto. |
 | `erd.cjs` | Membuat `aset/erd.png` (slide ERD) dari `prisma/schema.prisma` lewat Graphviz `dot`. Jalankan ulang bila skema berubah. |
 | `render.ps1` | Merender setiap slide ke PNG lewat PowerPoint untuk diperiksa; `-Pdf <path>` sekaligus menyimpan PDF. |
 

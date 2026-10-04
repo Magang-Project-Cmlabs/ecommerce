@@ -81,15 +81,16 @@ s.addNotes('Perkenalkan tim dan tujuan presentasi: TokoKita adalah toko online m
 
 // ---------- 2. Anggota tim (hanya nama; ketua lebih dulu, lalu urut abjad) ----------
 s = isi('Pembuka', 'Anggota tim', 'Tim di balik TokoKita');
-[['Azrian Dalimunthe', true], ['Doni Anggara'], ['Kevin Ilham'], ['Rizki Kusnadi'], ['Zulfikar Satya Nugraha']]
-  .forEach(([nama, ketua], i) => {
+// Foto = avatar GitHub publik (aset/foto-<akun>.png dari ambil-foto.cjs).
+[['Azrian Dalimunthe', 'azridalimunthe7', true], ['Doni Anggara', 'astroceilo'], ['Kevin Ilham', 'kvnlhm'], ['Rizki Kusnadi', 'rizkikusnadi03'], ['Zulfikar Satya Nugraha', 'fikarnugraha18']]
+  .forEach(([nama, akun, ketua], i) => {
     const x = 0.6 + i * 2.48, gelap = !!ketua;
     ubin(s, x, 2.05, 2.3, 4.5, gelap ? W.tinta : W.ubin);
-    const inisial = nama.split(' ').slice(0, 2).map((k) => k[0]).join('');
-    s.addShape(pres.shapes.OVAL, { x: x + 0.6, y: 3.05, w: 1.1, h: 1.1, fill: { color: gelap ? W.putih : W.tinta }, line: { type: 'none' } });
-    teks(s, inisial, { x: x + 0.6, y: 3.05, w: 1.1, h: 1.1, fontFace: H, fontSize: 26, color: gelap ? W.tinta : W.putih, align: 'center', valign: 'middle' });
-    teks(s, nama, { x: x + 0.2, y: 4.5, w: 1.9, h: 0.75, fontFace: H, fontSize: 16, color: gelap ? W.putih : W.tinta, align: 'center', valign: 'top' });
-    if (ketua) pil(s, x + 0.51, 5.15, 'Ketua tim', true);
+    s.addImage({ path: A(`foto-${akun}.png`), x: x + 0.5, y: 2.75, w: 1.3, h: 1.3, altText: `Foto profil ${nama}` });
+    // Garis tepi agar avatar berlatar terang (ikon bawaan GitHub) tetap terlihat bulat di kartu abu.
+    s.addShape(pres.shapes.OVAL, { x: x + 0.5, y: 2.75, w: 1.3, h: 1.3, fill: { color: W.putih, transparency: 100 }, line: { color: gelap ? W.gelap3 : 'D4D4D4', width: 1.5 } });
+    teks(s, nama, { x: x + 0.2, y: 4.35, w: 1.9, h: 0.75, fontFace: H, fontSize: 16, color: gelap ? W.putih : W.tinta, align: 'center', valign: 'top' });
+    if (ketua) pil(s, x + 0.51, 5.0, 'Ketua tim', true);
   });
 s.addNotes('Perkenalkan anggota satu per satu. Azrian Dalimunthe adalah ketua tim.');
 

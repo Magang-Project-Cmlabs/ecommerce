@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-04 — Kevin Ilham / Claude Code — PPT: foto profil anggota
+- Branch / PR: docs/ppt-foto-anggota
+- Perubahan: slide 2 memakai foto profil GitHub publik tiap anggota (permintaan pemilik) menggantikan lingkaran inisial; `scripts/ppt/ambil-foto.cjs` (baru) mengunduh dan memotongnya bulat ke `aset/foto-<akun>.png`, avatar transparan diberi latar putih, semua foto diberi garis tepi tipis.
+- Verifikasi: render PowerPoint 25 slide PASS (slide 2 diperiksa) · ekspor PDF PASS · kode aplikasi tidak berubah (typecheck/test/build NOT_RUN: tidak relevan).
+- Catatan: `rizkikusnadi03` dan `fikarnugraha18` belum memasang foto profil, jadi yang tampil ikon bawaan GitHub; setelah mereka mengunggah foto, jalankan `node ambil-foto.cjs` lalu bangun ulang PPT + PDF.
+
 ### 2026-10-04 — Kevin Ilham / Claude Code — PPT: slide anggota tim setelah cover
 - Branch / PR: docs/ppt-slide-anggota
 - Perubahan: atas permintaan pemilik, nama anggota tampil di slide 2 (setelah cover) tanpa peran: Azrian Dalimunthe (ketua tim, kartu gelap), lalu urut abjad Doni Anggara, Kevin Ilham, Rizki Kusnadi, Zulfikar Satya Nugraha. Slide pembagian peran (kini 18) kembali tanpa nama dan diberi judul "Pembagian modul kerja tim". PPT jadi 25 slide; rujukan nomor slide alur kerja di CONTRIBUTING, OPEN_DECISIONS, trello-board-plan dibetulkan (sudah meleset sejak slide ERD ditambahkan).
