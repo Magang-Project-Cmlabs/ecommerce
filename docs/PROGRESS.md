@@ -15,6 +15,13 @@ Format entri:
 
 ---
 
+### 2026-10-04 — Kevin Ilham / Claude Code — PPT: slide ERD, slide tautan, versi PDF
+- Branch / PR: docs/ppt-erd-tautan-pdf
+- Latar: pemilik membandingkan dengan contoh presentasi akhir (ekspor PDF dari slide) yang punya slide ERD dan tautan repo. Keputusan: tetap satu sumber (PPTX dari generator), PDF diekspor dari PPTX yang sama, bukan dokumen terpisah.
+- Perubahan: `scripts/ppt/erd.cjs` (baru) membuat `aset/erd.png` dari `prisma/schema.prisma` lewat Graphviz (15 tabel, 20 relasi, notasi crow's foot, kolom kunci saja); slide 9 "Relasi antar tabel (ERD)" dan slide 23 "Tautan proyek" (situs publik; repo GitHub dan Trello ditandai privat sesuai cek HTTP 404/401); PPT jadi 24 slide; `render.ps1 -Pdf` mengekspor `docs/Presentasi_ECommerce_TokoKita.pdf`; PPTX kini dikompresi (`stream({ compression: true })`, karena `writeFile` pptxgenjs 3.12 di Node mengabaikan opsi itu). README generator, README, MULAI_DI_SINI, DOCUMENTATION_INDEX, SERAH_TERIMA, PROJECT_STATUS, skill perbarui-status disesuaikan.
+- Verifikasi: render PowerPoint 24 slide PASS (semua dilihat di lembar kontak; slide 9, 23, 24 diperiksa penuh) · ekspor PDF PASS (24 halaman, teks bisa dicari, 3 tautan bisa diklik) · lint PASS · kode aplikasi tidak berubah (typecheck/test/build NOT_RUN: tidak relevan).
+- Catatan: slide 17 masih "Anggota 1–5"; isi nama bila diinginkan lalu bangun ulang PPT + PDF.
+
 ### 2026-10-03 — Kevin Ilham / Claude Code — Catatan resi demo
 - Pemilik mengecek resi `SCP108158466` (pesanan seed INV-202609-0014) di sicepat.com: "Nomor resi tidak ditemukan". Penyebab: `prisma/seed.ts` membuat resi acak, bukan resi kiriman nyata; tombol "Cek di situs kurir" tetap bekerja (membuka situs resmi + menyalin resi).
 - Dokumen diperjelas: PROJECT_STATUS (hasil lacak paket sungguhan NOT_RUN), SERAH_TERIMA, runbook login-google-dan-lacak-resi, catatan pembicara PPT slide 5. Kode tidak berubah.

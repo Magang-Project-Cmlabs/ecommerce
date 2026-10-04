@@ -1,5 +1,6 @@
 // Generator deck TokoKita (diperbarui 3 Okt 2026, lihat README.md): tema monokrom seperti situs (hitam/putih/abu, aksen merah kecil),
 // layout gelap untuk pembuka/sorotan/penutup, layout isi untuk slide lain. Jalankan: node bangun.cjs <keluar.pptx>
+const fs = require('fs');
 const path = require('path');
 const pptxgen = require('pptxgenjs');
 // applyTheme (nama tema + palet di XML) berasal dari skill pptx lokal dan tidak disalin ke repo.
@@ -162,7 +163,18 @@ s = isi('Teknologi', 'Rancangan database', '15 tabel MySQL dalam 4 kelompok');
   .forEach(([j, k], i) => { const x = 0.6 + i * 3.1; teks(s, j, { x, y: 5.4, w: 2.9, h: 0.32, fontFace: H, fontSize: 13 }); teks(s, k, { x, y: 5.73, w: 2.9, h: 0.6, fontSize: 11.5, color: W.redup }); });
 s.addNotes('Tunjukkan pengelompokan tabel. Tekankan aturan data: uang INT, snapshot pesanan, stok per varian. Satu tabel tambahan dipakai untuk membatasi percobaan login dan pertanyaan ke asisten AI.');
 
-// ---------- 9. Status pesanan ----------
+// ---------- 9. ERD (gambar dibangun dari prisma/schema.prisma oleh erd.cjs) ----------
+s = isi('Teknologi', 'Entity relationship diagram', 'Relasi antar tabel (ERD)');
+[['||', 'tepat satu'], ['o|', 'nol atau satu'], ['o<', 'nol atau banyak']].forEach(([sim, ket], i) => {
+  const x = 7.35 + i * 1.82;
+  teks(s, sim, { x, y: 1.12, w: 0.42, h: 0.3, fontFace: 'Consolas', fontSize: 13, color: W.tinta });
+  teks(s, ket, { x: x + 0.42, y: 1.14, w: 1.38, h: 0.3, fontSize: 11, color: W.redup });
+});
+teks(s, 'PK kunci utama · FK kunci tamu · UQ unik · kolom lain diringkas', { x: 7.35, y: 1.48, w: 5.4, h: 0.28, fontSize: 10.5, color: W.redup });
+gambar(s, 'erd', 0.6, 1.95, 12.13);
+s.addNotes('Diagram dibuat otomatis dari schema.prisma, jadi selalu sama dengan database. Pusatnya users dan products: satu pengguna punya banyak alamat, pesanan, ulasan, dan wishlist; satu produk punya banyak foto, varian, dan item pesanan. order_items menyimpan salinan nama dan harga, dan satu item pesanan paling banyak satu ulasan. promo_usages mengunci satu promo per pesanan. banners berdiri sendiri. Tabel auth_rate_limits tidak digambar karena tidak berelasi.');
+
+// ---------- 10. Status pesanan ----------
 s = isi('Teknologi', 'Aturan bisnis', 'Alur status pesanan, dari dibuat sampai selesai');
 const alur = [['Menunggu Pembayaran', 'F59E0B', 'Batas bayar 24 jam'], ['Dikonfirmasi', '3B82F6', 'Dibayar atau COD'], ['Dikemas', '8B5CF6', 'Admin menyiapkan barang'], ['Dikirim', '0EA5E9', 'Admin wajib input resi'], ['Selesai', '10B981', 'Pembeli terima / otomatis 7 hari']];
 const lebarAlur = [2.35, 1.75, 1.4, 1.3, 1.25]; let xAlur = 0.6;
@@ -173,7 +185,7 @@ teks(s, 'Lewat batas bayar, oleh pembeli sebelum bayar, atau oleh admin (wajib a
   .forEach(([ik, j, k], i) => { const x = 0.6 + i * 4.15; ubin(s, x, 4.55, 3.85, 1.95); lingkaranIkon(s, x + 0.3, 4.85, 0.55, ik); teks(s, j, { x: x + 1.0, y: 4.9, w: 2.7, h: 0.36, fontFace: H, fontSize: 14 }); teks(s, k, { x: x + 0.3, y: 5.55, w: 3.3, h: 0.85, fontSize: 11.5, color: W.redup }); });
 s.addNotes('Lencana dan warnanya sama persis dengan yang tampil di aplikasi. Jelaskan siapa yang mengubah tiap status; pesanan tidak dibayar 24 jam dibatalkan otomatis oleh cron.');
 
-// ---------- 10–14. Tampilan aplikasi ----------
+// ---------- 11–15. Tampilan aplikasi ----------
 pres.addSection({ title: 'Tampilan aplikasi' });
 function tampilan(eyebrow, judul, img, butir, kiri, catatan, gelapImg = false) {
   const s = isi('Tampilan aplikasi', eyebrow, judul);
@@ -193,7 +205,7 @@ gambar(s, 'admin-modal-potong', 5.35, 3.3, 3.25);
 catatanBernomor(s, 8.8, 2.15, 3.95, [['Ringkasan harian', 'Pesanan hari ini, omzet 7 dan 30 hari.'], ['Peringatan stok', 'Produk dengan stok ≤ 5 ditandai.'], ['Tambah & edit di modal', 'Form tampil di atas daftar.'], ['Lencana status', 'Pil netral dengan titik warna.']]);
 s.addNotes('Panel admin memakai bahasa visual yang sama dengan toko, terlihat di sini dalam mode gelap. Tambah dan edit produk, kategori, promo, banner muncul sebagai modal.');
 
-// ---------- 15. Sorotan: mode gelap & asisten AI ----------
+// ---------- 16. Sorotan: mode gelap & asisten AI ----------
 s = pres.addSlide({ masterName: 'GELAP', sectionTitle: 'Tampilan aplikasi' });
 pil(s, 0.6, 0.45, 'Sorotan', true);
 s.addText('Mode gelap dan asisten "Tanya AI"', { placeholder: 'judul' });
@@ -203,14 +215,14 @@ teks(s, 'Asisten belanja, bukan chatbot serba bisa', { x: 6.45, y: 2.1, w: 6.3, 
 teks(s, ['Menjawab produk, harga, ongkir, pembayaran, dan pesanan dari data toko.', 'Menolak coding, PR, puisi, SQL, dan jailbreak: 16/16 uji ditolak.', 'Tanpa akses database atau alat; hanya membalas teks.', 'Data kartu, NIK, password disamarkan, tidak dikirim.', 'Dibatasi per pengguna/IP, harian, dan global.'].map((t, k, arr) => ({ text: t, options: { bullet: true, breakLine: k < arr.length - 1 } })), { x: 6.45, y: 2.8, w: 6.0, h: 3.6, fontSize: 14, color: 'D4D4D4', paraSpaceAfter: 10 });
 s.addNotes('Mode gelap tersedia di seluruh toko dan admin. Asisten "Tanya AI" memakai Gemini dengan cadangan Groq, keduanya gratis tanpa kartu. Contoh di layar: rekomendasi produk dijawab dengan tautan, permintaan kode Python ditolak.');
 
-// ---------- 16. Tim ----------
+// ---------- 17. Tim ----------
 pres.addSection({ title: 'Tim & cara kerja' });
 s = isi('Tim & cara kerja', 'Struktur tim', 'Pembagian peran 5 anggota');
 [['Arsitektur & data', ['Skema database & Prisma', 'Login & keamanan', 'Review Pull Request']], ['Frontend katalog', ['Beranda & banner', 'Pencarian & filter', 'Halaman detail produk']], ['Frontend transaksi', ['Keranjang (drawer)', 'Buku alamat', 'Checkout 4 langkah']], ['Backend pesanan', ['Ongkir & kode promo', 'Email notifikasi', 'Batal otomatis 24 jam']], ['Admin panel & QA', ['Dashboard & stok menipis', 'Status pesanan & resi', 'Uji di berbagai HP']]]
   .forEach(([peran, tugas], i) => { const x = 0.6 + i * 2.48; ubin(s, x, 2.05, 2.3, 4.5); teks(s, `0${i + 1}`, { x: x + 0.28, y: 2.3, w: 1, h: 0.5, fontFace: H, fontSize: 24, color: W.redup }); teks(s, `Anggota ${i + 1}`, { x: x + 0.28, y: 2.95, w: 1.8, h: 0.3, fontSize: 11.5, color: W.redup }); teks(s, peran, { x: x + 0.28, y: 3.25, w: 1.85, h: 0.7, fontFace: H, fontSize: 15 }); teks(s, tugas.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < tugas.length - 1 } })), { x: x + 0.28, y: 4.1, w: 1.85, h: 2.2, fontSize: 11.5, color: W.redup, paraSpaceAfter: 6 }); });
 s.addNotes('Isi nama tiap anggota saat presentasi. Pembagian mengikuti modul PRD agar tiap orang punya area yang jelas dan jarang bentrok.');
 
-// ---------- 17. Alur kerja ----------
+// ---------- 18. Alur kerja ----------
 s = isi('Tim & cara kerja', 'Alur kerja tim', 'Cara 5 orang bekerja tanpa kode bertabrakan');
 teks(s, 'ALUR GIT & GITHUB', { x: 0.6, y: 2.1, w: 5, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
 [['Branch fitur', 'feat/… atau fix/… dari develop'], ['Commit kecil', 'Satu commit untuk satu perubahan'], ['Pull Request', 'Deskripsi + tangkapan layar'], ['CI otomatis', 'Typecheck, lint, test, build, MySQL'], ['Review & merge', 'Ke develop; develop → main per tahap']]
@@ -221,7 +233,7 @@ teks(s, 'PAPAN TUGAS TRELLO', { x: 6.78, y: 2.1, w: 5, h: 0.25, fontFace: H, fon
   .forEach(([ik, j, k], i) => { const y = 4.7 + i * 0.66; lingkaranIkon(s, 6.78, y, 0.48, ik); teks(s, j, { x: 7.4, y, w: 5.3, h: 0.28, fontFace: H, fontSize: 12.5 }); teks(s, k, { x: 7.4, y: y + 0.27, w: 5.3, h: 0.3, fontSize: 11, color: W.redup }); });
 s.addNotes('Alur Git berbasis branch per fitur dan Pull Request dengan CI otomatis di GitHub Actions, papan Trello untuk tugas, serta kebiasaan tim yang menjaga kode tidak bertabrakan.');
 
-// ---------- 18. Kualitas ----------
+// ---------- 19. Kualitas ----------
 pres.addSection({ title: 'Kualitas & demo' });
 s = isi('Kualitas & demo', 'Standar kualitas', 'Hasil uji yang terukur, 3 Oktober 2026');
 [['98', 'Lighthouse beranda HP', 'Situs online, LCP 1,7 dtk'], ['551', 'Unit test lulus', '+ 34 tes integrasi MySQL'], ['88', 'Tes E2E browser lulus', 'Alur pembeli & admin nyata'], ['0', 'Pelanggaran aksesibilitas serius', 'axe, mode terang & gelap']]
@@ -231,13 +243,13 @@ teks(s, 'TARGET PRD', { x: 0.6, y: 4.7, w: 4, h: 0.25, fontFace: H, fontSize: 9.
   .forEach(([j, k], i) => { const x = 0.6 + (i % 2) * 6.18, y = 5.05 + Math.floor(i / 2) * 0.78; teks(s, j, { x, y, w: 5.9, h: 0.3, fontFace: H, fontSize: 12.5 }); teks(s, k, { x, y: y + 0.3, w: 5.9, h: 0.35, fontSize: 11, color: W.redup }); });
 s.addNotes('Semua angka hasil pengujian nyata pada 3 Oktober 2026. Kecepatan diukur dengan Lighthouse dan HP yang diperlambat (Slow 4G). Pada mode simulasi Lighthouse, halaman detail masih sekitar 3 detik; ini catatan perbaikan lanjutan.');
 
-// ---------- 19. Keamanan ----------
+// ---------- 20. Keamanan ----------
 s = isi('Kualitas & demo', 'Keamanan & regulasi', 'Melindungi data pembeli dan transaksi toko');
 [['ShieldCheck', 'Privasi data', 'UU PDP No. 27/2022', ['Data pembeli hanya untuk pengiriman', 'Persetujuan privasi saat daftar', 'Pengguna bisa menghapus akun']], ['Lock', 'Akun & hak akses', 'Login dan peran', ['Argon2id + Login Google (PKCE)', 'Login maks. 5 percobaan / 15 menit', 'Panel admin khusus peran admin']], ['Scale', 'Transaksi adil', 'Stok & pembayaran', ['Batas bayar 24 jam', 'Stok kembali saat batal', 'Webhook Midtrans dicek tanda tangannya']], ['Bot', 'Asisten AI aman', 'Pengaman berlapis', ['Topik ketat, tolak di luar toko', 'Tanpa akses database/alat', 'Rate limit + data sensitif disamarkan']]]
   .forEach(([ik, j, sub, butir], i) => { const x = 0.6 + i * 3.1, gelap = i === 3; ubin(s, x, 2.05, 2.9, 4.5, gelap ? W.tinta : W.ubin); lingkaranIkon(s, x + 0.3, 2.35, 0.6, ik, !gelap); teks(s, j, { x: x + 0.3, y: 3.15, w: 2.4, h: 0.36, fontFace: H, fontSize: 15, color: gelap ? W.putih : W.tinta }); teks(s, sub, { x: x + 0.3, y: 3.5, w: 2.4, h: 0.3, fontSize: 11, color: gelap ? W.abuGelap : W.redup }); teks(s, butir.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < butir.length - 1 } })), { x: x + 0.3, y: 4.0, w: 2.4, h: 2.4, fontSize: 11.5, color: gelap ? 'D4D4D4' : W.tinta, paraSpaceAfter: 6 }); });
 s.addNotes('Kepatuhan UU PDP, keamanan akun dengan Argon2id dan pembatasan percobaan, Login Google dengan OAuth + PKCE (admin tetap wajib password), aturan transaksi yang adil, dan pengaman asisten AI.');
 
-// ---------- 20. Risiko ----------
+// ---------- 21. Risiko ----------
 s = isi('Kualitas & demo', 'Manajemen risiko', 'Risiko yang diantisipasi dan hasilnya');
 const kepala = (t) => ({ text: t, options: { fontFace: H, fontSize: 10.5, color: W.redup, fill: { color: W.ubin }, margin: [4, 8, 4, 8] } });
 const sel = (t, o = {}) => ({ text: t, options: { fontSize: 11, color: W.tinta, margin: [5, 8, 5, 8], ...o } });
@@ -252,7 +264,7 @@ s.addTable([
 ], { x: 0.6, y: 2.05, w: 12.13, colW: [3.3, 1.2, 4.3, 3.33], border: { type: 'solid', pt: 0.75, color: W.garis }, fontFace: B, valign: 'middle', rowH: 0.62 });
 s.addNotes('Risiko terbesar ada di sisi tim, bukan teknis. Kolom Hasil menunjukkan bagaimana mitigasi itu berjalan sampai akhir proyek.');
 
-// ---------- 21. Demo & rilis ----------
+// ---------- 22. Demo & rilis ----------
 s = isi('Kualitas & demo', 'Demo & rilis', 'Skenario demo 7 menit dan lingkungan rilis');
 teks(s, 'SKENARIO DEMO', { x: 0.6, y: 2.1, w: 5, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
 ['Pembeli mencari produk dan memilih varian', 'Checkout dengan kode HEMAT10 (min. Rp 100.000)', 'Admin konfirmasi bayar, kemas, input resi', 'Pembeli terima pesanan dan beri ulasan', 'Pesanan lewat batas bayar batal otomatis', 'Bonus: tanya asisten AI & ganti mode gelap']
@@ -263,7 +275,34 @@ teks(s, 'Lingkungan rilis', { x: 7.13, y: 2.35, w: 5.3, h: 0.4, fontFace: H, fon
   .forEach(([ik, j, k], i) => { const y = 2.95 + i * 0.7; lingkaranIkon(s, 7.13, y, 0.48, ik, false); teks(s, j, { x: 7.78, y: y - 0.02, w: 4.7, h: 0.28, fontFace: H, fontSize: 12.5, color: W.putih }); teks(s, k, { x: 7.78, y: y + 0.26, w: 4.7, h: 0.3, fontSize: 11, color: W.abuGelap }); });
 s.addNotes('Demo memakai data awal agar toko tidak kosong. Pembayaran uang asli butuh akun Midtrans atas nama badan usaha, jadi demo memakai sandbox dan konfirmasi manual admin. Rekaman cadangan ada di docs/screenshots/demo-ppt. Pembayaran sandbox sudah diuji di situs online sampai lunas otomatis; QRIS masih tertunda di simulator Midtrans.');
 
-// ---------- 22. Penutup ----------
+// ---------- 23. Tautan ----------
+s = isi('Kualitas & demo', 'Tautan proyek', 'Coba sendiri, lihat kodenya');
+const URL_SITUS = 'https://ecommerce-peach-seven-47.vercel.app';
+ubin(s, 0.6, 2.05, 5.95, 4.55, W.tinta);
+lingkaranIkon(s, 0.95, 2.4, 0.7, 'Globe', false);
+teks(s, 'Situs online', { x: 1.85, y: 2.42, w: 4.4, h: 0.38, fontFace: H, fontSize: 19, color: W.putih });
+teks(s, 'Publik · Vercel Singapura', { x: 1.85, y: 2.8, w: 4.4, h: 0.3, fontSize: 11.5, color: W.abuGelap });
+teks(s, [{ text: 'ecommerce-peach-seven-47.vercel.app', options: { hyperlink: { url: URL_SITUS, tooltip: 'Buka TokoKita' }, color: W.putih } }], { x: 0.95, y: 3.45, w: 5.3, h: 0.4, fontFace: H, fontSize: 16, color: W.putih });
+teks(s, ['Beranda, katalog, checkout: tanpa login', 'Akun pembeli & admin demo: lihat docs/DEMO.md', 'Pembayaran memakai Midtrans sandbox, bukan uang asli'].map((t, k, arr) => ({ text: t, options: { bullet: true, breakLine: k < arr.length - 1 } })), { x: 0.95, y: 4.2, w: 5.3, h: 1.4, fontSize: 13, color: 'D4D4D4', paraSpaceAfter: 8 });
+s.addShape(pres.shapes.LINE, { x: 0.95, y: 5.7, w: 5.25, h: 0, line: { color: W.gelap3, width: 1 } });
+[['26', 'produk'], ['79', 'pesanan demo'], ['98', 'Lighthouse HP']].forEach(([n, l], i) => {
+  const x = 0.95 + i * 1.8;
+  teks(s, n, { x, y: 5.85, w: 1.7, h: 0.42, fontFace: H, fontSize: 22, color: W.putih });
+  teks(s, l, { x, y: 6.25, w: 1.7, h: 0.25, fontSize: 10.5, color: W.abuGelap });
+});
+[['GitBranch', 'Repositori GitHub', 'github.com/Magang-Project-Cmlabs/ecommerce', 'https://github.com/Magang-Project-Cmlabs/ecommerce', 'Privat · akses diberikan atas permintaan'],
+ ['ListChecks', 'Papan tugas Trello', 'trello.com/b/sqbn4ehi', 'https://trello.com/b/sqbn4ehi/tokokita-proyek-magang', 'Privat · anggota tim dan pembimbing'],
+ ['BadgeCheck', 'Dokumentasi', 'docs/ di repositori', null, 'PRD, panduan mulai, status, uji mandiri, serah terima']]
+  .forEach(([ik, j, tautan, url, ket], i) => {
+    const y = 2.05 + i * 1.55;
+    ubin(s, 6.78, y, 5.95, 1.37); lingkaranIkon(s, 7.05, y + 0.36, 0.6, ik);
+    teks(s, j, { x: 7.9, y: y + 0.2, w: 4.6, h: 0.32, fontFace: H, fontSize: 14 });
+    teks(s, [{ text: tautan, options: url ? { hyperlink: { url } } : {} }], { x: 7.9, y: y + 0.52, w: 4.6, h: 0.3, fontFace: 'Consolas', fontSize: 11.5, color: W.tinta });
+    teks(s, ket, { x: 7.9, y: y + 0.86, w: 4.6, h: 0.3, fontSize: 11, color: W.redup });
+  });
+s.addNotes('Situs bisa dibuka siapa saja sekarang. Repositori GitHub dan papan Trello bersifat privat; minta akses ke ketua tim bila ingin melihat kode. Semua keputusan, status, dan panduan uji ada di folder docs/.');
+
+// ---------- 24. Penutup ----------
 pres.addSection({ title: 'Penutup' });
 s = pres.addSlide({ masterName: 'GELAP', sectionTitle: 'Penutup' });
 pil(s, 0.6, 0.55, 'Penutup', true);
@@ -274,4 +313,5 @@ teks(s, 'TokoKita sudah berjalan online dan siap didemokan.', { x: 0.6, y: 2.85,
 teks(s, 'Mohon masukan, saran, dan bimbingannya · Sesi tanya jawab', { x: 0.6, y: 6.55, w: 9, h: 0.35, fontSize: 12, color: W.abuGelap });
 s.addNotes('Rangkum empat hal utama, lalu buka sesi tanya jawab. Siapkan situs online dan rekaman cadangan bila jaringan bermasalah.');
 
-pres.writeFile({ fileName: KELUAR }).then(async () => { if (applyTheme) await applyTheme(KELUAR, THEME); console.log('tersimpan', KELUAR); });
+// stream() dipakai karena writeFile() di Node mengabaikan opsi compression (pptxgenjs 3.12).
+pres.stream({ compression: true }).then(async (isi) => { fs.writeFileSync(KELUAR, isi); if (applyTheme) await applyTheme(KELUAR, THEME); console.log('tersimpan', KELUAR); });

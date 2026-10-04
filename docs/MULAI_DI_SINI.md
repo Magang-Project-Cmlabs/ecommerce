@@ -10,7 +10,7 @@ dan admin lengkap sudah memakai database. Tidak ada fallback pesanan palsu
 ketika database gagal. Desain mengikuti [`DESIGN.md`](../DESIGN.md) (gaya Framer, mode terang/gelap,
 pilihan dropdown yang bisa dicari, admin dengan modal tambah/ubah). Ongkir per zona provinsi (D19),
 Login Google (D21), dan tombol cek resi di situs kurir sudah aktif. Tombol "Tanya AI"
-menjawab pertanyaan seputar toko (D18). PPT 22 slide berisi tangkapan layar terbaru.
+menjawab pertanyaan seputar toko (D18). PPT 24 slide (juga dalam PDF) berisi tangkapan layar terbaru, ERD, dan tautan proyek.
 
 Versi online: https://ecommerce-peach-seven-47.vercel.app (Vercel + Aiven).
 

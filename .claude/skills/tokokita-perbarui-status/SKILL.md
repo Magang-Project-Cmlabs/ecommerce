@@ -24,7 +24,7 @@ salah lebih buruk daripada tidak ada status.
 | `docs/SERAH_TERIMA.md` | Timpa: branch aktif, perubahan belum di-commit, pekerjaan setengah jadi, langkah berikutnya | Menyalin isi PROGRESS |
 | `docs/OPEN_DECISIONS.md` | Pindahkan butir yang diputuskan ke "Sudah diputuskan" + tanggal | Menghapus konteks keputusan |
 | `docs/GLOSSARY.md` | Konstanta/label baru yang dikunci di `constants.ts` | — |
-| `docs/Presentasi_ECommerce_TokoKita.pptx` | **Setiap akhir sesi** (aturan pemilik, 3 Okt 2026): angka uji, fitur, status online, risiko lewat `scripts/ppt/bangun.cjs`; render dan periksa slide yang berubah (`scripts/ppt/README.md`) | Mengedit PPTX langsung di PowerPoint (perubahan hilang saat dibangun ulang) |
+| `docs/Presentasi_ECommerce_TokoKita.pptx` | **Setiap akhir sesi** (aturan pemilik, 3 Okt 2026): angka uji, fitur, status online, risiko lewat `scripts/ppt/bangun.cjs`; render dan periksa slide yang berubah sekaligus ekspor `docs/Presentasi_ECommerce_TokoKita.pdf` (`render.ps1 -Pdf`); jalankan `erd.cjs` bila skema berubah (`scripts/ppt/README.md`) | Mengedit PPTX langsung di PowerPoint (perubahan hilang saat dibangun ulang) |
 
 ## 3. Aturan
 
