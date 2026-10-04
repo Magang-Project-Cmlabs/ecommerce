@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-04 — Kevin Ilham / Claude Code — PPT: slide anggota tim setelah cover
+- Branch / PR: docs/ppt-slide-anggota
+- Perubahan: atas permintaan pemilik, nama anggota tampil di slide 2 (setelah cover) tanpa peran: Azrian Dalimunthe (ketua tim, kartu gelap), lalu urut abjad Doni Anggara, Kevin Ilham, Rizki Kusnadi, Zulfikar Satya Nugraha. Slide pembagian peran (kini 18) kembali tanpa nama dan diberi judul "Pembagian modul kerja tim". PPT jadi 25 slide; rujukan nomor slide alur kerja di CONTRIBUTING, OPEN_DECISIONS, trello-board-plan dibetulkan (sudah meleset sejak slide ERD ditambahkan).
+- Verifikasi: render PowerPoint 25 slide PASS (slide 2 dan 18 diperiksa) · ekspor PDF PASS (25 halaman, halaman 2 memuat kelima nama + "KETUA TIM") · kode aplikasi tidak berubah (typecheck/test/build NOT_RUN: tidak relevan).
+
 ### 2026-10-04 — Kevin Ilham / Claude Code — PPT: nama anggota tim
 - Branch / PR: docs/ppt-nama-anggota
 - Perubahan: slide 17 memuat nama anggota sesuai A1–A5 (Kevin Ilham, Azrian Dalimunthe sebagai ketua tim dengan kartu gelap, Rizki Kusnadi, Doni Anggara, Zulfikar Satya Nugraha) dan catatan pembicaranya; nama lengkap ditambahkan di tabel `trello-board-plan.md` (ejaan "Azri" → "Azrian"). PPT + PDF dibangun ulang.

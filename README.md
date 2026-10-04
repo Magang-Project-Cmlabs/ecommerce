@@ -19,8 +19,8 @@ shadcn/ui · Midtrans Snap (sandbox) · Vercel Blob · asisten AI (Gemini, cadan
 | Produksi (cabang `develop`) | **https://ecommerce-peach-seven-47.vercel.app** | Publik. Database Aiven `tokokita`. |
 | Preview (cabang fitur) | https://ecommerce-git-feat-penyelesaian-tokokita-tes-2254s-projects.vercel.app | Perlu login Vercel. Database uji `tokokita_preview`. |
 
-Arah visual ada di [`DESIGN.md`](DESIGN.md); PPT 24 slide (`docs/Presentasi_ECommerce_TokoKita.pptx`, versi PDF `docs/Presentasi_ECommerce_TokoKita.pdf`) memuat
-tangkapan layar aplikasi yang berjalan, ERD, dan tautan proyek (diperbarui 4 Okt 2026).
+Arah visual ada di [`DESIGN.md`](DESIGN.md); PPT 25 slide (`docs/Presentasi_ECommerce_TokoKita.pptx`, versi PDF `docs/Presentasi_ECommerce_TokoKita.pdf`) memuat
+anggota tim, tangkapan layar aplikasi yang berjalan, ERD, dan tautan proyek (diperbarui 4 Okt 2026).
 
 Vercel membangun ulang otomatis setiap ada push ke repo `kvnlhm/ecommerce`
 (cermin repo organisasi). Akun admin/pembeli online tidak dicantumkan di sini;

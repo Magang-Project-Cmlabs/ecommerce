@@ -1,6 +1,6 @@
 # Generator PPT TokoKita
 
-Membangun `docs/Presentasi_ECommerce_TokoKita.pptx` (24 slide, tema monokrom seperti
+Membangun `docs/Presentasi_ECommerce_TokoKita.pptx` (25 slide, tema monokrom seperti
 situs, catatan pembicara di setiap slide) dan versi PDF-nya `docs/Presentasi_ECommerce_TokoKita.pdf`
 (untuk dibagikan atau dikumpulkan; tautan di slide tetap bisa diklik). Alat dokumentasi, bukan dependensi aplikasi:
 pustaka `pptxgenjs` dipasang di folder ini saja.
