@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-04 — Kevin Ilham / Claude Code — PPT: tautan GitHub anggota
+- Branch / PR: docs/ppt-tautan-github-anggota
+- Perubahan: slide 2 menampilkan tautan kecil `github.com/<akun>` di bawah nama tiap anggota (bisa diklik di PPT dan PDF); nama dan tautan satu kotak teks agar tautan ikut turun pada nama dua baris.
+- Verifikasi: render PowerPoint 25 slide PASS (slide 2 diperiksa) · PDF memuat 5 URI profil GitHub + 3 tautan proyek PASS · kode aplikasi tidak berubah (typecheck/test/build NOT_RUN: tidak relevan).
+
 ### 2026-10-04 — Kevin Ilham / Claude Code — PPT: foto profil anggota
 - Branch / PR: docs/ppt-foto-anggota
 - Perubahan: slide 2 memakai foto profil GitHub publik tiap anggota (permintaan pemilik) menggantikan lingkaran inisial; `scripts/ppt/ambil-foto.cjs` (baru) mengunduh dan memotongnya bulat ke `aset/foto-<akun>.png`, avatar transparan diberi latar putih, semua foto diberi garis tepi tipis.

@@ -89,8 +89,12 @@ s = isi('Pembuka', 'Anggota tim', 'Tim di balik TokoKita');
     s.addImage({ path: A(`foto-${akun}.png`), x: x + 0.5, y: 2.75, w: 1.3, h: 1.3, altText: `Foto profil ${nama}` });
     // Garis tepi agar avatar berlatar terang (ikon bawaan GitHub) tetap terlihat bulat di kartu abu.
     s.addShape(pres.shapes.OVAL, { x: x + 0.5, y: 2.75, w: 1.3, h: 1.3, fill: { color: W.putih, transparency: 100 }, line: { color: gelap ? W.gelap3 : 'D4D4D4', width: 1.5 } });
-    teks(s, nama, { x: x + 0.2, y: 4.35, w: 1.9, h: 0.75, fontFace: H, fontSize: 16, color: gelap ? W.putih : W.tinta, align: 'center', valign: 'top' });
-    if (ketua) pil(s, x + 0.51, 5.0, 'Ketua tim', true);
+    // Nama + tautan GitHub dalam satu kotak agar tautan ikut turun bila nama dua baris.
+    teks(s, [
+      { text: nama, options: { fontFace: H, fontSize: 16, color: gelap ? W.putih : W.tinta, breakLine: true } },
+      { text: `github.com/${akun}`, options: { fontSize: 10, color: gelap ? W.abuGelap : W.redup, hyperlink: { url: `https://github.com/${akun}`, tooltip: `Profil GitHub ${nama}` } } },
+    ], { x: x + 0.1, y: 4.35, w: 2.1, h: 1.0, align: 'center', valign: 'top', paraSpaceAfter: 4 });
+    if (ketua) pil(s, x + 0.51, 5.1, 'Ketua tim', true);
   });
 s.addNotes('Perkenalkan anggota satu per satu. Azrian Dalimunthe adalah ketua tim.');
 
