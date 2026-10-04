@@ -79,13 +79,27 @@ gambar(s, 'beranda', 6.95, 0.95, 5.8);
 gambarTinggi(s, 'hp-gelap', 6.25, 3.25, 3.75);
 s.addNotes('Perkenalkan tim dan tujuan presentasi: TokoKita adalah toko online mandiri yang kami bangun dari PRD sampai berjalan online di Vercel. Tunjukkan bahwa situs ini nyata dan bisa dibuka sekarang, dalam mode terang maupun gelap.');
 
-// ---------- 2. Agenda ----------
+// ---------- 2. Anggota tim (hanya nama; ketua lebih dulu, lalu urut abjad) ----------
+s = isi('Pembuka', 'Anggota tim', 'Tim di balik TokoKita');
+[['Azrian Dalimunthe', true], ['Doni Anggara'], ['Kevin Ilham'], ['Rizki Kusnadi'], ['Zulfikar Satya Nugraha']]
+  .forEach(([nama, ketua], i) => {
+    const x = 0.6 + i * 2.48, gelap = !!ketua;
+    ubin(s, x, 2.05, 2.3, 4.5, gelap ? W.tinta : W.ubin);
+    const inisial = nama.split(' ').slice(0, 2).map((k) => k[0]).join('');
+    s.addShape(pres.shapes.OVAL, { x: x + 0.6, y: 3.05, w: 1.1, h: 1.1, fill: { color: gelap ? W.putih : W.tinta }, line: { type: 'none' } });
+    teks(s, inisial, { x: x + 0.6, y: 3.05, w: 1.1, h: 1.1, fontFace: H, fontSize: 26, color: gelap ? W.tinta : W.putih, align: 'center', valign: 'middle' });
+    teks(s, nama, { x: x + 0.2, y: 4.5, w: 1.9, h: 0.75, fontFace: H, fontSize: 16, color: gelap ? W.putih : W.tinta, align: 'center', valign: 'top' });
+    if (ketua) pil(s, x + 0.51, 5.15, 'Ketua tim', true);
+  });
+s.addNotes('Perkenalkan anggota satu per satu. Azrian Dalimunthe adalah ketua tim.');
+
+// ---------- 3. Agenda ----------
 s = isi('Pembuka', 'Agenda', 'Yang akan kami paparkan');
 [['01', 'Latar & pengguna', 'Masalah yang diselesaikan dan siapa penggunanya'], ['02', 'Cakupan & hasil', 'Fitur yang selesai dan batasan proyek'], ['03', 'Teknologi & arsitektur', 'Stack, arsitektur, database, aturan bisnis'], ['04', 'Tampilan aplikasi', 'Beranda, katalog, checkout, admin, asisten AI'], ['05', 'Tim & cara kerja', 'Pembagian peran, alur Git, papan tugas'], ['06', 'Kualitas, keamanan & demo', 'Hasil uji, keamanan, risiko, skenario demo']]
   .forEach(([n, j, k], i) => { const x = 0.6 + (i % 3) * 4.15, y = 2.05 + Math.floor(i / 3) * 2.3; ubin(s, x, y, 3.85, 2.05); teks(s, n, { x: x + 0.35, y: y + 0.3, w: 1, h: 0.5, fontFace: H, fontSize: 26, color: W.redup }); teks(s, j, { x: x + 0.35, y: y + 0.95, w: 3.2, h: 0.4, fontFace: H, fontSize: 17 }); teks(s, k, { x: x + 0.35, y: y + 1.37, w: 3.2, h: 0.55, fontSize: 12, color: W.redup }); });
 s.addNotes('Urutan presentasi: dari masalah dan pengguna, hasil yang dibangun, teknologi, tampilan aplikasi, cara tim bekerja, sampai hasil uji dan demo.');
 
-// ---------- 3. Latar belakang ----------
+// ---------- 4. Latar belakang ----------
 pres.addSection({ title: 'Latar & cakupan' });
 s = isi('Latar & cakupan', 'Latar belakang', 'Masalah berjualan di marketplace, dan jawabannya');
 ubin(s, 0.6, 2.05, 5.95, 4.55);
@@ -98,7 +112,7 @@ s.addText([{ text: 'Solusi TokoKita', options: { color: W.putih } }, { text: '.'
   .forEach(([j, k], i) => { teks(s, j, { x: 7.13, y: 3.0 + i * 0.88, w: 5.3, h: 0.32, fontFace: H, fontSize: 14, color: W.putih }); teks(s, k, { x: 7.13, y: 3.32 + i * 0.88, w: 5.3, h: 0.4, fontSize: 12.5, color: W.abuGelap }); });
 s.addNotes('Jelaskan kenapa UMKM butuh toko online sendiri: komisi, kepemilikan data, perang harga, dan risiko suspend. Lalu tunjukkan jawaban TokoKita di sisi kanan.');
 
-// ---------- 4. Pengguna ----------
+// ---------- 5. Pengguna ----------
 s = isi('Latar & cakupan', 'Analisis kebutuhan', 'Dua pengguna utama TokoKita');
 [[0.6, 'User', 'Pembeli', 'Usia 18–40 tahun · 90% belanja lewat HP', [['Kebutuhan', 'Cari barang cepat, foto jelas, checkout di bawah 3 menit.'], ['Kekhawatiran', 'Barang palsu, ongkir tidak jelas, stok ternyata habis.'], ['Fitur andalan', 'Pencarian + filter, ulasan pembeli asli, kode promo, asisten AI.']]],
  [6.78, 'UserCog', 'Admin toko', 'Pemilik atau staf operasional · bukan orang IT', [['Kebutuhan', 'Pantau omzet, stok menipis, dan input resi dengan mudah.'], ['Kekhawatiran', 'Cek mutasi bank manual dan salah kirim varian.'], ['Fitur andalan', 'Peringatan stok ≤ 5, ubah status sekali klik, tambah/edit di modal.']]]]
@@ -109,7 +123,7 @@ s = isi('Latar & cakupan', 'Analisis kebutuhan', 'Dua pengguna utama TokoKita');
   });
 s.addNotes('Pembeli fokus pada kecepatan dan rasa percaya. Admin toko bukan orang IT, jadi panel admin dibuat sesederhana tampilan toko.');
 
-// ---------- 5. Cakupan & hasil ----------
+// ---------- 6. Cakupan & hasil ----------
 s = isi('Latar & cakupan', 'Ruang lingkup', 'Semua fitur MVP dan lanjutan sudah selesai');
 const kolomCakupan = [
   ['MVP · selesai', W.tinta, W.putih, ['Katalog, cari & filter', 'Detail produk & varian', 'Keranjang & kode promo', 'Checkout 4 langkah', 'Ongkir sesuai berat', 'Akun & lupa password', 'Riwayat & status pesanan', 'Admin pesanan & produk', 'Email notifikasi', 'Batal otomatis 24 jam']],
@@ -124,7 +138,7 @@ kolomCakupan.forEach(([j, bg, fg, butir], i) => {
 });
 s.addNotes('Seluruh fitur MVP dan fitur lanjutan sudah jalan. Tambahan dari rencana awal: pembayaran sandbox, mode gelap, asisten AI, ongkir per zona provinsi, Login Google, dan tombol cek resi di situs kurir. Lacak resi otomatis sudah dikodekan tetapi belum diaktifkan karena API-nya berbayar sekitar Rp 15 per pengecekan. Resi di data demo dibuat acak, jadi situs kurir menjawab tidak ditemukan; hasil lacak muncul untuk resi kiriman asli.');
 
-// ---------- 6. Teknologi ----------
+// ---------- 7. Teknologi ----------
 pres.addSection({ title: 'Teknologi' });
 s = isi('Teknologi', 'Teknologi', 'Tech stack dan alasan pemilihannya');
 [['Layers', 'Next.js 16 (App Router)', 'Tampilan dan logika server dalam satu proyek TypeScript.'], ['Database', 'MySQL di Aiven', 'Stabil dan dikenal; cloud saat rilis, Laragon saat lokal.'], ['Workflow', 'Prisma 7', 'Query sebagai kode, migrasi, dan data demo.'],
@@ -133,7 +147,7 @@ s = isi('Teknologi', 'Teknologi', 'Tech stack dan alasan pemilihannya');
   .forEach(([ik, j, k], i) => { const x = 0.6 + (i % 3) * 4.15, y = 2.05 + Math.floor(i / 3) * 1.55; ubin(s, x, y, 3.85, 1.37); lingkaranIkon(s, x + 0.25, y + 0.3, 0.6, ik); teks(s, j, { x: x + 1.05, y: y + 0.22, w: 2.65, h: 0.36, fontFace: H, fontSize: 14 }); teks(s, k, { x: x + 1.05, y: y + 0.6, w: 2.65, h: 0.65, fontSize: 11.5, color: W.redup }); });
 s.addNotes('Semua dipilih agar tim cepat produktif: satu proyek, satu bahasa (TypeScript), komponen siap pakai. Argon2id menggantikan bcrypt; asisten AI memakai Gemini dengan cadangan Groq.');
 
-// ---------- 7. Arsitektur ----------
+// ---------- 8. Arsitektur ----------
 s = isi('Teknologi', 'Arsitektur sistem', 'Bagaimana semua bagian terhubung');
 ubin(s, 0.6, 2.05, 2.35, 3.0);
 teks(s, 'PENGGUNA', { x: 0.85, y: 2.3, w: 2, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
@@ -155,7 +169,7 @@ teks(s, 'LAYANAN PENDUKUNG', { x: 0.6, y: 5.35, w: 4, h: 0.25, fontFace: H, font
   .forEach(([ik, j, k], i) => { const x = 0.6 + i * 2.45; ubin(s, x, 5.7, 2.28, 0.95); lingkaranIkon(s, x + 0.2, 5.88, 0.58, ik); teks(s, j, { x: x + 0.9, y: 5.86, w: 1.35, h: 0.3, fontFace: H, fontSize: 12 }); teks(s, k, { x: x + 0.9, y: 6.16, w: 1.35, h: 0.45, fontSize: 9.5, color: W.redup }); });
 s.addNotes('Alur: pengguna membuka halaman, Next.js memproses di server Vercel Singapura, Prisma menerjemahkan ke MySQL Aiven. Semua perubahan data hanya lewat Server Actions. Layanan pendukung: Blob untuk gambar, Gmail untuk email, Midtrans sandbox, cron pesanan tiap jam (GitHub Actions, cadangan cron harian Vercel) dengan backup database harian terenkripsi, dan Gemini/Groq untuk asisten AI. Email dikirim di latar agar checkout tidak menunggu.');
 
-// ---------- 8. Database ----------
+// ---------- 9. Database ----------
 s = isi('Teknologi', 'Rancangan database', '15 tabel MySQL dalam 4 kelompok');
 [['Pengguna', ['users', 'addresses', 'password_reset_tokens']], ['Katalog', ['categories', 'products', 'product_images', 'product_variants', 'reviews', 'wishlist_items']], ['Transaksi', ['orders', 'order_items', 'order_status_logs', 'promo_codes', 'promo_usages']], ['Konten', ['banners']]]
   .forEach(([j, t], i) => { const x = 0.6 + i * 3.1; ubin(s, x, 2.05, 2.9, 3.0); teks(s, j, { x: x + 0.3, y: 2.3, w: 2.3, h: 0.36, fontFace: H, fontSize: 16 }); teks(s, `${t.length} tabel`, { x: x + 0.3, y: 2.68, w: 2.3, h: 0.28, fontSize: 11, color: W.redup }); teks(s, t.map((n, k) => ({ text: n, options: { breakLine: k < t.length - 1 } })), { x: x + 0.3, y: 3.1, w: 2.4, h: 1.85, fontFace: 'Consolas', fontSize: 11.5, paraSpaceAfter: 3 }); });
@@ -163,7 +177,7 @@ s = isi('Teknologi', 'Rancangan database', '15 tabel MySQL dalam 4 kelompok');
   .forEach(([j, k], i) => { const x = 0.6 + i * 3.1; teks(s, j, { x, y: 5.4, w: 2.9, h: 0.32, fontFace: H, fontSize: 13 }); teks(s, k, { x, y: 5.73, w: 2.9, h: 0.6, fontSize: 11.5, color: W.redup }); });
 s.addNotes('Tunjukkan pengelompokan tabel. Tekankan aturan data: uang INT, snapshot pesanan, stok per varian. Satu tabel tambahan dipakai untuk membatasi percobaan login dan pertanyaan ke asisten AI.');
 
-// ---------- 9. ERD (gambar dibangun dari prisma/schema.prisma oleh erd.cjs) ----------
+// ---------- 10. ERD (gambar dibangun dari prisma/schema.prisma oleh erd.cjs) ----------
 s = isi('Teknologi', 'Entity relationship diagram', 'Relasi antar tabel (ERD)');
 [['||', 'tepat satu'], ['o|', 'nol atau satu'], ['o<', 'nol atau banyak']].forEach(([sim, ket], i) => {
   const x = 7.35 + i * 1.82;
@@ -174,7 +188,7 @@ teks(s, 'PK kunci utama · FK kunci tamu · UQ unik · kolom lain diringkas', { 
 gambar(s, 'erd', 0.6, 1.95, 12.13);
 s.addNotes('Diagram dibuat otomatis dari schema.prisma, jadi selalu sama dengan database. Pusatnya users dan products: satu pengguna punya banyak alamat, pesanan, ulasan, dan wishlist; satu produk punya banyak foto, varian, dan item pesanan. order_items menyimpan salinan nama dan harga, dan satu item pesanan paling banyak satu ulasan. promo_usages mengunci satu promo per pesanan. banners berdiri sendiri. Tabel auth_rate_limits tidak digambar karena tidak berelasi.');
 
-// ---------- 10. Status pesanan ----------
+// ---------- 11. Status pesanan ----------
 s = isi('Teknologi', 'Aturan bisnis', 'Alur status pesanan, dari dibuat sampai selesai');
 const alur = [['Menunggu Pembayaran', 'F59E0B', 'Batas bayar 24 jam'], ['Dikonfirmasi', '3B82F6', 'Dibayar atau COD'], ['Dikemas', '8B5CF6', 'Admin menyiapkan barang'], ['Dikirim', '0EA5E9', 'Admin wajib input resi'], ['Selesai', '10B981', 'Pembeli terima / otomatis 7 hari']];
 const lebarAlur = [2.35, 1.75, 1.4, 1.3, 1.25]; let xAlur = 0.6;
@@ -185,7 +199,7 @@ teks(s, 'Lewat batas bayar, oleh pembeli sebelum bayar, atau oleh admin (wajib a
   .forEach(([ik, j, k], i) => { const x = 0.6 + i * 4.15; ubin(s, x, 4.55, 3.85, 1.95); lingkaranIkon(s, x + 0.3, 4.85, 0.55, ik); teks(s, j, { x: x + 1.0, y: 4.9, w: 2.7, h: 0.36, fontFace: H, fontSize: 14 }); teks(s, k, { x: x + 0.3, y: 5.55, w: 3.3, h: 0.85, fontSize: 11.5, color: W.redup }); });
 s.addNotes('Lencana dan warnanya sama persis dengan yang tampil di aplikasi. Jelaskan siapa yang mengubah tiap status; pesanan tidak dibayar 24 jam dibatalkan otomatis oleh cron.');
 
-// ---------- 11–15. Tampilan aplikasi ----------
+// ---------- 12–16. Tampilan aplikasi ----------
 pres.addSection({ title: 'Tampilan aplikasi' });
 function tampilan(eyebrow, judul, img, butir, kiri, catatan, gelapImg = false) {
   const s = isi('Tampilan aplikasi', eyebrow, judul);
@@ -205,7 +219,7 @@ gambar(s, 'admin-modal-potong', 5.35, 3.3, 3.25);
 catatanBernomor(s, 8.8, 2.15, 3.95, [['Ringkasan harian', 'Pesanan hari ini, omzet 7 dan 30 hari.'], ['Peringatan stok', 'Produk dengan stok ≤ 5 ditandai.'], ['Tambah & edit di modal', 'Form tampil di atas daftar.'], ['Lencana status', 'Pil netral dengan titik warna.']]);
 s.addNotes('Panel admin memakai bahasa visual yang sama dengan toko, terlihat di sini dalam mode gelap. Tambah dan edit produk, kategori, promo, banner muncul sebagai modal.');
 
-// ---------- 16. Sorotan: mode gelap & asisten AI ----------
+// ---------- 17. Sorotan: mode gelap & asisten AI ----------
 s = pres.addSlide({ masterName: 'GELAP', sectionTitle: 'Tampilan aplikasi' });
 pil(s, 0.6, 0.45, 'Sorotan', true);
 s.addText('Mode gelap dan asisten "Tanya AI"', { placeholder: 'judul' });
@@ -215,24 +229,14 @@ teks(s, 'Asisten belanja, bukan chatbot serba bisa', { x: 6.45, y: 2.1, w: 6.3, 
 teks(s, ['Menjawab produk, harga, ongkir, pembayaran, dan pesanan dari data toko.', 'Menolak coding, PR, puisi, SQL, dan jailbreak: 16/16 uji ditolak.', 'Tanpa akses database atau alat; hanya membalas teks.', 'Data kartu, NIK, password disamarkan, tidak dikirim.', 'Dibatasi per pengguna/IP, harian, dan global.'].map((t, k, arr) => ({ text: t, options: { bullet: true, breakLine: k < arr.length - 1 } })), { x: 6.45, y: 2.8, w: 6.0, h: 3.6, fontSize: 14, color: 'D4D4D4', paraSpaceAfter: 10 });
 s.addNotes('Mode gelap tersedia di seluruh toko dan admin. Asisten "Tanya AI" memakai Gemini dengan cadangan Groq, keduanya gratis tanpa kartu. Contoh di layar: rekomendasi produk dijawab dengan tautan, permintaan kode Python ditolak.');
 
-// ---------- 17. Tim ----------
+// ---------- 18. Tim ----------
 pres.addSection({ title: 'Tim & cara kerja' });
-s = isi('Tim & cara kerja', 'Struktur tim', 'Pembagian peran 5 anggota');
-// Urutan = A1–A5 di docs/trello-board-plan.md; kartu gelap = ketua tim.
-[['Kevin Ilham', 'Arsitektur & data', ['Skema database & Prisma', 'Login & keamanan', 'Review Pull Request']], ['Azrian Dalimunthe', 'Frontend katalog', ['Beranda & banner', 'Pencarian & filter', 'Halaman detail produk'], true], ['Rizki Kusnadi', 'Frontend transaksi', ['Keranjang (drawer)', 'Buku alamat', 'Checkout 4 langkah']], ['Doni Anggara', 'Backend pesanan', ['Ongkir & kode promo', 'Email notifikasi', 'Batal otomatis 24 jam']], ['Zulfikar Satya Nugraha', 'Admin panel & QA', ['Dashboard & stok menipis', 'Status pesanan & resi', 'Uji di berbagai HP']]]
-  .forEach(([nama, peran, tugas, ketua], i) => {
-    const x = 0.6 + i * 2.48;
-    ubin(s, x, 2.05, 2.3, 4.5, ketua ? W.tinta : W.ubin);
-    teks(s, `0${i + 1}`, { x: x + 0.28, y: 2.3, w: 1, h: 0.5, fontFace: H, fontSize: 24, color: ketua ? W.abuGelap : W.redup });
-    if (ketua) pil(s, x + 0.82, 2.4, 'Ketua tim', true);
-    teks(s, nama, { x: x + 0.28, y: 2.95, w: 1.85, h: 0.68, fontFace: H, fontSize: 15, color: ketua ? W.putih : W.tinta, valign: 'bottom' });
-    teks(s, peran, { x: x + 0.28, y: 3.7, w: 1.85, h: 0.3, fontSize: 12, color: ketua ? 'D4D4D4' : W.tinta });
-    s.addShape(pres.shapes.LINE, { x: x + 0.28, y: 4.15, w: 1.74, h: 0, line: { color: ketua ? W.gelap3 : W.garis, width: 1 } });
-    teks(s, tugas.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < tugas.length - 1 } })), { x: x + 0.28, y: 4.35, w: 1.85, h: 2.0, fontSize: 11.5, color: ketua ? W.abuGelap : W.redup, paraSpaceAfter: 6 });
-  });
-s.addNotes('Azrian Dalimunthe memimpin tim sekaligus mengerjakan tampilan katalog. Pembagian mengikuti modul PRD agar tiap orang punya area yang jelas dan jarang bentrok; Kevin Ilham menjaga skema data dan meninjau setiap Pull Request sebelum digabung.');
+s = isi('Tim & cara kerja', 'Struktur tim', 'Pembagian modul kerja tim');
+[['Arsitektur & data', ['Skema database & Prisma', 'Login & keamanan', 'Review Pull Request']], ['Frontend katalog', ['Beranda & banner', 'Pencarian & filter', 'Halaman detail produk']], ['Frontend transaksi', ['Keranjang (drawer)', 'Buku alamat', 'Checkout 4 langkah']], ['Backend pesanan', ['Ongkir & kode promo', 'Email notifikasi', 'Batal otomatis 24 jam']], ['Admin panel & QA', ['Dashboard & stok menipis', 'Status pesanan & resi', 'Uji di berbagai HP']]]
+  .forEach(([peran, tugas], i) => { const x = 0.6 + i * 2.48; ubin(s, x, 2.05, 2.3, 4.5); teks(s, `0${i + 1}`, { x: x + 0.28, y: 2.3, w: 1, h: 0.5, fontFace: H, fontSize: 24, color: W.redup }); teks(s, peran, { x: x + 0.28, y: 3.0, w: 1.85, h: 0.7, fontFace: H, fontSize: 15 }); teks(s, tugas.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < tugas.length - 1 } })), { x: x + 0.28, y: 3.85, w: 1.85, h: 2.4, fontSize: 11.5, color: W.redup, paraSpaceAfter: 6 }); });
+s.addNotes('Pekerjaan dibagi per modul PRD agar setiap bagian punya pemilik yang jelas dan kode jarang bentrok.');
 
-// ---------- 18. Alur kerja ----------
+// ---------- 19. Alur kerja ----------
 s = isi('Tim & cara kerja', 'Alur kerja tim', 'Cara 5 orang bekerja tanpa kode bertabrakan');
 teks(s, 'ALUR GIT & GITHUB', { x: 0.6, y: 2.1, w: 5, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
 [['Branch fitur', 'feat/… atau fix/… dari develop'], ['Commit kecil', 'Satu commit untuk satu perubahan'], ['Pull Request', 'Deskripsi + tangkapan layar'], ['CI otomatis', 'Typecheck, lint, test, build, MySQL'], ['Review & merge', 'Ke develop; develop → main per tahap']]
@@ -243,7 +247,7 @@ teks(s, 'PAPAN TUGAS TRELLO', { x: 6.78, y: 2.1, w: 5, h: 0.25, fontFace: H, fon
   .forEach(([ik, j, k], i) => { const y = 4.7 + i * 0.66; lingkaranIkon(s, 6.78, y, 0.48, ik); teks(s, j, { x: 7.4, y, w: 5.3, h: 0.28, fontFace: H, fontSize: 12.5 }); teks(s, k, { x: 7.4, y: y + 0.27, w: 5.3, h: 0.3, fontSize: 11, color: W.redup }); });
 s.addNotes('Alur Git berbasis branch per fitur dan Pull Request dengan CI otomatis di GitHub Actions, papan Trello untuk tugas, serta kebiasaan tim yang menjaga kode tidak bertabrakan.');
 
-// ---------- 19. Kualitas ----------
+// ---------- 20. Kualitas ----------
 pres.addSection({ title: 'Kualitas & demo' });
 s = isi('Kualitas & demo', 'Standar kualitas', 'Hasil uji yang terukur, 3 Oktober 2026');
 [['98', 'Lighthouse beranda HP', 'Situs online, LCP 1,7 dtk'], ['551', 'Unit test lulus', '+ 34 tes integrasi MySQL'], ['88', 'Tes E2E browser lulus', 'Alur pembeli & admin nyata'], ['0', 'Pelanggaran aksesibilitas serius', 'axe, mode terang & gelap']]
@@ -253,13 +257,13 @@ teks(s, 'TARGET PRD', { x: 0.6, y: 4.7, w: 4, h: 0.25, fontFace: H, fontSize: 9.
   .forEach(([j, k], i) => { const x = 0.6 + (i % 2) * 6.18, y = 5.05 + Math.floor(i / 2) * 0.78; teks(s, j, { x, y, w: 5.9, h: 0.3, fontFace: H, fontSize: 12.5 }); teks(s, k, { x, y: y + 0.3, w: 5.9, h: 0.35, fontSize: 11, color: W.redup }); });
 s.addNotes('Semua angka hasil pengujian nyata pada 3 Oktober 2026. Kecepatan diukur dengan Lighthouse dan HP yang diperlambat (Slow 4G). Pada mode simulasi Lighthouse, halaman detail masih sekitar 3 detik; ini catatan perbaikan lanjutan.');
 
-// ---------- 20. Keamanan ----------
+// ---------- 21. Keamanan ----------
 s = isi('Kualitas & demo', 'Keamanan & regulasi', 'Melindungi data pembeli dan transaksi toko');
 [['ShieldCheck', 'Privasi data', 'UU PDP No. 27/2022', ['Data pembeli hanya untuk pengiriman', 'Persetujuan privasi saat daftar', 'Pengguna bisa menghapus akun']], ['Lock', 'Akun & hak akses', 'Login dan peran', ['Argon2id + Login Google (PKCE)', 'Login maks. 5 percobaan / 15 menit', 'Panel admin khusus peran admin']], ['Scale', 'Transaksi adil', 'Stok & pembayaran', ['Batas bayar 24 jam', 'Stok kembali saat batal', 'Webhook Midtrans dicek tanda tangannya']], ['Bot', 'Asisten AI aman', 'Pengaman berlapis', ['Topik ketat, tolak di luar toko', 'Tanpa akses database/alat', 'Rate limit + data sensitif disamarkan']]]
   .forEach(([ik, j, sub, butir], i) => { const x = 0.6 + i * 3.1, gelap = i === 3; ubin(s, x, 2.05, 2.9, 4.5, gelap ? W.tinta : W.ubin); lingkaranIkon(s, x + 0.3, 2.35, 0.6, ik, !gelap); teks(s, j, { x: x + 0.3, y: 3.15, w: 2.4, h: 0.36, fontFace: H, fontSize: 15, color: gelap ? W.putih : W.tinta }); teks(s, sub, { x: x + 0.3, y: 3.5, w: 2.4, h: 0.3, fontSize: 11, color: gelap ? W.abuGelap : W.redup }); teks(s, butir.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < butir.length - 1 } })), { x: x + 0.3, y: 4.0, w: 2.4, h: 2.4, fontSize: 11.5, color: gelap ? 'D4D4D4' : W.tinta, paraSpaceAfter: 6 }); });
 s.addNotes('Kepatuhan UU PDP, keamanan akun dengan Argon2id dan pembatasan percobaan, Login Google dengan OAuth + PKCE (admin tetap wajib password), aturan transaksi yang adil, dan pengaman asisten AI.');
 
-// ---------- 21. Risiko ----------
+// ---------- 22. Risiko ----------
 s = isi('Kualitas & demo', 'Manajemen risiko', 'Risiko yang diantisipasi dan hasilnya');
 const kepala = (t) => ({ text: t, options: { fontFace: H, fontSize: 10.5, color: W.redup, fill: { color: W.ubin }, margin: [4, 8, 4, 8] } });
 const sel = (t, o = {}) => ({ text: t, options: { fontSize: 11, color: W.tinta, margin: [5, 8, 5, 8], ...o } });
@@ -274,7 +278,7 @@ s.addTable([
 ], { x: 0.6, y: 2.05, w: 12.13, colW: [3.3, 1.2, 4.3, 3.33], border: { type: 'solid', pt: 0.75, color: W.garis }, fontFace: B, valign: 'middle', rowH: 0.62 });
 s.addNotes('Risiko terbesar ada di sisi tim, bukan teknis. Kolom Hasil menunjukkan bagaimana mitigasi itu berjalan sampai akhir proyek.');
 
-// ---------- 22. Demo & rilis ----------
+// ---------- 23. Demo & rilis ----------
 s = isi('Kualitas & demo', 'Demo & rilis', 'Skenario demo 7 menit dan lingkungan rilis');
 teks(s, 'SKENARIO DEMO', { x: 0.6, y: 2.1, w: 5, h: 0.25, fontFace: H, fontSize: 9.5, color: W.redup, charSpacing: 1.5 });
 ['Pembeli mencari produk dan memilih varian', 'Checkout dengan kode HEMAT10 (min. Rp 100.000)', 'Admin konfirmasi bayar, kemas, input resi', 'Pembeli terima pesanan dan beri ulasan', 'Pesanan lewat batas bayar batal otomatis', 'Bonus: tanya asisten AI & ganti mode gelap']
@@ -285,7 +289,7 @@ teks(s, 'Lingkungan rilis', { x: 7.13, y: 2.35, w: 5.3, h: 0.4, fontFace: H, fon
   .forEach(([ik, j, k], i) => { const y = 2.95 + i * 0.7; lingkaranIkon(s, 7.13, y, 0.48, ik, false); teks(s, j, { x: 7.78, y: y - 0.02, w: 4.7, h: 0.28, fontFace: H, fontSize: 12.5, color: W.putih }); teks(s, k, { x: 7.78, y: y + 0.26, w: 4.7, h: 0.3, fontSize: 11, color: W.abuGelap }); });
 s.addNotes('Demo memakai data awal agar toko tidak kosong. Pembayaran uang asli butuh akun Midtrans atas nama badan usaha, jadi demo memakai sandbox dan konfirmasi manual admin. Rekaman cadangan ada di docs/screenshots/demo-ppt. Pembayaran sandbox sudah diuji di situs online sampai lunas otomatis; QRIS masih tertunda di simulator Midtrans.');
 
-// ---------- 23. Tautan ----------
+// ---------- 24. Tautan ----------
 s = isi('Kualitas & demo', 'Tautan proyek', 'Coba sendiri, lihat kodenya');
 const URL_SITUS = 'https://ecommerce-peach-seven-47.vercel.app';
 ubin(s, 0.6, 2.05, 5.95, 4.55, W.tinta);
@@ -312,7 +316,7 @@ s.addShape(pres.shapes.LINE, { x: 0.95, y: 5.7, w: 5.25, h: 0, line: { color: W.
   });
 s.addNotes('Situs bisa dibuka siapa saja sekarang. Repositori GitHub dan papan Trello bersifat privat; minta akses ke ketua tim bila ingin melihat kode. Semua keputusan, status, dan panduan uji ada di folder docs/.');
 
-// ---------- 24. Penutup ----------
+// ---------- 25. Penutup ----------
 pres.addSection({ title: 'Penutup' });
 s = pres.addSlide({ masterName: 'GELAP', sectionTitle: 'Penutup' });
 pil(s, 0.6, 0.55, 'Penutup', true);
