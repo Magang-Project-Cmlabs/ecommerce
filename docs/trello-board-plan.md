@@ -27,10 +27,10 @@ Ditambah kolom 👥 Semua (Rencana, Selesai) dan 💤 Lanjutan (Backlog).
 | Warna | Kode | Peran | Anggota (GitHub) |
 |---|---|---|---|
 | Merah | A1 | Database & Login | `kvnlhm` (Kevin Ilham) — paling berpengalaman, penggabung PR |
-| Kuning | A2 | **Ketua Tim** & Tampilan Katalog | `azridalimunthe7` (Azri Dalimunthe) |
-| Hijau | A3 | Tampilan Keranjang & Checkout | `rizkikusnadi03` |
-| Biru | A4 | Logika Pesanan | `astroceilo` |
-| Ungu | A5 | Admin & Pengujian | `fikarnugraha18` |
+| Kuning | A2 | **Ketua Tim** & Tampilan Katalog | `azridalimunthe7` (Azrian Dalimunthe) |
+| Hijau | A3 | Tampilan Keranjang & Checkout | `rizkikusnadi03` (Rizki Kusnadi) |
+| Biru | A4 | Logika Pesanan | `astroceilo` (Doni Anggara) |
+| Ungu | A5 | Admin & Pengujian | `fikarnugraha18` (Zulfikar Satya Nugraha) |
 | Oranye | Blocker | Harus selesai duluan, anggota lain menunggu | — |
 
 Pemetaan disepakati 27 Sep 2026, mengikuti anggota organisasi GitHub (sama

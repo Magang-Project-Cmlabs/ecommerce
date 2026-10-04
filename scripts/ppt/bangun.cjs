@@ -218,9 +218,19 @@ s.addNotes('Mode gelap tersedia di seluruh toko dan admin. Asisten "Tanya AI" me
 // ---------- 17. Tim ----------
 pres.addSection({ title: 'Tim & cara kerja' });
 s = isi('Tim & cara kerja', 'Struktur tim', 'Pembagian peran 5 anggota');
-[['Arsitektur & data', ['Skema database & Prisma', 'Login & keamanan', 'Review Pull Request']], ['Frontend katalog', ['Beranda & banner', 'Pencarian & filter', 'Halaman detail produk']], ['Frontend transaksi', ['Keranjang (drawer)', 'Buku alamat', 'Checkout 4 langkah']], ['Backend pesanan', ['Ongkir & kode promo', 'Email notifikasi', 'Batal otomatis 24 jam']], ['Admin panel & QA', ['Dashboard & stok menipis', 'Status pesanan & resi', 'Uji di berbagai HP']]]
-  .forEach(([peran, tugas], i) => { const x = 0.6 + i * 2.48; ubin(s, x, 2.05, 2.3, 4.5); teks(s, `0${i + 1}`, { x: x + 0.28, y: 2.3, w: 1, h: 0.5, fontFace: H, fontSize: 24, color: W.redup }); teks(s, `Anggota ${i + 1}`, { x: x + 0.28, y: 2.95, w: 1.8, h: 0.3, fontSize: 11.5, color: W.redup }); teks(s, peran, { x: x + 0.28, y: 3.25, w: 1.85, h: 0.7, fontFace: H, fontSize: 15 }); teks(s, tugas.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < tugas.length - 1 } })), { x: x + 0.28, y: 4.1, w: 1.85, h: 2.2, fontSize: 11.5, color: W.redup, paraSpaceAfter: 6 }); });
-s.addNotes('Isi nama tiap anggota saat presentasi. Pembagian mengikuti modul PRD agar tiap orang punya area yang jelas dan jarang bentrok.');
+// Urutan = A1–A5 di docs/trello-board-plan.md; kartu gelap = ketua tim.
+[['Kevin Ilham', 'Arsitektur & data', ['Skema database & Prisma', 'Login & keamanan', 'Review Pull Request']], ['Azrian Dalimunthe', 'Frontend katalog', ['Beranda & banner', 'Pencarian & filter', 'Halaman detail produk'], true], ['Rizki Kusnadi', 'Frontend transaksi', ['Keranjang (drawer)', 'Buku alamat', 'Checkout 4 langkah']], ['Doni Anggara', 'Backend pesanan', ['Ongkir & kode promo', 'Email notifikasi', 'Batal otomatis 24 jam']], ['Zulfikar Satya Nugraha', 'Admin panel & QA', ['Dashboard & stok menipis', 'Status pesanan & resi', 'Uji di berbagai HP']]]
+  .forEach(([nama, peran, tugas, ketua], i) => {
+    const x = 0.6 + i * 2.48;
+    ubin(s, x, 2.05, 2.3, 4.5, ketua ? W.tinta : W.ubin);
+    teks(s, `0${i + 1}`, { x: x + 0.28, y: 2.3, w: 1, h: 0.5, fontFace: H, fontSize: 24, color: ketua ? W.abuGelap : W.redup });
+    if (ketua) pil(s, x + 0.82, 2.4, 'Ketua tim', true);
+    teks(s, nama, { x: x + 0.28, y: 2.95, w: 1.85, h: 0.68, fontFace: H, fontSize: 15, color: ketua ? W.putih : W.tinta, valign: 'bottom' });
+    teks(s, peran, { x: x + 0.28, y: 3.7, w: 1.85, h: 0.3, fontSize: 12, color: ketua ? 'D4D4D4' : W.tinta });
+    s.addShape(pres.shapes.LINE, { x: x + 0.28, y: 4.15, w: 1.74, h: 0, line: { color: ketua ? W.gelap3 : W.garis, width: 1 } });
+    teks(s, tugas.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < tugas.length - 1 } })), { x: x + 0.28, y: 4.35, w: 1.85, h: 2.0, fontSize: 11.5, color: ketua ? W.abuGelap : W.redup, paraSpaceAfter: 6 });
+  });
+s.addNotes('Azrian Dalimunthe memimpin tim sekaligus mengerjakan tampilan katalog. Pembagian mengikuti modul PRD agar tiap orang punya area yang jelas dan jarang bentrok; Kevin Ilham menjaga skema data dan meninjau setiap Pull Request sebelum digabung.');
 
 // ---------- 18. Alur kerja ----------
 s = isi('Tim & cara kerja', 'Alur kerja tim', 'Cara 5 orang bekerja tanpa kode bertabrakan');
