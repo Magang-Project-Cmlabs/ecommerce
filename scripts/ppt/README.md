@@ -1,7 +1,8 @@
 # Generator PPT TokoKita
 
-Membangun `docs/Presentasi_ECommerce_TokoKita.pptx` (22 slide, tema monokrom seperti
-situs, catatan pembicara di setiap slide). Alat dokumentasi, bukan dependensi aplikasi:
+Membangun `docs/Presentasi_ECommerce_TokoKita.pptx` (24 slide, tema monokrom seperti
+situs, catatan pembicara di setiap slide) dan versi PDF-nya `docs/Presentasi_ECommerce_TokoKita.pdf`
+(untuk dibagikan atau dikumpulkan; tautan di slide tetap bisa diklik). Alat dokumentasi, bukan dependensi aplikasi:
 pustaka `pptxgenjs` dipasang di folder ini saja.
 
 Aturan proyek: **setiap akhir sesi kerja, perbarui PPT bersama dokumen lain** bila ada
@@ -16,7 +17,8 @@ perubahan fitur, angka uji, atau status online.
 | `ambil.cjs` | Mengambil tangkapan layar baru dari server uji lokal `http://localhost:3002` ke `img/` (akun dari `tests/e2e/.env.e2e`, tidak dicetak). |
 | `ambil-asisten.cjs` | Tangkapan layar panel "Tanya AI" dari situs produksi (memakai kuota AI gratis). |
 | `aset.cjs` | Mengolah `img/*.png` menjadi `aset/` (sudut membulat, garis tipis) dan membuat ikon. |
-| `render.ps1` | Merender setiap slide ke PNG lewat PowerPoint untuk diperiksa. |
+| `erd.cjs` | Membuat `aset/erd.png` (slide ERD) dari `prisma/schema.prisma` lewat Graphviz `dot`. Jalankan ulang bila skema berubah. |
+| `render.ps1` | Merender setiap slide ke PNG lewat PowerPoint untuk diperiksa; `-Pdf <path>` sekaligus menyimpan PDF. |
 
 `aset/admin-modal-potong.png` dan `aset/asisten-panel.png` adalah potongan manual dari
 `admin-modal.png` dan `asisten.png`; potong ulang bila tangkapan aslinya diganti.
@@ -33,14 +35,26 @@ NODE_PATH="$PWD/node_modules" node bangun.cjs ../../docs/Presentasi_ECommerce_To
 Opsional: `PPTX_APPLY_THEME=<path apply_theme.js dari skill pptx>` menulis nama tema dan
 palet ke XML; tanpa itu tampilan tetap sama karena setiap elemen menulis warna dan font.
 
-Periksa hasil:
+Periksa hasil dan ekspor PDF sekaligus:
 
 ```powershell
-powershell -File scripts/ppt/render.ps1 -Berkas "$PWD\docs\Presentasi_ECommerce_TokoKita.pptx" -Keluar "$PWD\scripts\ppt\render"
+powershell -File scripts/ppt/render.ps1 -Berkas "$PWD\docs\Presentasi_ECommerce_TokoKita.pptx" -Keluar "$PWD\scripts\ppt\render" -Pdf "$PWD\docs\Presentasi_ECommerce_TokoKita.pdf"
 ```
 
 Buka `render/slide-XX.png` untuk slide yang berubah. Jangan melaporkan PPT selesai
-sebelum dirender dan diperiksa.
+sebelum dirender dan diperiksa. PPTX dan PDF selalu dibangun bersama; jangan mengedit PDF
+secara terpisah.
+
+## ERD dari skema
+
+Setelah migration yang menambah/mengubah tabel atau relasi (butuh Graphviz `dot` di PATH):
+
+```bash
+cd scripts/ppt && node erd.cjs   # aset/erd.png + ukurannya di aset/ukuran.json
+```
+
+ERD hanya menampilkan kolom kunci (PK, FK, unik) dengan notasi crow's foot; `auth_rate_limits`
+tidak digambar karena tidak berelasi. Kelompok tabel diatur di `KELOMPOK` dalam `erd.cjs`.
 
 ## Mengganti tangkapan layar
 

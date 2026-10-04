@@ -50,7 +50,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Lighthouse produksi seluler (Chrome bersih) | PASS / FAIL | Beranda **98**, LCP 1,7 s · katalog 96, LCP 2,5 s · detail 91, LCP 3,1 s (simulasi; render delay dari streaming). Throttling devtools: katalog 2,5 s, detail 2,4 s. Font judul tidak lagi dipreload: build lokal LCP katalog 2,33 → 2,17 s, detail 2,21 → 2,10 s (median 3 run), CLS 0 |
 | Asisten AI di produksi | PASS | Jawaban benar (metode bayar, rekomendasi produk + tautan, ongkir 2,5 kg = Rp 45.000); 16/16 upaya penyalahgunaan ditolak (Gemini dan Groq) |
 | Suite lintas browser penuh (Edge, Firefox, WebKit) | NOT_RUN hari ini | Terakhir 1 Okt: 299/310 lalu 28/28 setelah isi ulang stok DB uji; diulang bila ada perubahan lintas browser |
-| PPT diperbarui | PASS | 22 slide dari generator `scripts/ppt/` (diperbarui tiap akhir sesi); versi terakhir 3 Okt: angka uji 475/87, LCP katalog 2,3 / detail 2,2 dtk, backup harian, uji bayar produksi; validator PPTX PASS; slide 7, 18, 20, 21 dirender dan diperiksa |
+| PPT + PDF diperbarui | PASS | 24 slide dari generator `scripts/ppt/` (diperbarui tiap akhir sesi); 4 Okt: + slide 9 ERD (dibangun otomatis dari `schema.prisma`: 15 tabel, 20 relasi) dan slide 23 tautan proyek; PDF diekspor PowerPoint dari PPTX yang sama (3 tautan bisa diklik); 24 slide dirender, slide 9, 23, 24 diperiksa |
 
 ## 4. Layanan online (produksi)
 
