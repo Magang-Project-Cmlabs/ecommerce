@@ -15,6 +15,11 @@ Format entri:
 
 ---
 
+### 2026-10-04 — Kevin Ilham / Claude Code — PPT: nama anggota tim
+- Branch / PR: docs/ppt-nama-anggota
+- Perubahan: slide 17 memuat nama anggota sesuai A1–A5 (Kevin Ilham, Azrian Dalimunthe sebagai ketua tim dengan kartu gelap, Rizki Kusnadi, Doni Anggara, Zulfikar Satya Nugraha) dan catatan pembicaranya; nama lengkap ditambahkan di tabel `trello-board-plan.md` (ejaan "Azri" → "Azrian"). PPT + PDF dibangun ulang.
+- Verifikasi: render PowerPoint 24 slide PASS (slide 17 diperiksa) · ekspor PDF PASS · kode aplikasi tidak berubah (typecheck/test/build NOT_RUN: tidak relevan).
+
 ### 2026-10-04 — Kevin Ilham / Claude Code — PPT: slide ERD, slide tautan, versi PDF
 - Branch / PR: docs/ppt-erd-tautan-pdf
 - Latar: pemilik membandingkan dengan contoh presentasi akhir (ekspor PDF dari slide) yang punya slide ERD dan tautan repo. Keputusan: tetap satu sumber (PPTX dari generator), PDF diekspor dari PPTX yang sama, bukan dokumen terpisah.
