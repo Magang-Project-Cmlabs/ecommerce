@@ -2,7 +2,7 @@
 
 **Repo:** `Magang-Project-Cmlabs/ecommerce` (private) · cermin `kvnlhm/ecommerce` (sumber deploy Vercel)
 **Branch integrasi:** `develop` (terakhir PR #62, fitur lanjutan D19–D21); pekerjaan lanjutan lewat PR
-**Diperbarui:** 3 Oktober 2026 · riwayat per sesi ada di [PROGRESS](PROGRESS.md)
+**Diperbarui:** 12 Oktober 2026 (perbaikan keranjang saat keluar, D22) · riwayat per sesi ada di [PROGRESS](PROGRESS.md)
 
 ## 1. Ringkasan
 
@@ -50,6 +50,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Lighthouse produksi seluler (Chrome bersih) | PASS / FAIL | Beranda **98**, LCP 1,7 s · katalog 96, LCP 2,5 s · detail 91, LCP 3,1 s (simulasi; render delay dari streaming). Throttling devtools: katalog 2,5 s, detail 2,4 s. Font judul tidak lagi dipreload: build lokal LCP katalog 2,33 → 2,17 s, detail 2,21 → 2,10 s (median 3 run), CLS 0 |
 | Asisten AI di produksi | PASS | Jawaban benar (metode bayar, rekomendasi produk + tautan, ongkir 2,5 kg = Rp 45.000); 16/16 upaya penyalahgunaan ditolak (Gemini dan Groq) |
 | Suite lintas browser penuh (Edge, Firefox, WebKit) | NOT_RUN hari ini | Terakhir 1 Okt: 299/310 lalu 28/28 setelah isi ulang stok DB uji; diulang bila ada perubahan lintas browser |
+| Perbaikan keranjang saat keluar/hapus akun (12 Okt, D22) | PASS | E2E `akun` + `auth-guard` + `commerce` 17/17 (dua tes baru gagal pada kode lama, lulus setelah perbaikan); typecheck, lint, test 551/2 dilewati, build PASS. Suite E2E penuh dan lintas browser NOT_RUN (perubahan terbatas pada dua komponen client) |
 | PPT + PDF diperbarui | PASS | 25 slide dari generator `scripts/ppt/` (diperbarui tiap akhir sesi); 4 Okt: + slide 2 anggota tim (nama saja), slide 10 ERD (dibangun otomatis dari `schema.prisma`: 15 tabel, 20 relasi), slide 24 tautan proyek; PDF diekspor PowerPoint dari PPTX yang sama (3 tautan bisa diklik); 25 slide dirender, slide 2, 10, 18, 24 diperiksa |
 
 ## 4. Layanan online (produksi)

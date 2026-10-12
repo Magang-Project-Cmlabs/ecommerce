@@ -6,12 +6,24 @@ import { hasCredentials, alasanLewati } from '../helpers/auth';
 import { tangkapError } from '../helpers/cek';
 
 const NAMA_COOKIE = 'tokokita_sesi';
+const NAMA_STORAGE_KERANJANG = 'tokokita-cart';
 const barAkun = (page: Page) => page.getByRole('navigation', { name: 'Akun' });
 
 async function isiMasuk(page: Page, email: string, password: string) {
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password', { exact: true }).fill(password);
   await page.getByRole('button', { name: /^masuk$/i }).click();
+}
+
+// Keranjang tinggal di localStorage perangkat; isi lewat storage lalu muat ulang agar store terhidrasi.
+async function isiKeranjang(page: Page) {
+  const item = { productId: 1, variantId: null, quantity: 2, slug: 'contoh', name: 'Produk Contoh', variantName: null, image: null, price: 89000 };
+  await page.evaluate(({ kunci, isi }) => localStorage.setItem(kunci, isi), { kunci: NAMA_STORAGE_KERANJANG, isi: JSON.stringify({ state: { items: [item] }, version: 0 }) });
+  await page.reload({ waitUntil: 'load' });
+}
+
+async function itemKeranjangTersimpan(page: Page): Promise<unknown[]> {
+  return page.evaluate((kunci) => JSON.parse(localStorage.getItem(kunci) ?? '{"state":{"items":[]}}').state.items, NAMA_STORAGE_KERANJANG);
 }
 
 test.describe('Akun', () => {
@@ -61,6 +73,10 @@ test.describe('Akun', () => {
     expect(cookie!.httpOnly).toBe(true);
     expect(cookie!.expires - Date.now() / 1000).toBeGreaterThan(29 * 24 * 3600);
 
+    // Keranjang berisi sebelum keluar; setelah keluar harus kosong (perangkat bisa dipakai bersama).
+    await isiKeranjang(page);
+    expect(await itemKeranjangTersimpan(page)).toHaveLength(1);
+
     await barAkun(page).getByRole('button', { name: 'Keluar' }).click();
     // Keluar meminta konfirmasi; Batal tidak mengeluarkan, Ya, keluar mengeluarkan.
     const dialog = page.getByRole('alertdialog', { name: 'Keluar dari akun?' });
@@ -71,7 +87,33 @@ test.describe('Akun', () => {
     await dialog.getByRole('button', { name: 'Ya, keluar' }).click();
     await expect(barAkun(page).getByRole('link', { name: 'Masuk' })).toBeVisible();
     expect((await context.cookies()).find((c) => c.name === NAMA_COOKIE)).toBeUndefined();
+    expect(await itemKeranjangTersimpan(page)).toEqual([]);
     expect(errors).toEqual([]);
+  });
+
+  test('hapus akun mengosongkan keranjang di perangkat ini', async ({ page }) => {
+    const email = `e2e-hapus-${Date.now()}@example.com`;
+    await page.goto('/daftar', { waitUntil: 'load' });
+    await page.getByLabel('Nama lengkap').fill('Pembeli Dihapus');
+    await page.getByLabel('Email').fill(email);
+    await page.getByLabel('Password', { exact: true }).fill('rahasia123');
+    await page.getByLabel('Ulangi password').fill('rahasia123');
+    await page.getByRole('checkbox', { name: /Syarat & Ketentuan/ }).check();
+    await page.getByRole('button', { name: /^daftar$/i }).click();
+    await page.waitForURL((u) => u.pathname === '/');
+
+    await page.goto('/akun', { waitUntil: 'load' });
+    await isiKeranjang(page);
+    expect(await itemKeranjangTersimpan(page)).toHaveLength(1);
+
+    await page.getByRole('button', { name: 'Hapus Akun' }).click();
+    await page.getByLabel(/Masukkan Password Anda/).fill('rahasia123');
+    await page.getByRole('checkbox', { name: /Saya mengerti/ }).check();
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.getByRole('button', { name: 'Hapus Akun Saya Secara Permanen' }).click();
+    await page.waitForURL((u) => u.pathname === '/');
+    await expect(barAkun(page).getByRole('link', { name: 'Masuk' })).toBeVisible();
+    expect(await itemKeranjangTersimpan(page)).toEqual([]);
   });
 
   test('daftar dengan isian salah menampilkan pesan per kolom dan tidak membuat sesi', async ({ page, context }) => {

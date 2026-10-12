@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-12 — Kevin Ilham / Claude Code — Keranjang masih tampil setelah keluar
+- Branch / PR: fix/keranjang-saat-keluar
+- Perubahan: laporan pemilik: isi keranjang tetap ada setelah logout. Penyebab: keranjang tersimpan di localStorage perangkat, sedangkan `keluar()` hanya menghapus cookie sesi. `TombolKeluar` (header toko dan panel admin) kini mengosongkan keranjang sebelum memanggil `keluar()`; `HapusAkunTab` mengosongkannya setelah akun berhasil dihapus. Keputusan dicatat sebagai D22 (PRD §10.8 tidak mengatur logout). E2E `akun.spec.ts`: tes keluar memeriksa keranjang kosong, tes baru untuk hapus akun.
+- Verifikasi: kedua tes E2E FAIL pada kode lama (bukti bug) lalu PASS · E2E `akun` + `auth-guard` + `commerce` 17/17 PASS · typecheck PASS · lint PASS · test 551 lulus, 2 dilewati · build PASS · suite E2E penuh/lintas browser NOT_RUN (perubahan terbatas pada dua komponen client).
+- Catatan: sesi yang berakhir sendiri (kedaluwarsa, password diganti di perangkat lain) tidak mengosongkan keranjang karena tidak ada aksi client. PPT tidak diubah: tidak ada fitur, angka, atau status online yang berubah di slide.
+
 ### 2026-10-04 — Kevin Ilham / Claude Code — PPT: tautan GitHub anggota
 - Branch / PR: docs/ppt-tautan-github-anggota
 - Perubahan: slide 2 menampilkan tautan kecil `github.com/<akun>` di bawah nama tiap anggota (bisa diklik di PPT dan PDF); nama dan tautan satu kotak teks agar tautan ikut turun pada nama dua baris.
