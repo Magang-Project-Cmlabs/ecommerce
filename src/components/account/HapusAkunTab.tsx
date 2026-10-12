@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { hapusAkun } from "@/actions/akun";
 import { hapusAkunSchema } from "@/lib/validations/akun";
+import { useCartStore } from "@/stores/cart-store";
 
 export default function HapusAkunTab() {
   const router = useRouter();
@@ -46,6 +47,8 @@ export default function HapusAkunTab() {
       const res = await hapusAkun({ password, konfirmasi: true });
 
       if (res.ok) {
+        // Sesi sudah dicabut; keranjang di perangkat ini ikut dikosongkan seperti saat keluar.
+        useCartStore.getState().kosongkanKeranjang();
         alert("Akun Anda telah berhasil dinonaktifkan. Seluruh data pribadi telah dihapus.");
         router.push("/");
         router.refresh();
