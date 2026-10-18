@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useSyncExternalStore, useTransition } from 'react';
+import { useEffect, useEffectEvent, useState, useSyncExternalStore, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check, Loader2 } from 'lucide-react';
@@ -13,6 +13,10 @@ import PilihanKurir from './PilihanKurir';
 import PilihanPembayaran, { type MetodePembayaran } from './PilihanPembayaran';
 import KonfirmasiPesanan from './KonfirmasiPesanan';
 import RingkasanPesanan from './RingkasanPesanan';
+import { toast } from 'sonner';
+import { TARIF_KURIR } from '@/lib/pesanan/ongkir';
+import { LABEL_BAYAR, type DrafAlamat } from '@/lib/asisten/aksi';
+import { perintahSah, useAsistenCheckout, type PerintahCheckout } from '@/stores/asisten-checkout-store';
 
 const KOSONG: ItemKeranjang[] = [];
 const LANGKAH = ['Alamat', 'Pengiriman', 'Pembayaran', 'Konfirmasi'];
@@ -45,6 +49,44 @@ export default function CheckoutWizard({ initialAddresses }: { initialAddresses:
     });
     return () => { active = false; };
   }, [key]);
+  // Perintah dari Asisten TokoKita (D23), dijalankan setelah pembeli menekan tombolnya di panel.
+  // Hanya mengisi pilihan di wizard; pesanan tetap dibuat lewat tombol Buat Pesanan.
+  const [drafAlamat, setDrafAlamat] = useState<{ id: number; data: DrafAlamat } | null>(null);
+  const terapkanPerintah = useEffectEvent((perintah: PerintahCheckout) => {
+    if (pesananBaru) return;
+    const selesai = () => useAsistenCheckout.getState().selesai(perintah.id);
+    if (perintah.jenis === 'alamat') {
+      selesai(); setStep(1); setDrafAlamat({ id: perintah.id, data: perintah.data });
+      toast.info('Formulir alamat diisi dari asisten. Periksa lalu tekan Simpan Alamat.');
+      return;
+    }
+    if (perintah.jenis === 'bayar') {
+      selesai(); setPayment(perintah.kode);
+      toast.success(`Pembayaran ${LABEL_BAYAR[perintah.kode]} dipilih${step < 3 ? ', dipakai di langkah Pembayaran' : ''}.`);
+      return;
+    }
+    if (items.length === 0) { selesai(); return; }
+    if (!address) { selesai(); toast.error('Pilih atau tambah alamat pengiriman dulu, lalu pilih kurir.'); return; }
+    if (!preview) return; // tunggu ongkir untuk alamat ini selesai dihitung
+    selesai();
+    const opsi = preview.shippingOptions.find(o => o.method === perintah.kode);
+    if (!opsi?.available) { toast.error(opsi?.reason ?? `${TARIF_KURIR[perintah.kode].label} belum tersedia untuk alamat ini.`); return; }
+    setShipping(perintah.kode); setStep(s => (s < 2 ? 2 : s));
+    toast.success(`Kurir ${TARIF_KURIR[perintah.kode].label} dipilih.`);
+  });
+  // Dengarkan perintah baru, dan periksa ulang yang tertunda (dititipkan sebelum halaman ini
+  // dibuka, atau kurir yang menunggu ongkir) setiap kali alamat atau pratinjau berubah.
+  const adaPratinjau = !!preview;
+  useEffect(() => {
+    const periksa = () => {
+      const p = useAsistenCheckout.getState().perintah;
+      if (!p) return;
+      if (perintahSah(p)) terapkanPerintah(p); else useAsistenCheckout.setState({ perintah: null });
+    };
+    const lepas = useAsistenCheckout.subscribe(periksa);
+    const tunda = setTimeout(periksa, 0);
+    return () => { lepas(); clearTimeout(tunda); };
+  }, [adaPratinjau, addressId]);
   const masalah = preview?.items.some(i => i.masalah !== null) ?? true;
   const hargaBerubah = preview?.items.some(i => items.find(x => x.productId === i.productId && x.variantId === i.variantId)?.price !== i.price);
   const kurirBoleh = preview?.shippingOptions.some(o => o.method === shipping && o.available) ?? false;
@@ -70,7 +112,7 @@ export default function CheckoutWizard({ initialAddresses }: { initialAddresses:
     {preview?.promo && !preview.promo.ok && <p role="alert" className="mb-4 text-destructive">{preview.promo.message}</p>}
     {preview?.items.filter(i => i.masalah).map(i => <p role="alert" key={`${i.productId}:${i.variantId}`} className="mb-2 text-destructive">{i.name}: {i.masalah === 'varian_wajib' ? 'Pilih varian terlebih dahulu.' : i.masalah === 'tidak_aktif' ? 'Produk sudah tidak dijual.' : `Stok tersedia ${Math.max(0, i.stock)}. Ubah isi keranjang.`}</p>)}
     <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"><section className="min-w-0 rounded-3xl bg-tile p-5 sm:p-8">
-      {step === 1 && <DaftarAlamat addresses={addresses} selectedAddressId={addressId} onSelectAddress={id => { setAddressId(id); setShipping(null); }} onAddressAdded={a => { setAddresses(prev => [...prev.map(x => a.isDefault ? { ...x, isDefault: false } : x), a]); setAddressId(a.id); setShipping(null); }} />}
+      {step === 1 && <DaftarAlamat draf={drafAlamat} addresses={addresses} selectedAddressId={addressId} onSelectAddress={id => { setAddressId(id); setShipping(null); }} onAddressAdded={a => { setAddresses(prev => [...prev.map(x => a.isDefault ? { ...x, isDefault: false } : x), a]); setAddressId(a.id); setShipping(null); }} />}
       {step === 2 && address && preview && <PilihanKurir address={address} totalWeight={preview.totalWeight} shippingOptions={preview.shippingOptions} selectedMethod={shipping} onSelectMethod={setShipping} onBackToAddress={() => setStep(1)} />}
       {step === 3 && preview && <PilihanPembayaran grandTotal={preview.grandTotal} selectedShippingMethod={shipping} selectedPaymentMethod={payment} onSelectPaymentMethod={setPayment} />}
       {step === 4 && address && preview && shipping && payment && <KonfirmasiPesanan address={address} shippingOptions={preview.shippingOptions} selectedShippingMethod={shipping} selectedPaymentMethod={payment} items={items} pratinjauItems={preview.items} subtotal={preview.subtotal} totalWeight={preview.totalWeight} shippingCost={preview.shippingCost ?? 0} promo={appliedPromo} discount={preview.discount} grandTotal={preview.grandTotal} notes={notes} onChangeNotes={setNotes} onGoToStep={setStep} isSubmitting={saving} errorMessage={submitError} />}

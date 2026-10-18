@@ -15,6 +15,12 @@ Format entri:
 
 ---
 
+### 2026-10-18 — Kevin Ilham / Claude Code — Asisten AI membantu belanja (D23)
+- Branch / PR: feat/asisten-aksi-belanja
+- Perubahan: permintaan pemilik agar "Tanya AI" merekomendasikan produk sesuai permintaan, membantu checkout, dan mengisi data. Model tetap tanpa `tools`; ia menulis penanda `[[produk:…]]`, `[[keranjang:…]]`, `[[checkout]]`, `[[kurir:…]]`, `[[bayar:…]]`, `[[alamat|…]]` yang diurai server (`src/lib/asisten/aksi.ts`) dan dicocokkan ke database. Panel menampilkan kartu produk (foto, harga dari DB, pilihan varian, Tambah ke Keranjang), tombol Lanjut ke Checkout, kartu kurir/pembayaran, dan draf alamat; `CheckoutWizard` menerima perintah lewat `src/stores/asisten-checkout-store.ts` dan membuka formulir alamat yang sudah terisi. Panel mengirim konteks halaman + isi keranjang (nama/harga dibaca ulang dari DB). Tombol asisten kini tampil di `/checkout`. Nomor HP disamarkan menjadi `NOMOR_HP_n` di browser dan di server. Kebijakan privasi diberi bagian "Asisten AI". PPT slide 17 dan angka unit test diperbarui.
+- Verifikasi: typecheck PASS · lint PASS · test 587 lulus, 2 dilewati · build PASS · E2E 57/57 PASS (asisten-aksi, asisten, commerce, accessibility, navigation, auth-guard, responsive; asisten diuji dengan model Gemini asli lewat dev server lokal) · tangkapan layar desktop + 360 px tanpa gulir mendatar dan tanpa error console · review keamanan (agent security-reviewer): 0 CRITICAL/HIGH, 2 MEDIUM + 3 LOW ditindaklanjuti, 1 LOW lama dicatat di D23 · suite E2E penuh, integrasi MySQL, dan lintas browser NOT_RUN (perubahan terbatas pada asisten dan formulir checkout) · asisten di produksi NOT_RUN (belum di-deploy).
+- Catatan: tangkapan layar asisten di PPT masih versi lama (diambil dari produksi); ambil ulang dengan `scripts/ppt/ambil-asisten.cjs` setelah fitur ini online.
+
 ### 2026-10-12 — Kevin Ilham / Claude Code — Keranjang masih tampil setelah keluar
 - Branch / PR: fix/keranjang-saat-keluar
 - Perubahan: laporan pemilik: isi keranjang tetap ada setelah logout. Penyebab: keranjang tersimpan di localStorage perangkat, sedangkan `keluar()` hanya menghapus cookie sesi. `TombolKeluar` (header toko dan panel admin) kini mengosongkan keranjang sebelum memanggil `keluar()`; `HapusAkunTab` mengosongkannya setelah akun berhasil dihapus. Keputusan dicatat sebagai D22 (PRD §10.8 tidak mengatur logout). E2E `akun.spec.ts`: tes keluar memeriksa keranjang kosong, tes baru untuk hapus akun.

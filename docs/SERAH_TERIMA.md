@@ -41,6 +41,16 @@ Preview), `.env.akun-produksi` (akun admin/pembeli Produksi, kata sandi acak),
 - Password memakai Argon2id (D17); hash bcrypt lama diganti otomatis saat pengguna berhasil masuk.
 - Pilihan bisa dicari, lencana status bergaya monokrom, dan asisten "Tanya AI" (D18) aktif; `ASISTEN_API_KEY` (Gemini) dan `ASISTEN_CADANGAN_API_KEY` (Groq), keduanya kunci gratis milik pemilik, terpasang di Vercel Preview + Production sejak 3 Okt 2026. Pengaman: topik dibatasi ke belanja di toko, tanpa tools/SQL, batas 20 pertanyaan/10 menit dan 100/hari per pengguna atau IP, 1.500/hari untuk seluruh toko; uji penyalahgunaan 16/16 ditolak. Darurat (mis. kuota disalahgunakan): pasang `ASISTEN_NONAKTIF=1` di Vercel lalu deploy ulang untuk mematikan asisten. Mengganti kunci: ubah `.env.asisten`, lalu `node scripts/pasang-env-vercel.mjs .env.asisten`.
 
+## Asisten membantu belanja (18 Okt 2026, D23, menunggu merge)
+
+- Branch `feat/asisten-aksi-belanja`: kartu rekomendasi produk, tambah ke keranjang, tombol checkout,
+  pilih kurir/pembayaran, dan draf alamat untuk formulir checkout. Tidak butuh environment variable baru;
+  memakai kunci asisten yang sudah ada. Setelah merge dan push ke cermin, uji di produksi lalu ambil ulang
+  tangkapan layar PPT (`scripts/ppt/ambil-asisten.cjs`).
+- Uji lokal dengan model asli: jalankan dev server dengan variabel dari `.env.asisten`
+  (mis. `env $(grep -E '^ASISTEN_' .env.asisten | tr -d '\r' | xargs) npx next dev -p 3100`), lalu
+  `E2E_BASE_URL=http://localhost:3100 npx playwright test -c tests/e2e/playwright.config.ts specs/asisten-aksi.spec.ts`.
+
 ## Fitur lanjutan (dirilis 3 Okt 2026 malam, PR #62)
 
 - **Ongkir per zona provinsi** (D19): Jawa tetap JNE Rp 15.000/SiCepat Rp 13.000 per kg; luar Jawa lebih mahal

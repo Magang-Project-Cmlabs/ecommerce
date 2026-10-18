@@ -1,9 +1,12 @@
 'use server';
 
-// Asisten AI publik (D18). Tidak butuh login dan tidak membaca data akun/pesanan apa pun:
-// hanya data toko publik + pertanyaan pengguna. Model tidak diberi alat (tools), akses database,
-// atau internet; satu-satunya keluarannya adalah teks. Pengaman berlapis:
-// tombol darurat ASISTEN_NONAKTIF → validasi Zod (panjang & riwayat) → penyaring data sensitif →
+// Asisten AI publik (D18) yang bisa membantu belanja (D23). Tidak butuh login dan tidak membaca data
+// akun/alamat/pesanan apa pun: hanya data toko publik, pertanyaan pengguna, dan konteks belanja dari
+// browser (halaman + isi keranjang) yang nama dan harganya dibaca ulang dari database.
+// Model tidak diberi alat (tools), akses database, atau internet; keluarannya hanya teks. Penanda
+// aksi di teks ([[produk:slug]] dst.) dicocokkan ke database dan dikembalikan sebagai usulan tombol;
+// tidak ada yang dijalankan di server. Pengaman berlapis:
+// tombol darurat ASISTEN_NONAKTIF → validasi Zod (panjang, riwayat, konteks) → penyaring data sensitif →
 // pembatas per pengguna/IP + harian + global → cache jawaban umum → model dengan instruksi topik ketat.
 
 import { headers } from 'next/headers';
@@ -12,12 +15,14 @@ import { ipKlien } from '@/lib/auth/ip';
 import { driverBatasAuth } from '@/lib/auth/batas-percobaan';
 import { catatBatasAsisten } from '@/lib/asisten/pembatas';
 import { daftarPenyedia, mintaJawaban, type PesanChat } from '@/lib/asisten/penyedia';
-import { periksaPesanSensitif, susunInstruksi } from '@/lib/asisten/pengetahuan';
-import { ambilDataAsisten } from '@/lib/data/asisten';
+import { periksaPesanSensitif, susunInstruksi, type KonteksPembeli } from '@/lib/asisten/pengetahuan';
+import { slugPenanda, susunAksi, uraiPenanda, type AksiAsisten } from '@/lib/asisten/aksi';
+import { samarkanTeleponRiwayat } from '@/lib/asisten/telepon';
+import { ambilDataAsisten, ambilProdukAksi } from '@/lib/data/asisten';
 import { ambilPenggunaSaatIni } from '@/lib/data/pengguna';
-import { pesanAsistenSchema } from '@/lib/validations/asisten';
+import { pesanAsistenSchema, type PesanAsistenInput } from '@/lib/validations/asisten';
 
-export type HasilAsisten = { ok: true; jawaban: string } | { ok: false; pesan: string };
+export type HasilAsisten = { ok: true; jawaban: string; aksi: AksiAsisten[] } | { ok: false; pesan: string };
 
 const BELUM_TERSEDIA = 'Asisten belum tersedia. Coba lagi beberapa saat atau buka Pusat Bantuan.';
 type Alasan = 'tidak-aktif' | 'sibuk' | 'gagal';
@@ -27,21 +32,55 @@ const PESAN_GAGAL: Record<Alasan, string> = {
   gagal: 'Asisten belum bisa menjawab. Coba lagi atau buka Pusat Bantuan.',
 };
 
+const BATAS_CACHE = 80;
+
 class GagalAsisten extends Error { constructor(readonly alasan: Alasan) { super(alasan); } }
 
 async function jawabModel(pesan: PesanChat[]): Promise<string> {
   const hasil = await mintaJawaban(pesan, daftarPenyedia());
   if (!hasil.ok) throw new GagalAsisten(hasil.alasan);
-  return hasil.jawaban.slice(0, 3000);
+  return hasil.jawaban.slice(0, 4000);
 }
 
-// Pertanyaan pembuka yang sama (mis. tombol saran) dijawab dari cache 1 jam: hemat kuota gratis.
-// Hanya jawaban sukses yang tersimpan (galat dilempar, tidak di-cache). Ikut tag katalog sehingga
-// perubahan produk/harga membuat cache segar.
+// Pertanyaan pembuka yang sama (mis. tombol saran) tanpa konteks belanja dijawab dari cache 1 jam:
+// hemat kuota gratis. Yang di-cache teks mentah model (dengan penanda), sehingga kartu produk tetap
+// dibaca segar dari database. Hanya jawaban sukses yang tersimpan; ikut tag katalog.
 function jawabPertanyaanUmum(instruksi: string, pertanyaan: string): Promise<string> {
   const kunci = pertanyaan.toLowerCase().replace(/\s+/g, ' ').trim();
   return unstable_cache(() => jawabModel([{ role: 'system', content: instruksi }, { role: 'user', content: pertanyaan }]),
-    ['tokokita-asisten-jawaban-v1', kunci], { revalidate: 3600, tags: ['katalog-publik'] })();
+    ['tokokita-asisten-jawaban-v2', kunci], { revalidate: 3600, tags: ['katalog-publik'] })();
+}
+
+/** Konteks belanja dengan nama dan harga dari database. undefined bila tidak ada yang perlu diceritakan. */
+async function bacaKonteks(k: PesanAsistenInput['konteks']): Promise<KonteksPembeli | undefined> {
+  if (!k) return undefined;
+  const checkout = k.halaman === '/checkout';
+  const slugDilihat = /^\/produk\/([a-z0-9-]+)$/.exec(k.halaman ?? '')?.[1] ?? null;
+  const slugs = [...new Set([...k.keranjang.map((i) => i.slug), ...(slugDilihat ? [slugDilihat] : [])])];
+  if (!checkout && !slugs.length) return undefined;
+  const perSlug = new Map((slugs.length ? await ambilProdukAksi(slugs) : []).map((p) => [p.slug, p]));
+  const keranjang = k.keranjang.flatMap((i) => {
+    const p = perSlug.get(i.slug);
+    const v = i.varianId ? p?.variants.find((x) => x.id === i.varianId) : undefined;
+    if (!p || (i.varianId && !v)) return [];
+    return [{ name: p.name, varian: v?.name ?? null, jumlah: i.jumlah, harga: v?.price ?? p.price }];
+  });
+  const dilihat = slugDilihat ? perSlug.get(slugDilihat) : undefined;
+  return { checkout, keranjang, dilihat: dilihat ? { name: dilihat.name, slug: dilihat.slug } : null };
+}
+
+/** Pisahkan penanda dari teks lalu cocokkan ke database. Gagal membaca produk = teks tanpa tombol. */
+async function susunHasil(mentah: string): Promise<HasilAsisten> {
+  const { teks, penanda } = uraiPenanda(mentah);
+  let aksi: AksiAsisten[] = [];
+  try {
+    const slugs = slugPenanda(penanda);
+    aksi = susunAksi(penanda, slugs.length ? await ambilProdukAksi(slugs) : []);
+  } catch {
+    console.error('[asisten] produk untuk aksi belum dapat dibaca');
+  }
+  if (!teks && !aksi.length) return { ok: false, pesan: PESAN_GAGAL.gagal };
+  return { ok: true, jawaban: teks || 'Silakan pilih lewat tombol di bawah.', aksi };
 }
 
 export async function tanyaAsisten(input: unknown): Promise<HasilAsisten> {
@@ -49,11 +88,13 @@ export async function tanyaAsisten(input: unknown): Promise<HasilAsisten> {
 
   const hasil = pesanAsistenSchema.safeParse(input);
   if (!hasil.success) return { ok: false, pesan: 'Pertanyaan belum bisa dikirim. Tulis pertanyaan maksimal 600 karakter atau mulai percakapan baru.' };
-  const riwayat = hasil.data.riwayat.slice(-8);
+  // Browser sudah menyamarkan nomor HP, tetapi klien tidak dipercaya: samarkan sekali lagi di sini.
+  // Token buatan server tidak dikenal browser, sehingga nomor itu dikosongkan di draf alamat.
+  const riwayat = samarkanTeleponRiwayat(hasil.data.riwayat.slice(-8)).riwayat;
   const pertanyaan = riwayat.at(-1)!.isi;
 
   const tolak = periksaPesanSensitif(pertanyaan);
-  if (tolak) return { ok: true, jawaban: tolak };
+  if (tolak) return { ok: true, jawaban: tolak, aksi: [] };
 
   // Identitas pembatas: pengguna login bila ada (adil untuk banyak orang di satu Wi-Fi), selain itu IP.
   const ip = ipKlien(await headers());
@@ -75,21 +116,26 @@ export async function tanyaAsisten(input: unknown): Promise<HasilAsisten> {
     }
   }
 
+  // Konteks belanja hanya pelengkap: bila gagal dibaca, asisten tetap menjawab tanpa konteks.
+  let konteks: KonteksPembeli | undefined;
+  try { konteks = await bacaKonteks(hasil.data.konteks); } catch { console.error('[asisten] konteks belanja belum dapat dibaca'); }
+
   let instruksi: string;
-  try { instruksi = susunInstruksi(await ambilDataAsisten()); }
+  try { instruksi = susunInstruksi(await ambilDataAsisten(), konteks); }
   catch {
     console.error('[asisten] data toko belum dapat dibaca');
     return { ok: false, pesan: BELUM_TERSEDIA };
   }
 
   try {
-    if (riwayat.length === 1) return { ok: true, jawaban: await jawabPertanyaanUmum(instruksi, pertanyaan) };
+    // Cache hanya untuk pertanyaan pembuka pendek (mis. tombol saran), supaya kunci cache tidak tumbuh bebas.
+    if (riwayat.length === 1 && !konteks && pertanyaan.length <= BATAS_CACHE) return await susunHasil(await jawabPertanyaanUmum(instruksi, pertanyaan));
     // Pesan lama yang memuat data sensitif tidak pernah dikirim ulang ke model.
     const pesan: PesanChat[] = [
       { role: 'system', content: instruksi },
       ...riwayat.filter((m) => m.peran === 'asisten' || !periksaPesanSensitif(m.isi)).map((m): PesanChat => ({ role: m.peran === 'pengguna' ? 'user' : 'assistant', content: m.isi })),
     ];
-    return { ok: true, jawaban: await jawabModel(pesan) };
+    return await susunHasil(await jawabModel(pesan));
   } catch (e) {
     return { ok: false, pesan: PESAN_GAGAL[e instanceof GagalAsisten ? e.alasan : 'gagal'] };
   }

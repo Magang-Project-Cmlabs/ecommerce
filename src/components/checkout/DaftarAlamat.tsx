@@ -5,12 +5,15 @@ import { CheckCircle2, Circle, MapPin, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Alamat } from "@/lib/data/alamat";
 import AlamatForm from "./AlamatForm";
+import type { DrafAlamat } from "@/lib/asisten/aksi";
 
 type Props = {
   addresses: Alamat[];
   selectedAddressId: number | null;
   onSelectAddress: (id: number) => void;
   onAddressAdded: (alamatBaru: Alamat) => void;
+  /** Draf alamat dari asisten (D23): membuka formulir yang sudah terisi. */
+  draf?: { id: number; data: DrafAlamat } | null;
 };
 
 export default function DaftarAlamat({
@@ -18,13 +21,23 @@ export default function DaftarAlamat({
   selectedAddressId,
   onSelectAddress,
   onAddressAdded,
+  draf = null,
 }: Props) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formDibuka, setFormDibuka] = useState(false);
+  // Draf yang sudah ditutup/disimpan tidak membuka formulir lagi.
+  const [drafSelesai, setDrafSelesai] = useState<number | null>(null);
+  const drafAktif = draf && draf.id !== drafSelesai ? draf : null;
+  const isFormOpen = formDibuka || !!drafAktif;
+  const tutupForm = () => {
+    setFormDibuka(false);
+    if (draf) setDrafSelesai(draf.id);
+  };
+  const setIsFormOpen = (buka: boolean) => (buka ? setFormDibuka(true) : tutupForm());
 
   const handleAdded = (alamatBaru: Alamat) => {
     onAddressAdded(alamatBaru);
     onSelectAddress(alamatBaru.id);
-    setIsFormOpen(false);
+    tutupForm();
   };
 
   return (
@@ -54,6 +67,8 @@ export default function DaftarAlamat({
       {/* Form Tambah Alamat Baru */}
       {isFormOpen && (
         <AlamatForm
+          key={drafAktif?.id ?? "baru"}
+          awal={drafAktif?.data}
           onSuccess={handleAdded}
           onCancel={() => setIsFormOpen(false)}
         />
