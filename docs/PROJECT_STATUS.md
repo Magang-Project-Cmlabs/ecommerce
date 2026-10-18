@@ -2,7 +2,7 @@
 
 **Repo:** `Magang-Project-Cmlabs/ecommerce` (private) · cermin `kvnlhm/ecommerce` (sumber deploy Vercel)
 **Branch integrasi:** `develop` (terakhir PR #62, fitur lanjutan D19–D21); pekerjaan lanjutan lewat PR
-**Diperbarui:** 12 Oktober 2026 (perbaikan keranjang saat keluar, D22) · riwayat per sesi ada di [PROGRESS](PROGRESS.md)
+**Diperbarui:** 18 Oktober 2026 (asisten AI membantu belanja, D23) · riwayat per sesi ada di [PROGRESS](PROGRESS.md)
 
 ## 1. Ringkasan
 
@@ -16,7 +16,9 @@ Tambahan di luar rencana awal: pembayaran **Midtrans Snap sandbox**, unggah gamb
 **mode terang/gelap** (D16), password **Argon2id** (D17), dan asisten **"Tanya AI"**
 (D18, Gemini dengan cadangan Groq, pengaman berlapis). Rilis 3 Okt malam: **ongkir per zona provinsi** (D19),
 **Login Google** (D21), dan tombol gratis **"Cek di situs kurir"**; lacak resi otomatis (D20) siap tetapi
-nonaktif karena API Binderbyte berbayar.
+nonaktif karena API Binderbyte berbayar. Sejak 18 Okt (D23, branch `feat/asisten-aksi-belanja`, belum di produksi)
+asisten juga merekomendasikan produk dalam bentuk kartu, menambah ke keranjang, mengarahkan ke checkout,
+memilih kurir/pembayaran, dan mengisi formulir alamat; semua aksi lewat tombol yang ditekan pembeli.
 
 Yang masih terbuka: LCP seluler halaman detail di simulasi Lighthouse (3,1 s; throttling devtools 2,4 s),
 QRIS sandbox (simulator error 2603),
@@ -51,6 +53,7 @@ dan uji manusia di produksi (lihat bagian 6).
 | Asisten AI di produksi | PASS | Jawaban benar (metode bayar, rekomendasi produk + tautan, ongkir 2,5 kg = Rp 45.000); 16/16 upaya penyalahgunaan ditolak (Gemini dan Groq) |
 | Suite lintas browser penuh (Edge, Firefox, WebKit) | NOT_RUN hari ini | Terakhir 1 Okt: 299/310 lalu 28/28 setelah isi ulang stok DB uji; diulang bila ada perubahan lintas browser |
 | Perbaikan keranjang saat keluar/hapus akun (12 Okt, D22) | PASS | E2E `akun` + `auth-guard` + `commerce` 17/17 (dua tes baru gagal pada kode lama, lulus setelah perbaikan); typecheck, lint, test 551/2 dilewati, build PASS. Suite E2E penuh dan lintas browser NOT_RUN (perubahan terbatas pada dua komponen client) |
+| Asisten membantu belanja (18 Okt, D23) | PASS | typecheck, lint, test 587/2 dilewati, build PASS; E2E 57/57 (asisten-aksi + asisten dengan model Gemini asli di dev lokal, commerce, accessibility, navigation, auth-guard, responsive); review keamanan 0 CRITICAL/HIGH, temuan MEDIUM/LOW ditindaklanjuti. Suite E2E penuh, integrasi, lintas browser, dan uji di produksi NOT_RUN |
 | PPT + PDF diperbarui | PASS | 25 slide dari generator `scripts/ppt/` (diperbarui tiap akhir sesi); 4 Okt: + slide 2 anggota tim (nama saja), slide 10 ERD (dibangun otomatis dari `schema.prisma`: 15 tabel, 20 relasi), slide 24 tautan proyek; PDF diekspor PowerPoint dari PPTX yang sama (3 tautan bisa diklik); 25 slide dirender, slide 2, 10, 18, 24 diperiksa |
 
 ## 4. Layanan online (produksi)

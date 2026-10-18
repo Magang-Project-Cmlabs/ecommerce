@@ -8,14 +8,15 @@ import { Sparkles, X } from 'lucide-react';
 const PanelAsisten = dynamic(() => import('./PanelAsisten'), { ssr: false });
 
 /**
- * Tombol melayang "Tanya AI" di halaman toko (disembunyikan di admin lewat layout dan di checkout).
+ * Tombol melayang "Tanya AI" di halaman toko, termasuk /checkout untuk membantu checkout (D23).
+ * Disembunyikan di admin lewat layout dan di halaman sukses checkout.
  * Di produksi hanya tampil bila ASISTEN_API_KEY terpasang; di development tetap tampil agar bisa diuji.
  */
 export default function TombolAsisten({ aktif }: { aktif: boolean }) {
   const pathname = usePathname();
   const [buka, setBuka] = useState(false);
   const [pernahBuka, setPernahBuka] = useState(false);
-  if (pathname.startsWith('/checkout') || (!aktif && process.env.NODE_ENV === 'production')) return null;
+  if (pathname.startsWith('/checkout/') || (!aktif && process.env.NODE_ENV === 'production')) return null;
   return <>
     {pernahBuka && <PanelAsisten buka={buka} tutup={() => setBuka(false)} />}
     <button type="button" onClick={() => { setPernahBuka(true); setBuka((b) => !b); }} aria-expanded={buka} aria-controls={pernahBuka ? "panel-asisten" : undefined}

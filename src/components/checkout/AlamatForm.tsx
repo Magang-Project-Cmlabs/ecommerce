@@ -11,24 +11,28 @@ import { DAFTAR_PROVINSI } from "@/lib/pesanan/wilayah";
 import { simpanAlamat } from "@/actions/alamat";
 import { alamatSchema, type AlamatInput } from "@/lib/validations/alamat";
 import type { Alamat } from "@/lib/data/alamat";
+import type { DrafAlamat } from "@/lib/asisten/aksi";
 
 const OPSI_PROVINSI = DAFTAR_PROVINSI.map((p) => ({ value: p, label: p }));
 
 type Props = {
   onSuccess: (alamatBaru: Alamat) => void;
   onCancel: () => void;
+  /** Isian awal dari asisten (D23). Pembeli tetap memeriksa dan menekan Simpan Alamat. */
+  awal?: DrafAlamat;
 };
 
-export default function AlamatForm({ onSuccess, onCancel }: Props) {
+export default function AlamatForm({ onSuccess, onCancel, awal }: Props) {
   const [isPending, startTransition] = useTransition();
-  const [label, setLabel] = useState("Rumah");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [district, setDistrict] = useState("");
-  const [city, setCity] = useState("Jakarta");
-  const [province, setProvince] = useState("DKI Jakarta");
-  const [postalCode, setPostalCode] = useState("");
+  const [label, setLabel] = useState(awal?.label ?? "Rumah");
+  const [name, setName] = useState(awal?.name ?? "");
+  const [phone, setPhone] = useState(awal?.phone ?? "");
+  const [street, setStreet] = useState(awal?.street ?? "");
+  const [district, setDistrict] = useState(awal?.district ?? "");
+  // Tanpa draf: bawaan kota toko. Dengan draf: jangan menebak kota/provinsi yang tidak disebut.
+  const [city, setCity] = useState(awal ? awal.city ?? "" : "Jakarta");
+  const [province, setProvince] = useState(awal ? awal.province ?? "" : "DKI Jakarta");
+  const [postalCode, setPostalCode] = useState(awal?.postalCode ?? "");
   const [isDefault, setIsDefault] = useState(false);
 
   const [errors, setErrors] = useState<Partial<Record<keyof AlamatInput, string[]>>>({});
@@ -87,7 +91,10 @@ export default function AlamatForm({ onSuccess, onCancel }: Props) {
       className="rounded-3xl bg-tile p-5"
     >
       <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
-        <h3 className="text-sm font-bold text-foreground">Tambah Alamat Baru</h3>
+        <div>
+          <h3 className="text-sm font-bold text-foreground">Tambah Alamat Baru</h3>
+          {awal && <p role="status" className="mt-0.5 text-xs text-muted-foreground">Diisi dari Asisten TokoKita. Periksa lalu tekan Simpan Alamat.</p>}
+        </div>
         <button
           type="button"
           onClick={onCancel}

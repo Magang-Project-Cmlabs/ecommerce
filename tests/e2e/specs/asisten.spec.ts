@@ -26,9 +26,14 @@ test('asisten AI: buka panel, tolak data sensitif, jawab atau beri pesan jelas',
   await expect(panel.getByRole('log')).toContainText('Metode pembayaran apa saja?');
 });
 
-test('asisten tidak tampil di checkout', async ({ page }) => {
+// D23: asisten membantu checkout, jadi tombolnya tampil di /checkout (alurnya di asisten-aksi.spec.ts).
+test('asisten tampil di checkout dengan saran khusus checkout', async ({ page }) => {
   test.skip(!hasCredentials('customer'), alasanLewati('customer'));
   await performLogin(page, 'customer');
   await page.goto('/checkout'); await expect(page).toHaveURL(/\/checkout/);
-  await expect(page.getByRole('button', { name: /^Tanya AI/ })).toHaveCount(0);
+  await page.getByRole('button', { name: /^Tanya AI/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Asisten TokoKita' });
+  const ulang = panel.getByRole('button', { name: 'Mulai percakapan baru' });
+  if (await ulang.count()) await ulang.click();
+  await expect(panel.getByRole('button', { name: 'Kurir mana yang paling murah?' })).toBeVisible();
 });

@@ -39,6 +39,41 @@ describe('susunInstruksi', () => {
   });
 });
 
+describe('susunInstruksi: aksi belanja dan konteks pembeli (D23)', () => {
+  it('menjelaskan penanda aksi dan melarang mengaku sudah menjalankan aksi', () => {
+    const teks = susunInstruksi(data);
+    for (const p of ['[[produk:slug]]', '[[keranjang:slug|varian|jumlah]]', '[[checkout]]', '[[kurir:kode]]', '[[bayar:kode]]', '[[alamat|nama=', 'NOMOR_HP_1']) expect(teks).toContain(p);
+    expect(teks).toMatch(/Jangan pernah mengaku sudah menambahkan/);
+  });
+
+  it('kata kunci produk ikut di katalog bila ada', () => {
+    const teks = susunInstruksi({ ...data, produk: [{ ...data.produk[1]!, tags: ['lampu', 'smart home'] }] });
+    expect(teks).toContain('Lampu Pintar Wi-Fi | Terang | Elektronik | Rp 119.000 | stok habis; kata kunci: lampu, smart home | /produk/lampu-pintar-wi-fi');
+  });
+
+  it('tanpa konteks tidak ada bagian KONTEKS PEMBELI', () => {
+    expect(susunInstruksi(data)).not.toContain('KONTEKS PEMBELI');
+  });
+
+  it('konteks keranjang, halaman checkout, dan produk dilihat memakai data dari server, sebelum pengingat akhir', () => {
+    const teks = susunInstruksi(data, {
+      checkout: true,
+      dilihat: { name: 'Kaos Polos Premium', slug: 'kaos-polos-premium' },
+      keranjang: [{ name: 'Kaos Polos Premium', varian: 'M', jumlah: 2, harga: 89000 }, { name: 'Lampu Pintar Wi-Fi', varian: null, jumlah: 1, harga: 119000 }],
+    });
+    expect(teks).toContain('- Kaos Polos Premium (M) × 2 — Rp 89.000 per barang');
+    expect(teks).toContain('Subtotal barang: Rp 297.000');
+    expect(teks).toMatch(/HALAMAN: pembeli sedang di halaman checkout/);
+    expect(teks).toContain('PRODUK YANG SEDANG DILIHAT: Kaos Polos Premium (/produk/kaos-polos-premium)');
+    expect(teks.indexOf('KONTEKS PEMBELI')).toBeGreaterThan(teks.indexOf('=== AKHIR DATA TOKO'));
+    expect(teks.trim().split('\n').at(-1)).toMatch(/^PENGINGAT:/);
+  });
+
+  it('keranjang kosong dinyatakan jelas', () => {
+    expect(susunInstruksi(data, { checkout: false, dilihat: null, keranjang: [] })).toContain('KERANJANG: kosong');
+  });
+});
+
 describe('periksaPesanSensitif', () => {
   it.each([
     'nomor kartu saya 4111 1111 1111 1111 bisa dipakai?',
