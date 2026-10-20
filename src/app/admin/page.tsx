@@ -1,58 +1,112 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { ShoppingBag, Wallet, Clock, TrendingUp, ChevronRight, PackageCheck } from 'lucide-react';
-import { requireAdmin } from '@/lib/auth/akses';
-import { ringkasanAdmin } from '@/lib/data/admin';
-import { formatRupiah, formatTanggalSingkat } from '@/lib/format';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AdminHeading, AdminEmpty, StatusBadge, StokBadge } from '@/components/admin/presentation';
+import Link from "next/link";
+import { Search, Filter, TrendingUp, AlertTriangle } from "lucide-react";
 
-export const metadata: Metadata = { title: 'Admin', robots: { index: false, follow: false } };
+const recentOrders = [
+  { id: "#TK1094", customer: "Andi Pratama", total: "Rp 125.000", status: "Dikemas", color: "bg-orange-100 text-orange-700" },
+  { id: "#TK1093", customer: "Budi Santoso", total: "Rp 450.000", status: "Menunggu Bayar", color: "bg-amber-100 text-amber-700" },
+  { id: "#TK1092", customer: "Citra Dewi", total: "Rp 210.500", status: "Dikirim", color: "bg-emerald-100 text-emerald-700" },
+  { id: "#TK1091", customer: "Dian Sari", total: "Rp 330.000", status: "Dikemas", color: "bg-orange-100 text-orange-700" },
+];
 
-const tautanBaris = 'font-medium text-foreground underline-offset-4 hover:underline focus-visible:underline';
+export default function AdminDashboardPage() {
+  return (
+    <div className="space-y-8">
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pesanan Hari Ini</span>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-bold text-slate-900">18 Pesanan</span>
+            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <TrendingUp className="w-3.5 h-3.5" /> +12%
+            </span>
+          </div>
+        </div>
 
-export default async function HalamanAdmin() {
-  const admin = await requireAdmin('/admin');
-  const data = await ringkasanAdmin();
-  const stats = [
-    { label: 'Pesanan hari ini', value: String(data.pesananHariIni), icon: ShoppingBag, href: '/admin/pesanan', sorot: false },
-    { label: 'Omzet 7 hari', value: formatRupiah(data.omzet7), icon: Wallet, href: null, sorot: false },
-    { label: 'Omzet 30 hari', value: formatRupiah(data.omzet30), icon: TrendingUp, href: null, sorot: false },
-    { label: 'Perlu diproses', value: String(data.perluDiproses), icon: Clock, href: '/admin/pesanan', sorot: data.perluDiproses > 0 },
-  ];
-  // Satu baris per produk: angka yang menentukan urgensi adalah stok terendah (varian atau produk).
-  const stok = data.stokMenipis
-    .map((p) => ({ ...p, sisa: p.variants.length ? Math.min(...p.variants.map((v) => v.stock)) : p.stock }))
-    .sort((a, b) => a.sisa - b.sisa);
-  const tampil = stok.slice(0, 6);
-  return <>
-    <AdminHeading title="Ringkasan toko" description={`Selamat datang, ${admin.name}. Pantau aktivitas dan kelola toko Anda.`} />
-    <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-      {stats.map(({ label, value, icon: Icon, href, sorot }) => {
-        const isi = <Card className={`h-full transition-colors ${sorot ? '!bg-foreground text-background' : ''} ${href ? 'group-hover:!bg-foreground/[0.08]' : ''} ${sorot && href ? 'group-hover:!bg-foreground/90' : ''}`}><CardContent className="space-y-6">
-          <div className="flex items-start justify-between gap-2"><span className={`text-sm ${sorot ? 'text-background/70' : 'text-muted-foreground'}`}>{label}</span><span className={`flex size-10 items-center justify-center rounded-full ${sorot ? 'bg-background/15 text-background' : 'bg-background text-foreground'}`}><Icon aria-hidden className="size-[18px]" /></span></div>
-          <p className="font-heading text-[clamp(1.35rem,2.3vw,2.25rem)] font-medium leading-none tracking-[-0.03em] tabular-nums">{value}</p>
-        </CardContent></Card>;
-        return href ? <Link key={label} href={href} className="group rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{isi}</Link> : <div key={label}>{isi}</div>;
-      })}
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Omzet Bulan Ini</span>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-bold text-slate-900">Rp 45.200.000</span>
+            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <TrendingUp className="w-3.5 h-3.5" /> +8.4%
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pesanan Perlu Diproses</span>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-bold text-amber-600">5</span>
+            <span className="text-xs text-slate-500">butuh resi/kirim</span>
+          </div>
+        </div>
+
+        <div className="bg-amber-50/70 p-5 rounded-xl border border-amber-300 shadow-sm flex flex-col justify-between">
+          <span className="text-xs font-semibold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
+            <AlertTriangle className="w-4 h-4 text-amber-600" /> Peringatan Stok Menipis
+          </span>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-bold text-amber-900">3 Produk</span>
+            <span className="text-xs font-medium text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded">sisa ≤ 5</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <h2 className="text-lg font-bold text-slate-800">Daftar Pesanan Terbaru</h2>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
+              <input 
+                type="text" 
+                placeholder="Cari pesanan / nama..." 
+                className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            </div>
+            <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 transition">
+              <Filter className="w-4 h-4 text-slate-500" />
+              <span>Filter</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-600">
+            <thead className="bg-slate-50 text-xs uppercase font-semibold text-slate-500 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-4">Nomor Pesanan</th>
+                <th className="px-6 py-4">Pembeli</th>
+                <th className="px-6 py-4">Total Belanja</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {recentOrders.map((order) => (
+                <tr key={order.id} className="hover:bg-slate-50/70 transition">
+                  <td className="px-6 py-4 font-semibold text-slate-900">{order.id}</td>
+                  <td className="px-6 py-4">{order.customer}</td>
+                  <td className="px-6 py-4 font-medium text-slate-900">{order.total}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${order.color}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Link 
+                      href={`/admin/orders/${order.id.replace('#', '')}`}
+                      className="inline-block px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-700 hover:bg-slate-100 transition"
+                    >
+                      Lihat Detail
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-      <Card className="min-w-0">
-        <CardHeader className="flex flex-row items-center justify-between gap-3"><CardTitle>Pesanan terbaru</CardTitle><Button asChild variant="outline" size="sm"><Link href="/admin/pesanan">Lihat semua<ChevronRight aria-hidden /></Link></Button></CardHeader>
-        <CardContent>{data.terbaru.length ? <Table><TableHeader><TableRow><TableHead>Pesanan</TableHead><TableHead className="hidden sm:table-cell">Pembeli</TableHead><TableHead className="text-right">Total</TableHead><TableHead>Status</TableHead></TableRow></TableHeader><TableBody>{data.terbaru.map((order) => <TableRow key={order.id}><TableCell><Link className={tautanBaris} href={`/admin/pesanan/${order.id}`}>{order.orderNumber}</Link><p className="text-xs text-muted-foreground">{formatTanggalSingkat(order.createdAt)}</p></TableCell><TableCell className="hidden sm:table-cell">{order.user.name}</TableCell><TableCell className="text-right tabular-nums">{formatRupiah(order.grandTotal)}</TableCell><TableCell><StatusBadge status={order.status} /></TableCell></TableRow>)}</TableBody></Table> : <AdminEmpty>Belum ada pesanan.</AdminEmpty>}</CardContent>
-      </Card>
-      <Card className="min-w-0 self-start">
-        <CardHeader><CardTitle>Stok menipis</CardTitle><p className="text-sm text-muted-foreground">Produk atau varian dengan stok ≤ 5.</p></CardHeader>
-        <CardContent>{tampil.length ? <>
-          <ul className="divide-y divide-border">{tampil.map((p) => <li key={p.id} className="flex items-center justify-between gap-3 py-3">
-            <div className="min-w-0"><Link href={`/admin/produk?edit=${p.id}`} className={`block truncate ${tautanBaris}`}>{p.name}</Link>{p.variants.length > 0 && <p className="mt-0.5 truncate text-xs text-muted-foreground">{p.variants.map((v) => `${v.name}: ${v.stock}`).join(' · ')}</p>}</div>
-            <StokBadge stok={p.sisa} />
-          </li>)}</ul>
-          {stok.length > tampil.length && <Button asChild variant="ghost" size="sm" className="mt-2 w-full"><Link href="/admin/produk">Lihat {stok.length - tampil.length} produk lainnya</Link></Button>}
-        </> : <div className="flex flex-col items-center gap-2 py-6 text-center text-sm text-muted-foreground"><PackageCheck aria-hidden className="size-8 text-green-600 dark:text-green-400" />Semua stok produk masih mencukupi.</div>}</CardContent>
-      </Card>
-    </div>
-  </>;
+  );
 }
